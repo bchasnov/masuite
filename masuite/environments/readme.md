@@ -6,4 +6,6 @@ There are the supported multi-agent environments:
 - [ ] Finite matrix game
 - [ ] Markov Soccer
 - [ ] Cartpole 
+- [ ] Prisoner's dilemma
+- [ ] Bimatrix games
 - [ ] ...
