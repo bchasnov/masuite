@@ -22,28 +22,25 @@ class LinearQuadraticGame(gym.Env):
 
     Parameters:
     -@param params: **params: a combination of some (or none) of the following:
-        - n_players: number of players in the game
-        - n_states: number of states in the game
-        - n_actions: number of actions each player takes each step
+     Required:
         - states: initial state of the game
         - A: state transition matrix
         - Bs: control input matrices (1 for each player)
         - Qs: reward transition matrix
         - Rs: reward weights for each player. Must have the shape
             |n_players|x|n_players|
+            observations
+     Optional:
+        - n_players: number of players in the game
+        - n_states: number of states in the game
+        - n_actions: number of actions each player takes each step
         - noise_state: standard deviation of noise added to state.
-        - high: list of maximum values the state can take on. Type np.array of
-            size n_states
-        - low: list of minimum values the states can have. Same type
-            and size as high. Defaults to -1*high if not specified.
         - action_space: Space object corresponding to valid actions
         - observation_space: Space observation corresponding to valid
-            observations
-    
+            and size as high. Defaults to -1*high if not specified.
+
     Additional class parameters:
-    - rewards: current cumulative rewards for each player. Initialized to 0s
-    - reward_range: tuple corresponding to the min and max possible rewards.
-        Defaults to (-inf, inf)
+        - rewards: current cumulative rewards for each player. Initialized to 0s
     """
 
     def __init__(self, **params):
