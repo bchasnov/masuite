@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "masuite"
+version = "0.1.0"
+description = "A collection on n-player RL experiments"
+authors = ["Zane Alumbaugh <zanedma@gmail.com>, Ben Chasnov <bchasnov@uw.edu>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6.9"
+torch = "^1.3.1"
+gym = "^0.15.3"
+jupyter = "^1.0.0"
+ipykernel = "^5.3.4"
+spinup = {git = "https://github.com/openai/spinningup"}
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

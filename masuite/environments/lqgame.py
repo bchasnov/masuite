@@ -170,3 +170,8 @@ class LinearQuadraticGame(gym.Env):
         self.states = self.initial_states
         self.rewards = torch.zeros(self.n_players, 1)
         return self.states
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
