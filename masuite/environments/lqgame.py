@@ -113,16 +113,13 @@ class LinearQuadraticGame(gym.Env):
             player's reward for this step, whether the game is "done" 
             (currently always False), and "info" (see gym documentation for
             details, currently an empty dict)
-
-        >>> game = LinearQuadraticGame()
-        >>> game.step(torch.FloatTensor([[[1.]]]))
-        (tensor([[2.]]), tensor([[5.]]), False, {})
         """
         # vpg sends
         if type(actions) == np.ndarray:
             actions = torch.FloatTensor(actions)
 
         err_msg = 'actions must be in the game\'s action space'
+        if actions.shape != torch.Size([self.n_players, self.n_actions]): print(actions)
         assert actions.shape == torch.Size([self.n_players, self.n_actions]), err_msg
         '''update states, see writeup.md for equation'''
         self.states = (self.A@self.states).flatten()
@@ -162,16 +159,7 @@ class LinearQuadraticGame(gym.Env):
     def reset(self):
         """
         Reset the states of the game and player rewards
-        
-        >>> game = LinearQuadraticGame()
-        >>> game.reset()
-        tensor([[1.]])
         """
         self.states = self.initial_states
         self.rewards = torch.zeros(self.n_players, 1)
         return self.states
-
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()

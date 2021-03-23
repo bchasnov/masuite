@@ -49,7 +49,7 @@ setuptools.setup(
     author='',
     author_email='',
     license='',
-    version=imp.load_source('_metadata', 'bsuite/_metadata.py').__version__,
+    version=imp.load_source('_metadata', 'masuite/_metadata.py').__version__,
     keywords='',
     packages=setuptools.find_packages(),
     install_requires=[
@@ -65,6 +65,10 @@ setuptools.setup(
 #         'scikit-image',
 #         'six',
         'termcolor',
+        'torch',
+        'ipykernel',
+        'jax',
+        'jaxlib'
     ],
 #     extras_require={
 #         'baselines': baselines_require,
