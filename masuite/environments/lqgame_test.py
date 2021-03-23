@@ -1,6 +1,6 @@
 import torch
 from lqgame import LinearQuadraticGame
-from masuite.utils.envutils import scalar_zerosum_game
+from masuite.experiments.envutils import scalar_zerosum_game
 
 def step_game(game):
     return game.step(torch.FloatTensor([[1.], [1.]]))

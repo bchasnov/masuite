@@ -1,6 +1,6 @@
 import numpy as np
 from gym import spaces
-import masuite.utils.systems as systems
+import masuite.experiments.systems as systems
 from masuite.environments.lqgame import LinearQuadraticGame
 
 def create_game_from_matrices(A, Bs, Qs, Rs, x0, obs_space_max=500):
