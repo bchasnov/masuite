@@ -25,7 +25,7 @@ The fact that `B` and `C` are non-zero is important when considering the gradien
 in single agent learning problems.
 
 
-## Planned support features:
+## Planned features:
 ### environments
 Environments model cost/reward functions and state transitions.
 * Matrix game (numpy, jax)
