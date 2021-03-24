@@ -1,7 +1,7 @@
 # Environments
 
 There are the supported multi-agent environments:
-
+- [ ] Quadratic game
 - [x] Linear quadratic game
 
   Linear Quadratic (LQ) game dynamics. Child class of [OpenAI's gym.Env](https://github.com/openai/gym/blob/c8a659369d98706b3c98b84b80a34a832bbdc6c0/gym/core.py#L8). The state update is defined as:
