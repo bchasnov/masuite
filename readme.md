@@ -1,7 +1,40 @@
-# masuite
-Multi-agent suite with a focus on continuous games. Other names for these are
-* differentiable games
-* smooth games
+# Multi-agent suite for games optimization (`masuite`)
+## Introduction
+The multi-agent suite is a collection of experiments that investigate the capabilities of learning in continuous games (also called differentiable or smooth games).
+
+## Technical overview
+Experiments are defined in the `experiments` folder. Each folder inside corresponds to one experiment and contains:
+* A file that defines an environment, with a level of configurability.
+* A sequence of keyword arguments for this environment, defined in `CONFIG` variable in the experiment's `config.py` file
+* A file `analysis.py` that defines the plotting and analysis tools.
+Logging is done inside an environment.
+
+## Getting Started
+The main way to use the package is through the command line or juptyer notebooks.
+
+### Installation
+We recommend installing a virtual environment.
+
+```
+python3 -m venv masuite
+source masuite/bin/activate
+pip install .
+```
+
+### Command line
+```
+python tests
+```
+
+### Notebooks
+For example usage, see
+the jupyter notebooks in `masuite/notebooks`.
+You can open it 
+
+### Installation
+
+
+## Environments
 
 The environments are defined by a set of functions `(f1, f2, ..., fn)` where `fi` is the `i`th agent's cost/reward. 
 The costs/rewards of each agent are dependent on the shared state, its own action and the actions of others.
@@ -24,8 +57,88 @@ Then
 The fact that `B` and `C` are non-zero is important when considering the gradient of agents in games. These terms do not show up 
 in single agent learning problems.
 
+### Loading an environment
+Environments are specificed by a `masuite_id` string. 
+```
+import masuite
 
-## Planned features:
+env = masuite.load_env('lqgame/zs/0')
+```
+
+### Loading an environemnt with logging
+```
+import masuite
+
+env = masuite.load_env_and_record('lqgame/zs/0', results_dir='/path/to/results')
+```
+
+### Interacting with an environment
+Example run loop for 2 agents (no state)
+```
+def sample(env, agent1, agent2):
+  x = agent1.act()  
+  y = agent2.act()
+  fx, fy = env.step((x,y))
+  return fx, fy
+```
+
+Example run loop for 2 agents in an environment (with state)
+```
+def sample(env, agent1, agent2)
+  rets = []
+  for _ in range(env.num_episodes):
+    obs = env.reset()
+    while not done:
+      act1 = agent1.act(obs)
+      act2 = agent2.act(obs)
+      obs, rews, done, info = env.step((act1, act2))
+      rets.append(rews)
+    agent1.act(obs)
+    agent2.act(obs)
+  return rets 
+```
+
+## Algorithms
+### Loading an algorithm
+```
+import masuite
+
+alg = masuite.load_alg('simgrad')
+```
+
+### Loading an algorithm with logging
+
+```
+import masuite
+
+alg = masuite.load_alg_and_record('stackgrad/reg', results_dir='/path/to/results')
+```
+
+### Training agents
+For simultaneous gradient descent
+```
+def train(x, y):
+  fx, fy = sample(x, y)
+  gx = alg.grad(fx, x)  
+  gy = alg.grad(fy, y)
+  info = alg.step((gx, gy))
+  return info
+```
+
+For stackelberg gradient descent
+```
+def train(x, y):
+  fx, fy = sample(x, y)
+  gy = alg.grad(fy, y)
+  gx = alg.grad(fx, x, gy)
+  info = alg.step((gx, gy))
+  return info
+```
+
+## Baseline agents
+We include implementations of several common agents in the `baselines` directory
+
+## Planned features
 ### environments
 Environments model cost/reward functions and state transitions.
 * Matrix game (numpy, jax)
