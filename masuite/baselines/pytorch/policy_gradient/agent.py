@@ -18,14 +18,14 @@ def mlp(sizes, activation=nn.Tanh, output_activation=nn.Identity):
 
 class PolicyGradient():
     def __init__(self,
-        env,
-        n_players,
+        env, #algos
+        n_players, #algos
         hidden_sizes=[32],
-        lr=1e-2,
-        epochs=50,
-        batch_size=5000,
+        lr=1e-2, #algos
+        epochs=50, #algos
+        batch_size=5000, #algos
         render=False,
-        optim=Adam
+        optim=Adam #algos
     ):
         self.n_players = n_players
         if isinstance(lr, list):
@@ -73,7 +73,7 @@ class PolicyGradient():
         batch_acts = []         # for actions
         batch_weights = []      # for R(tau) weighting in policy gradient
         batch_rets = []         # for measuring episode returns
-        batch_lens = []         # for measuring episode lengths
+        batch_lens = []         # for mtcheasuring episode lengths
 
         # reset episode-specific variables
         obs = self.env.reset()       # first obs comes from starting distribution

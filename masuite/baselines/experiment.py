@@ -1,6 +1,6 @@
 import gym
 
-def run(agent,
+def run(agents,
         environment: gym.Env,
         num_episodes: int,
         verbose: bool=False)->None:
@@ -17,4 +17,10 @@ def run(agent,
         #TODO: config logger when implemented
         pass
     
-    for _ in range()
+    for _ in range(num_epochs):
+        obs = env.reset()
+        done = False
+        while !done: 
+            actions = [agent.get_action(obs) for agent in agents]
+            obs, rews, done, env_info = env.step(actions)
+            algs_info = alg.update(grads)
