@@ -1,5 +1,7 @@
 """Basic test coverage for agent training."""
 
+from masuite.environments.cartpole import CartPoleEnv
+from masuite.baselines.pytorch.policy_gradient import PolicyGradient
 from bsuite import bsuite
 from bsuite.baselines import experiment
 from bsuite.baselines.pytorch import policy_gradient
@@ -24,3 +26,4 @@ def test_run(self, env_id: str, alg_id: str):
 
 if __name__ == '__main__':
   test_run()
+

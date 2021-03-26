@@ -43,7 +43,7 @@ import setuptools
 setuptools.setup(
     name='masuite',
     description=(''),
-    long_description=open('README.md').read(),
+    long_description=open('readme.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/bchasnov/masuite',
     author='',

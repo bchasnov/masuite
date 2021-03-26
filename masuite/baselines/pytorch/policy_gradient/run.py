@@ -1,4 +1,5 @@
 """Run a policy gradient agent instance on a masuite experiment."""
+import masuite
 from masuite.baselines import experiment
 from masuite.baselines.pytorch import policy_gradient
 
@@ -12,7 +13,7 @@ def run(CONFIG):
   agents = []
   for i in range(env.n_players):
     agents.append(
-      policy_gradient.default_agent(env.observation_spec(), env.action_spec(), lr=CONFIG.lr)
+      policy_gradient.default_agent(env.observation_space, env.action_space, lr=CONFIG.lr)
     )
   
   experiment.run(

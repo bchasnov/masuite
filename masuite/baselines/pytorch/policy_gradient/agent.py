@@ -18,7 +18,7 @@ def mlp(sizes, activation=nn.Tanh, output_activation=nn.Identity):
 
 class PolicyGradient():
     def __init__(self,
-        env_name='CartPole-v0',
+        env,
         n_players,
         hidden_sizes=[32],
         lr=1e-2,
@@ -154,5 +154,14 @@ class PolicyGradient():
     def update(self, action):
         pass
 
-def default_agent(obs_spec, act_spec, seed=0):
-  return PolicyGradient()
+def default_agent(env, lr=1e-2):
+    return PolicyGradient(
+        env=env,
+        n_players=env.n_players,
+        lr=lr
+    )
+
+
+if __name__ == '__main__':
+    from masuite.environments.cartpole import CartPoleEnv
+    

@@ -57,6 +57,7 @@ class CartPoleEnv(gym.Env):
     }
 
     def __init__(self):
+        self.n_players=1
         self.gravity = 9.8
         self.masscart = 1.0
         self.masspole = 0.1
@@ -93,6 +94,7 @@ class CartPoleEnv(gym.Env):
         return [seed]
 
     def step(self, action):
+        if isinstance(action, list): action = action[0]
         err_msg = "%r (%s) invalid" % (action, type(action))
         assert self.action_space.contains(action), err_msg
 
