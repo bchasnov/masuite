@@ -17,10 +17,10 @@ def run(agents,
         #TODO: config logger when implemented
         pass
     
-    for _ in range(num_epochs):
+    for _ in range(num_episodes):
         obs = env.reset()
         done = False
-        while !done: 
+        while done is False: 
             actions = [agent.get_action(obs) for agent in agents]
             obs, rews, done, env_info = env.step(actions)
             algs_info = alg.update(grads)
