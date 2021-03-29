@@ -1,7 +1,8 @@
 import gym
 
-def run(agents,
-        environment: gym.Env,
+def run(alg,
+        agents,
+        env: gym.Env,
         num_episodes: int,
         verbose: bool=False)->None:
     """
@@ -21,6 +22,7 @@ def run(agents,
         obs = env.reset()
         done = False
         while done is False: 
-            actions = [agent.get_action(obs) for agent in agents]
+            actions = [agent.act(obs) for agent in agents]
             obs, rews, done, env_info = env.step(actions)
-            algs_info = alg.update(grads)
+            algs_info = alg.step(actions, obs)
+            print(algs_info)

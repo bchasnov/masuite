@@ -43,9 +43,16 @@ def run(masuite_id: str):
 
     env_dim, act_dim = 0, 1
     agents = [ConstantAgent(env_dim=env_dim, act_dim=act_dim) for _ in range(2)]
-    algo = QuadraticTwoPlayerSimgrad(env=env,
+    alg = QuadraticTwoPlayerSimgrad(env=env,
         lrs=[args.lr1, args.lr2],
         agents=agents
+    )
+
+    experiment.run(
+        alg=alg,
+        agents=agents,
+        env=env,
+        num_episodes=50
     )
 
     return masuite_id
