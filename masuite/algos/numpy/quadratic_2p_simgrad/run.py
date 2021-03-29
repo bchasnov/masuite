@@ -2,7 +2,7 @@ import argparse
 import torch
 # import masuite
 from masuite.baselines import experiment
-from masuite.baselines.numpy.constant_agent import ConstantAgent
+from masuite.baselines.numpy.constant_agent.agent import ConstantAgent
 from masuite.environments.quadratic_2_player import QuadraticTwoPlayer
 from masuite.algos.numpy.quadratic_2p_simgrad.quadratic_2p_simgrad import QuadraticTwoPlayerSimgrad
 
