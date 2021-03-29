@@ -1,7 +1,7 @@
 import numpy as np
 
 class QuadraticTwoPlayerSimgrad:
-    def __init__(env, lrs, agents):
+    def __init__(self, env, lrs, agents):
         self.env = env
         self.agents = agents
         self.lrs = lrs

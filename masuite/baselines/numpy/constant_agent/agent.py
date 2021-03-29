@@ -1,7 +1,7 @@
 import numpy as np
 
 class ConstantAgent:
-    def __init__(env_dim, act_dim):
+    def __init__(self, env_dim, act_dim):
         self.x = np.zeros(act_dim)
     
     def act(self, obs):

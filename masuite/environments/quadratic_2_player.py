@@ -1,7 +1,7 @@
 import numpy as np
 
 class QuadraticTwoPlayer:
-    def __init__(A: np.ndarray, B: np.ndarray, C: np.ndarray, D: np.ndarray):
+    def __init__(self, A: np.ndarray, B: np.ndarray, C: np.ndarray, D: np.ndarray):
         self.A = A
         self.B = B
         self.C = C
