@@ -14,11 +14,18 @@ def wrap_environment(env: environments.Environment,
                      results_dir: str,
                      overwrite: bool=False,
                      log_by_step: bool=False)->environments.Environment:
+    """
+    Returns a wrapped logging environment that logs to CSV
+    """
     logger = Logger(masuite_id, results_dir, overwrite)
     return wrappers.Logging(env, logger, log_by_step=log_by_step)
 
 
 class Logger(base.Logger):
+    """
+    Saves data to a CSV file via Pandas
+
+    """
     def __init__(self,
                  masuite_id: str,
                  results_dir: str= '/tmp/masuite',
@@ -45,4 +52,5 @@ class Logger(base.Logger):
 
     def write(self, data: dict):
         self.data.append(data)
-        df = 
+        df = pd.DataFrame(self.data)
+        df.to_csv(self.save_path, index=False)
