@@ -12,7 +12,7 @@ def wrap_environment(env: environments.Environment,
                      log_by_step: bool=False)->environments.Environment:
     logging.getLogger()
     logger = Logger(pretty_print)
-    return wrappers.Logging(env, logger, log_by_step=log_by_step=, log_every=log_every=)
+    return wrappers.Logging(env, logger, log_by_step=log_by_step, log_every=log_every)
 
 
 class Logger(base.Logger):

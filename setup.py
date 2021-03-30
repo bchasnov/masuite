@@ -55,7 +55,7 @@ setuptools.setup(
     install_requires=[
 #         'absl-py',
 #         'dm_env',
-#         'frozendict',
+        'frozendict',
         'gym',
         'matplotlib',
         'numpy',

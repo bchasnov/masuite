@@ -1,4 +1,5 @@
 import gym
+from masuite.logging import terminal_logging
 
 def run(alg,
         agents,
@@ -15,8 +16,7 @@ def run(alg,
         verbose: Whether or not to also log to terminal
     """
     if verbose:
-        #TODO: config logger when implemented
-        pass
+        env = terminal_logging.wrap_environment(env, log_every=True)
     
     for _ in range(num_episodes):
         obs = env.reset()

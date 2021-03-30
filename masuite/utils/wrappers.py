@@ -1,4 +1,5 @@
 from masuite import environments
+from masuite.logging import base
 import gym
 
 STANDARD_KEYS = frozenset([
@@ -40,56 +41,58 @@ class Logging(environments.Environment):
         self.episode_len = 0
         self.episode_return = [0.0 for _ in range(env.n_players)]
         
-        def flush(self):
-            if hasattr(self.logger, 'flush'):
-                self.logger.flush()
+    def flush(self):
+        if hasattr(self.logger, 'flush'):
+            self.logger.flush()
+    
+    def reset(self):
+        obs = self.env.reset()
+        return obs
+    
+    def step(self, actions):
+        obs, rews, done, info = self.env.step(actions)
+        return obs, rews, done, info
+    
+    def track(self, obs, rews=None, done=None, info=None):
+        if rews is not None:
+            assert len(rews) == self.env.n_players, 'must be 1 reward for each player'
         
-        def reset(self):
-            obs = self.env.reset()
-            return obs
+        if rews is not None:
+            self.steps += 1
+            self.episode_len += 1
         
-        def step(self, actions):
-            obs, rews, done, info = self.env.step(actions)
-            return obs, rews, done, info
+        if done:
+            self.episode += 1
         
-        def track(self, obs, rews=None, done=None, info=None):
-            if rews is not None:
-                assert len(rews) == self.env.n_players, 'must be 1 reward for each player'
-            
-            if rews is not None:
-                self.steps += 1
-                self.episode_len += 1
-            
-            if done:
-                self.episode += 1
-            
-            for player in range(self.env.n_players):
-                self.episode_return[player] += rews[player]
-                self.total_return[player] += rews[player]
-            
-            if self.log_by_step:
-                if self.log_every or self.steps % self.log_freq == 0:
-                    self.log_masuite_data()
-            elif done:
-                if self.log_every or self.steps % self.log_freq == 0:
-                    self.log_masuite_data()
-            
-            if done:
-                self.episode_len = 0
-                self.episode_return = [0.0 for _ in range(self.env.n_players)]
+        for player in range(self.env.n_players):
+            self.episode_return[player] += rews[player]
+            self.total_return[player] += rews[player]
+        
+        if self.log_by_step:
+            if self.log_every or self.steps % self.log_freq == 0:
+                self.log_masuite_data()
+        elif done:
+            if self.log_every or self.steps % self.log_freq == 0:
+                self.log_masuite_data()
+        
+        if done:
+            self.episode_len = 0
+            self.episode_return = [0.0 for _ in range(self.env.n_players)]
 
-            #TODO: what is this?
-            # if self.episode == self.env.masuite_num_episodes:
-                # self.flush()
+        if self.episode == self.env.masuite_num_episodes:
+            self.flush()
         
-        def log_masuite_data(self):
-            info = dict(
-                steps=self.steps,
-                epidsode=self.episode,
-                total_return=self.total_return,
-                episode_len=self.episode_len,
-                episode_return=self.episode_return
-            )
+    def __getattr__(self, attr):
+        return getattr(self.env, attr)
+    
+    def log_masuite_data(self):
+        info = dict(
+            steps=self.steps,
+            epidsode=self.episode,
+            total_return=self.total_return,
+            episode_len=self.episode_len,
+            episode_return=self.episode_return
+        )
 
-            #data.update(self.env.masuite_info())
-            self.logger.write(data)
+        #data.update(self.env.masuite_info())
+        self.logger.write(data)

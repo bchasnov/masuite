@@ -1,11 +1,11 @@
 import os
 from typing import Mapping, Any
 import pandas as pd
+from masuite import sweep
 from masuite import environments
 from masuite.logging import base
 from masuite.utils import wrappers
 
-BAD_SEP = '/'
 SAFE_SEP = '-'
 INITIAL_SEP = '_-_'
 MASUITE_PREFIX = 'masuite_id' + INITIAL_SEP
@@ -38,7 +38,7 @@ class Logger(base.Logger):
             except OSError:
                 pass
 
-        safe_masuite_id = masuite_id.replace(BAD_SEP, SAFE_SEP)
+        safe_masuite_id = masuite_id.replace(sweep.SEP, SAFE_SEP)
         filename = f'{MASUITE_PREFIX}{safe_masuite_id}.csv'
         save_path = os.path.join(results_dir, filename)
 
