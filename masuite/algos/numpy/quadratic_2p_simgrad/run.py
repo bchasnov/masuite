@@ -35,15 +35,12 @@ def run(masuite_id: str):
     Runs quadratic two-player simgrad with constant agents on a single
     masuite environment, logging to csv.
     """
-    #TODO: define load_and_record()
     env = masuite.load_and_record(
         masuite_id=masuite_id,
         save_path=args.save_path,
         logging_mode=args.logging_mode,
         overwrite=args.overwrite
     )
-
-    print(env)
 
     env_dim, act_dim = 0, 1
     agents = [ConstantAgent(env_dim=env_dim, act_dim=act_dim) for _ in range(2)]

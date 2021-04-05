@@ -19,10 +19,31 @@ def run(alg,
         env = terminal_logging.wrap_environment(env, log_every=True)
     
     for _ in range(num_episodes):
+        batch_obs = []     # for observations
+        batch_acts = []    # for actions
+        batch_weights = [] # for R(taut) weighting in policy gradient
+        batch_rets = []    # for measuring episode returns
+        batch_lens = []    # for measuring episode lengths
+
         obs = env.reset()
         done = False
+        ep_rews = []
+
         while done is False: 
+            batch_obs.append(obs.copy())
             actions = [agent.act(obs) for agent in agents]
             obs, rews, done, env_info = env.step(actions)
-            algs_info = alg.step(actions, obs)
-            print(algs_info)
+            batch_acts.append(act)
+            ep_rews.append(rew)
+            if done:
+                #TODO: convert for multi-dim arrays
+                ep_ret, ep_len = sum(ep_rews), len(ep_rews)
+                batch_rets.append(ep_ret)
+                batch_lens.append(ep_len)
+
+                #TODO: maybe move weights to simple pg
+                batch_weights += [ep_ret] * ep_len
+
+            updates = alg.step(batch_acts, batch_obs, weights)
+            agents[i].update(obs, actions, updates[i]) for i in range(len(agents))
+
