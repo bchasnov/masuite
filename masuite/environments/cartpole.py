@@ -6,12 +6,13 @@ permalink: https://perma.cc/C9ZM-652R
 
 import math
 import gym
+from masuite.environments.base import Environment
 from gym import spaces, logger
 from gym.utils import seeding
 import numpy as np
 
 
-class CartPoleEnv(gym.Env):
+class CartPoleEnv(Environment):
     """
     Description:
         A pole is attached by an un-actuated joint to a cart, which moves along
@@ -88,6 +89,9 @@ class CartPoleEnv(gym.Env):
         self.state = None
 
         self.steps_beyond_done = None
+
+        self.masuite_num_episodes = 5000
+        self.mapping_seed = 0
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)

@@ -96,3 +96,9 @@ class Logging(environments.Environment):
 
         #data.update(self.env.masuite_info())
         self.logger.write(data)
+    
+    def raw_env(self):
+        wrappend = self.env
+        if hasattr(wrapped, 'raw_env'):
+            return wrappend.raw_env()
+        return wrapped
