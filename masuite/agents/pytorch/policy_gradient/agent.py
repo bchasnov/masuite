@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 from torch.distributions.categorical import Categorical
 
@@ -18,7 +19,11 @@ class PGAgent:
         hidden_sizes: list=[32],
         lr: float=1e-2
     ):
-        self.logits_net = mlp(sizes=[env_dim]+hidden_sizes+act_dim)
+        if not isinstance(env_dim, list):
+            env_dim = [env_dim]
+        if not isinstance(act_dim, list):
+            act_dim = [act_dim]
+        self.logits_net = mlp(sizes=env_dim+hidden_sizes+act_dim)
         self.lr = lr
 
 
@@ -39,14 +44,16 @@ class PGAgent:
     
 
     def select_action(self, obs):
+        if not isinstance(obs, torch.Tensor):
+            obs = torch.as_tensor(obs).float()
         return self._get_policy(obs).sample().item()
         
 
     def update(self, grad):
         self._zero_grad()
-        idx = 0
+        index = 0
         for p in self.logits_net.parameters():
-            p.data.add_(-self.lr * grad[index:index+p.numel()].reshape(p.shape))
+            p.data.add_(-self.lr * grad[index:index+p.numel()])#.reshape(p.shape))
             index += p.numel()
         if index != grad.numel():
             raise ValueError('Gradient size mismatch')

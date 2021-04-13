@@ -1,6 +1,7 @@
 from typing import Any, Dict, Mapping, Tuple
 
 from masuite.experiments.quadratic_2p_simgrad import sweep as quadratic_2p_simgrad_sweep
+from masuite.experiments.cartpole_simplepg import sweep as cartpole_simplepg_sweep
 
 import frozendict
 
@@ -42,11 +43,13 @@ def _parse_sweep(experiment_package)->Tuple[MASuiteId,...]:
             _TAGS[tag] = []
         _TAGS[tag].extend(results)
     _SWEEP.extend(results)
+    print(results)
     return tuple(results)
 
 
 # masuite_ids borken down by environment
 QUADRATIC_2P_SIMGRAD = _parse_sweep(quadratic_2p_simgrad_sweep)
+CARTPOLE_SIMPLEPG = _parse_sweep(cartpole_simplepg_sweep)
 
 # mapping from masuite id to keyword arguments for the corresponding env
 SETTINGS: Mapping[MASuiteId, EnvKWargs] = frozendict.frozendict(**_SETTINGS)

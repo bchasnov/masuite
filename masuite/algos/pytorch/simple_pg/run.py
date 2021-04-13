@@ -34,10 +34,15 @@ def run(masuite_id: str):
         overwrite=args.overwrite
     )
 
-    env_dim = 4
-    act_dim = 1
+    env_dim = [4]
+    act_dim = [1]
     agents = [PGAgent(env_dim=env_dim, act_dim=act_dim, lr=args.lr)]
-    alg = SimplePG(agents=agents)
+    alg = SimplePG(
+        agents=agents,
+        obs_dim=env_dim,
+        act_dim=act_dim,
+        n_players=1
+    )
 
     num_episodes = args.num_episodes or getattr(env, 'masuite_num_episodes')
 
@@ -51,4 +56,4 @@ def run(masuite_id: str):
     return masuite_id
 
 if __name__ == '__main__':
-    run('cartpole/0')
+    run('cartpole_simplepg/0')

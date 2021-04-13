@@ -3,6 +3,7 @@ from typing import Any, Mapping, Tuple
 from masuite import sweep
 from masuite.environments import base
 from masuite.experiments.quadratic_2p_simgrad import quadratic_2p_simgrad
+from masuite.experiments.cartpole_simplepg import cartpole_simplepg
 
 from masuite.logging import csv_logging
 from masuite.logging import terminal_logging
@@ -12,7 +13,8 @@ from masuite.logging import terminal_logging
 # Each constructor or load function accepts keywork arguments as defined in
 # each experiment's sweep.py file
 EXPERIMENT_NAME_TO_ENVIRONMENT = dict(
-    quadratic_2p_simgrad=quadratic_2p_simgrad.load
+    quadratic_2p_simgrad=quadratic_2p_simgrad.load,
+    cartpole_simplepg=cartpole_simplepg.load
 )
 
 

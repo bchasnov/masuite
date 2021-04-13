@@ -2,7 +2,6 @@ import gym
 from masuite.logging import terminal_logging
 
 def run(alg,
-        agents,
         env: gym.Env,
         num_episodes: int,
         verbose: bool=False)->None:
@@ -21,15 +20,15 @@ def run(alg,
     
     for _ in range(num_episodes):
         obs = env.reset()
-        if hasattr(alg, buffer):
+        if hasattr(alg, 'buffer'):
             alg.buffer.append_reset(obs)
         done = False
         ep_rews = []
 
         while done is False:
             print('running')
-            actions = [agent.act(obs) for agent in agents]
-            obs, rews, done, env_info = env.step(actions)
+            acts = [agent.select_action(obs) for agent in agents]
+            obs, rews, done, env_info = env.step(acts)
             batch_loss, batch_rets, batch_lens = alg.update(obs, acts, rews, done)
             if batch_loss is not None:
                 break

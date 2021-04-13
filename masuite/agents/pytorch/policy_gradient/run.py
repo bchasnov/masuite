@@ -17,7 +17,6 @@ def run(CONFIG):
     )
   
   experiment.run(
-    agents=agents,
     environment=env,
     num_episodes=CONFIG.num_episodes, 
     verbose=CONFIG.verbose)

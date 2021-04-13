@@ -57,7 +57,7 @@ class CartPoleEnv(Environment):
         'video.frames_per_second': 50
     }
 
-    def __init__(self):
+    def __init__(self, mapping_seed=0):
         self.n_players=1
         self.gravity = 9.8
         self.masscart = 1.0
