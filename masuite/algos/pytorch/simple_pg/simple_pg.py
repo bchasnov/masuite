@@ -17,16 +17,16 @@ class SimplePG:
         self.batch_size = batch_size
     
     def _compute_loss(self, obs, act, rews, agent):
-        print('policy: ', agent._get_policy(obs).sample())
+        # print('policy: ', agent._get_policy(obs).sample())
         # import pdb
         # pdb.set_trace()
         logp = agent._get_policy(obs).log_prob(act)
-        print('logp: ', logp)
+        # print('logp: ', logp)
         return -(logp * rews).mean()
     
     
     def step(self, obs, acts):
-        print(obs.shape, acts.shape)
+        # print(obs.shape, acts.shape)
         info = {
             'loss': [],
         }
@@ -34,10 +34,10 @@ class SimplePG:
         obs = torch.as_tensor(obs, dtype=torch.float32)
         acts = torch.as_tensor(acts, dtype=torch.float32)
         rews = torch.as_tensor(self.batch_rews, dtype=torch.float32)
-        print('obs: ', obs.shape)
-        print('acts: ', acts.shape)
-        print(acts)
-        print('rews: ', rews.shape)
+        # print('obs: ', obs.shape)
+        # print('acts: ', acts.shape)
+        # print(acts)
+        # print('rews: ', rews.shape)
         logps = []
         for idx in range(len(self.agents)):
             agent = self.agents[idx]
@@ -45,7 +45,7 @@ class SimplePG:
             info['loss'].append(loss)
             grad = autograd.grad(loss, agent._get_params(), create_graph=True)
             grads.append(grad)
-        print('grads: ', grads)
+        # print('grads: ', grads)
         # exit()
         return grads, info
 

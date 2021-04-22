@@ -71,7 +71,6 @@ class Buffer:
         acts = np.array(acts)
         self._curr_len = 0
         self._needs_reset = True
-        print(obs, acts)
         return obs, acts 
     
     
