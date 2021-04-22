@@ -25,10 +25,10 @@ def run(alg,
             alg.buffer.append_reset(obs)
         done = False
         ep_rews = []
-        # finished_rendering_this_epoch = False
+        finished_rendering_this_epoch = False
         while done is False:
-            # if (not finished_rendering_this_epoch):
-                # env.raw_env.render()
+            if (not finished_rendering_this_epoch):
+                env.raw_env.render()
             acts = [agent.select_action(obs) for agent in agents]
             obs, rews, done, env_info = env.step(acts)
             batch_loss, batch_rets, batch_lens = alg.update(obs, acts, rews, done)
