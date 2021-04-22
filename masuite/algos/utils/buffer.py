@@ -5,12 +5,18 @@ class Buffer:
     def __init__(
         self,
         obs_dim: list,
-        act_dim: list,
+        act_dim: int,
         n_players: int,
         max_batch_len: int
     ):
         self._obs = np.zeros(shape=(max_batch_len+1, *obs_dim))
-        self._acts = np.zeros(shape=(max_batch_len, n_players, *act_dim))
+        self._acts = dict()
+        for player in range(n_players):
+            if act_dim == 1:
+                self._acts[player] = np.zeros(max_batch_len)
+            else:
+                self._acts[player] = np.zeros(shape=(max_batch_len, act_dim))
+            self._acts[player] = np.zeros(shape=(max_batch_len))
         self._rews = np.zeros(shape=(max_batch_len, n_players))
         self._batch_rets = np.zeros(shape=(max_batch_len, n_players))
         self._batch_lens = np.zeros(shape=max_batch_len)
@@ -38,7 +44,8 @@ class Buffer:
             raise ValueError('Cannot append; buffer is full')
         
         self._obs[self._curr_len+1] = obs
-        self._acts[self._curr_len+1] = acts
+        for player in range(self.n_players):
+            self._acts[player][self._curr_len+1] = acts[player]
         self._rews[self._curr_len+1] = rews
         self._curr_len += 1
 
@@ -58,9 +65,13 @@ class Buffer:
         if self.empty():
             raise ValueError('Cannot drain; buffer is empty')
         obs = self._obs[:self._curr_len]
-        acts = self._acts[:self._curr_len]
+        acts = []
+        for i in range(self.n_players):
+            acts.append(self._acts[i][:self._curr_len])
+        acts = np.array(acts)
         self._curr_len = 0
         self._needs_reset = True
+        print(obs, acts)
         return obs, acts 
     
     

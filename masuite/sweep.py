@@ -43,7 +43,6 @@ def _parse_sweep(experiment_package)->Tuple[MASuiteId,...]:
             _TAGS[tag] = []
         _TAGS[tag].extend(results)
     _SWEEP.extend(results)
-    print(results)
     return tuple(results)
 
 

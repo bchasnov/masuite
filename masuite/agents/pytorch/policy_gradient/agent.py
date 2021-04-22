@@ -15,20 +15,22 @@ def mlp(sizes, activation=nn.Tanh, output_activation=nn.Identity):
 class PGAgent:
     def __init__(self,
         env_dim: int,
-        act_dim: int,
+        n_acts: int,
         hidden_sizes: list=[32],
         lr: float=1e-2
     ):
         if not isinstance(env_dim, list):
             env_dim = [env_dim]
-        if not isinstance(act_dim, list):
-            act_dim = [act_dim]
-        self.logits_net = mlp(sizes=env_dim+hidden_sizes+act_dim)
+        if not isinstance(n_acts, list):
+            n_acts = [n_acts]
+        self.logits_net = mlp(sizes=env_dim+hidden_sizes+n_acts)
+        # print(env_dim+hidden_sizes+n_acts)
         self.lr = lr
 
 
     def _get_policy(self, obs):
         logits = self.logits_net(obs)
+        # print('logits: ', logits)
         return Categorical(logits=logits)
 
 
@@ -51,12 +53,8 @@ class PGAgent:
 
     def update(self, grad):
         self._zero_grad()
-        index = 0
-        for p in self.logits_net.parameters():
-            p.data.add_(-self.lr * grad[index:index+p.numel()])#.reshape(p.shape))
-            index += p.numel()
-        if index != grad.numel():
-            raise ValueError('Gradient size mismatch')
+        for p, g in zip(self.logits_net.parameters(), grad):
+            p.data.add_(-self.lr * g)
 
 def default_agent(env_dim, act_dim):
     return PGAgent(env_dim, act_dim)

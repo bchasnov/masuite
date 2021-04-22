@@ -18,15 +18,17 @@ def run(alg,
     if verbose:
         env = terminal_logging.wrap_environment(env, log_every=True)
     
-    for _ in range(num_episodes):
+    for i in range(num_episodes):
         obs = env.reset()
+        env.track(obs)
         if hasattr(alg, 'buffer'):
             alg.buffer.append_reset(obs)
         done = False
         ep_rews = []
-
+        # finished_rendering_this_epoch = False
         while done is False:
-            print('running')
+            # if (not finished_rendering_this_epoch):
+                # env.raw_env.render()
             acts = [agent.select_action(obs) for agent in agents]
             obs, rews, done, env_info = env.step(acts)
             batch_loss, batch_rets, batch_lens = alg.update(obs, acts, rews, done)

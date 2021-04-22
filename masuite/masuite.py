@@ -26,7 +26,6 @@ def unpack_masuite_id(masuite_id: str)->Tuple[str, int]:
 
 
 def load(exp_name: str, kwargs: Mapping[str, Any])->base.Environment:
-    print('kwargs:', kwargs)
     return EXPERIMENT_NAME_TO_ENVIRONMENT[exp_name](**kwargs)
 
 

@@ -35,8 +35,9 @@ def run(masuite_id: str):
     )
 
     env_dim = [4]
-    act_dim = [1]
-    agents = [PGAgent(env_dim=env_dim, act_dim=act_dim, lr=args.lr)]
+    n_acts = env.raw_env.action_space.n # number of possible actions
+    act_dim = 1 # number of actions chosen at each step (per agent)
+    agents = [PGAgent(env_dim=env_dim, n_acts=n_acts, lr=args.lr)]
     alg = SimplePG(
         agents=agents,
         obs_dim=env_dim,

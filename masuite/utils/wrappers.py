@@ -31,6 +31,7 @@ class Logging(environments.Environment):
         self.logger = logger
         self.log_by_step = log_by_step
         self.log_every = log_every
+        self.log_freq = log_freq
 
         # accumulating throughout experiment
         self.steps = 0
@@ -47,26 +48,27 @@ class Logging(environments.Environment):
     
     def reset(self):
         obs = self.env.reset()
+        self.track(obs)
         return obs
     
     def step(self, actions):
         obs, rews, done, info = self.env.step(actions)
+        self.track(obs, rews, done, info)
         return obs, rews, done, info
     
     def track(self, obs, rews=None, done=None, info=None):
-        if rews is not None:
-            assert len(rews) == self.env.n_players, 'must be 1 reward for each player'
-        
+        if rews is not None and not isinstance(rews, list):
+            rews = [rews]
+
         if rews is not None:
             self.steps += 1
             self.episode_len += 1
+            for player in range(self.env.n_players):
+                self.episode_return[player] += rews[player]
+                self.total_returns[player] += rews[player]
         
         if done:
             self.episode += 1
-        
-        for player in range(self.env.n_players):
-            self.episode_return[player] += rews[player]
-            self.total_return[player] += rews[player]
         
         if self.log_by_step:
             if self.log_every or self.steps % self.log_freq == 0:
@@ -82,23 +84,24 @@ class Logging(environments.Environment):
         if self.episode == self.env.masuite_num_episodes:
             self.flush()
         
+    @property
+    def raw_env(self):
+        wrapped = self.env
+        if hasattr(wrapped, 'raw_env'):
+            return wrapped.raw_env
+        return wrapped
+
     def __getattr__(self, attr):
         return getattr(self.env, attr)
     
     def log_masuite_data(self):
-        info = dict(
+        data = dict(
             steps=self.steps,
-            epidsode=self.episode,
-            total_return=self.total_return,
+            episode=self.episode,
+            total_return=self.total_returns,
             episode_len=self.episode_len,
             episode_return=self.episode_return
         )
 
         #data.update(self.env.masuite_info())
         self.logger.write(data)
-    
-    def raw_env(self):
-        wrappend = self.env
-        if hasattr(wrapped, 'raw_env'):
-            return wrappend.raw_env()
-        return wrapped

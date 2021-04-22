@@ -215,3 +215,4 @@ class CartPoleEnv(Environment):
         if self.viewer:
             self.viewer.close()
             self.viewer = None
+    
