@@ -1,5 +1,5 @@
 from masuite.environments.base import Environment
-from masuite.experiments.quadratic_2_player_simgrad import sweep 
+from masuite.experiments.quadratic_2p_simgrad import sweep 
 import numpy as np
 
 class QuadraticTwoPlayer(Environment):
