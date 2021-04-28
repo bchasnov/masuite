@@ -99,23 +99,23 @@ class Cartpole2PEnv(Environment):
 
             self._pole_geoms = [pole1, pole2]
 
-            if self.envs[0].state is None and self.envs[1].state is None:
-                return None
-            
-            pole1, pole2 = self._pole_geoms[0], self._pole_geoms[1]
-            l, r, t, b = -polewidth / 2, polewidth / 2, polelen - polewidth / 2, -polewidth / 2
-            pole1.v = [(l, b), (l, t), (r, t), (r, b)]
-            pole2.v = [(l, b), (l, t), (r, t), (r, b)]
+        if self.envs[0].state is None and self.envs[1].state is None:
+            return None
+        
+        pole1, pole2 = self._pole_geoms[0], self._pole_geoms[1]
+        l, r, t, b = -polewidth / 2, polewidth / 2, polelen - polewidth / 2, -polewidth / 2
+        pole1.v = [(l, b), (l, t), (r, t), (r, b)]
+        pole2.v = [(l, b), (l, t), (r, t), (r, b)]
 
-            x1, x2 = self.envs[0].state, self.envs[1].state
-            cart1x = x1[0] * scale + screen_width / 2.0
-            cart2x = x2[0] * scale + screen_width / 2.0
-            self.carttrans1.set_translation(cart1x, carty)
-            self.carttrans2.set_translation(cart2x, carty)
-            self.poletrans1.set_rotation(-x1[2])
-            self.poletrans2.set_rotation(-x2[2])
+        x1, x2 = self.envs[0].state, self.envs[1].state
+        cart1x = x1[0] * scale + screen_width / 2.0
+        cart2x = x2[0] * scale + screen_width / 2.0
+        self.carttrans1.set_translation(cart1x, carty)
+        self.carttrans2.set_translation(cart2x, carty)
+        self.poletrans1.set_rotation(-x1[2])
+        self.poletrans2.set_rotation(-x2[2])
 
-            return self.viewer.render(return_rgb_array=mode == 'rgb_array')
+        return self.viewer.render(return_rgb_array=mode == 'rgb_array')
     
     def close(self):
         if self.viewer:
