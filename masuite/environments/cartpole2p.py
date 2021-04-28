@@ -5,7 +5,6 @@ from masuite.environments.cartpole import CartPoleEnv
 
 class Cartpole2PEnv(Environment):
     def __init__(self, mapping_seed, masuite_num_episodes, is_uncoupled=True):
-        super(Cartpole2PEnv, self).__init__()
         self.n_players = 2
         self.viewer = None
         self.is_uncoupled = is_uncoupled
