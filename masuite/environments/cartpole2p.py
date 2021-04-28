@@ -3,10 +3,11 @@ from masuite.environments.base import Environment
 from masuite.environments.cartpole import CartPoleEnv
 
 
-class Cartpole2PEnv(CartPoleEnv):
+class Cartpole2PEnv(Environment):
     def __init__(self, mapping_seed, masuite_num_episodes, is_uncoupled=True):
         super(Cartpole2PEnv, self).__init__()
         self.n_players = 2
+        self.viewer = None
         self.is_uncoupled = is_uncoupled
         self.envs = [CartPoleEnv(mapping_seed) for _ in range(self.n_players)]
 
@@ -49,11 +50,11 @@ class Cartpole2PEnv(CartPoleEnv):
         screen_width = 600
         screen_height = 400
 
-        world_width = self.x_threshold * 2
+        world_width = self.envs[0].x_threshold * 2
         scale = screen_width/world_width
         carty = 100  # TOP OF CART
         polewidth = 10.0
-        polelen = scale * (2 * self.length)
+        polelen = scale * (2 * self.envs[0].length)
         cartwidth = 50.0
         cartheight = 30.0
 
@@ -122,4 +123,5 @@ if __name__ == '__main__':
     env = Cartpole2PEnv(0, 5000)
     print(env.reset())
     print(env.step(acts=[0, 1]))
-    env.render()
+    while True:
+        env.render()
