@@ -1,17 +1,27 @@
 import numpy as np
+from gym import spaces
 from masuite.environments.base import Environment
 from masuite.environments.cartpole import CartPoleEnv
 
 
-class Cartpole2PEnv(Environment):
-    def __init__(self, mapping_seed, masuite_num_episodes, is_uncoupled=True):
+class CartPole2PEnv(Environment):
+    def __init__(self, mapping_seed, is_uncoupled=True):
         self.n_players = 2
         self.viewer = None
         self.is_uncoupled = is_uncoupled
         self.envs = [CartPoleEnv(mapping_seed) for _ in range(self.n_players)]
 
+        high = np.array([self.envs[0].x_threshold * 2,
+                         np.finfo(np.float32).max,
+                         self.envs[0].theta_threshold_radians * 2,
+                         np.finfo(np.float32).max],
+                        dtype=np.float32)
+        self.action_space = spaces.Discrete(2)
+        self.observation_space = spaces.Box(-high, high, dtype=np.float32)
+        self.masuite_num_episodes = 5000
 
-    def step(self, acts, weight=-0.00):
+
+    def step(self, acts, pos_weight=-0.00):
         obs, raw_rews, done, info = [], [], [], []
         for idx in range(self.n_players):
             act = acts[idx]
@@ -28,7 +38,7 @@ class Cartpole2PEnv(Environment):
         else:
             xs = [1, -1]
             rews = [
-                rews[i] + weight*self.envs[i].state[0]-xs[i]**2
+                rews[i] + pos_weight*(self.envs[i].state[0]-xs[i])**2
                 for i in range(self.n_players)
             ]
         # rews = [rews[0] + weight*(self.env1.state[0]-x1)**2, 

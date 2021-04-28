@@ -1,12 +1,13 @@
 import argparse
 import masuite
+from masuite import sweep
 from masuite.agents import experiment
 from masuite.agents.pytorch.policy_gradient.agent import PGAgent
 from masuite.environments.cartpole import CartPoleEnv
 from masuite.algos.pytorch.simple_pg.simple_pg import SimplePG
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--masuite-id', default='cartpole/0', type=str,
+parser.add_argument('--masuite-id', default='cartpole_simplepg/0', type=str,
     help='global flag used to control which environment is loaded')
 parser.add_argument('--save_path', default='tmp/masuite', type=str,
     help='where to save masuite results')
@@ -56,5 +57,20 @@ def run(masuite_id: str):
 
     return masuite_id
 
+
+def main():
+    masuite_id = args.masuite_id
+    if masuite_id in sweep.SWEEP:
+        print(f'Running single experiment: masuite_id={masuite_id}')
+        run(masuite_id=masuite_id)
+    elif hasattr(sweep, masuite_id):
+        masuite_sweep = getattr(sweep, masuite_id)
+        print(f'Running sweep over masuite_id in sweep.{masuite_id}')
+        args.verbose = False
+        pool.map_mpi(run, masuite_sweep)
+    else:
+        raise ValueError(f'Invalid flag: masuite_id={masuite_id}')
+
+
 if __name__ == '__main__':
-    run('cartpole_simplepg/0')
+    main()
