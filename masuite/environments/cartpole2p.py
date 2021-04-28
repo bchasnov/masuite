@@ -104,8 +104,8 @@ class Cartpole2PEnv(Environment):
             
             pole1, pole2 = self._pole_geoms[0], self._pole_geoms[1]
             l, r, t, b = -polewidth / 2, polewidth / 2, polelen - polewidth / 2, -polewidth / 2
-            pol1.v = [(l, b), (l, t), (r, t), (r, b)]
-            pol2.v = [(l, b), (l, t), (r, t), (r, b)]
+            pole1.v = [(l, b), (l, t), (r, t), (r, b)]
+            pole2.v = [(l, b), (l, t), (r, t), (r, b)]
 
             x1, x2 = self.envs[0].state, self.envs[1].state
             cart1x = x1[0] * scale + screen_width / 2
