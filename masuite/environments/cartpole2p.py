@@ -116,6 +116,11 @@ class Cartpole2PEnv(Environment):
             self.poletrans2.set_rotation(-x2[2])
 
             return self.viewer.render(return_rgb_array=mode == 'rgb_array')
+    
+    def close(self):
+        if self.viewer:
+            self.viewer.close()
+            self.viewer = None
             
 
 if __name__ == '__main__':
