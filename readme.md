@@ -7,7 +7,7 @@ Experiments are defined in the `experiments` folder. Each folder inside correspo
 * A file that defines an environment, with a level of configurability.
 * A sequence of keyword arguments for this environment, defined in `CONFIG` variable in the experiment's `config.py` file
 * A file `analysis.py` that defines the plotting and analysis tools.
-Logging is done inside an environment.
+Logging is done inside an environment, which allows for data to be output in the correct format regardless of the agent or algorithm structure.
 
 ## Getting Started
 The main way to use the package is through the command line or juptyer notebooks.
@@ -22,6 +22,7 @@ pip install .
 ```
 
 ### Command line
+To confirm the installation was successful, run:
 ```
 python tests
 ```
