@@ -89,8 +89,8 @@ class Cartpole2PEnv(Environment):
             self.axle1.add_attr(self.carttrans1)
             self.axle2.add_attr(self.poletrans2)
             self.axle2.add_attr(self.carttrans2)
-            self.axle1.set_color(.5, .5, .5)
-            self.axle2.set_color(.5, .5, .5)
+            self.axle1.set_color(.5, .5, .8)
+            self.axle2.set_color(.5, .5, .8)
             self.viewer.add_geom(self.axle1)
             self.viewer.add_geom(self.axle2)
             self.track = rendering.Line((0, carty), (screen_width, carty))
@@ -99,7 +99,7 @@ class Cartpole2PEnv(Environment):
 
             self._pole_geoms = [pole1, pole2]
 
-            if self.envs[0].state is None or self.envs[1].state is None:
+            if self.envs[0].state is None and self.envs[1].state is None:
                 return None
             
             pole1, pole2 = self._pole_geoms[0], self._pole_geoms[1]
@@ -108,8 +108,8 @@ class Cartpole2PEnv(Environment):
             pole2.v = [(l, b), (l, t), (r, t), (r, b)]
 
             x1, x2 = self.envs[0].state, self.envs[1].state
-            cart1x = x1[0] * scale + screen_width / 2
-            cart2x = x2[0] * scale + screen_width / 2
+            cart1x = x1[0] * scale + screen_width / 2.0
+            cart2x = x2[0] * scale + screen_width / 2.0
             self.carttrans1.set_translation(cart1x, carty)
             self.carttrans2.set_translation(cart2x, carty)
             self.poletrans1.set_rotation(-x1[2])
