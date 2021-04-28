@@ -46,7 +46,7 @@ def _parse_sweep(experiment_package)->Tuple[MASuiteId,...]:
     return tuple(results)
 
 
-# masuite_ids borken down by environment
+# masuite_ids broken down by environment
 QUADRATIC_2P_SIMGRAD = _parse_sweep(quadratic_2p_simgrad_sweep)
 CARTPOLE_SIMPLEPG = _parse_sweep(cartpole_simplepg_sweep)
 

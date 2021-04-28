@@ -1,5 +1,5 @@
 import torch
-from lqgame import LinearQuadraticGame
+from masuite.environments.lqgame import LinearQuadraticGame
 from masuite.experiments.envutils import scalar_zerosum_game
 
 def step_game(game):

@@ -7,10 +7,10 @@ _B = np.array([0.3])
 _C = np.array([0.7])
 _D = np.array([0.3])
 SETTINGS = tuple({
-    'mapping_seed': n,
+    'mapping_seed': 0,
     'A': _A,
     'B': _B,
     'C': _C,
-    'D': _D} for n in range(20)
-)
+    'D': _D
+})
 TAGS = ('basic',)

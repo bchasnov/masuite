@@ -70,7 +70,7 @@ env = masuite.load_env('lqgame/zs/0')
 ```
 import masuite
 
-env = masuite.load_env_and_record('lqgame/zs/0', results_dir='/path/to/results')
+env = masuite.load_and_record('lqgame/zs/0', save_path='/path/to/results')
 ```
 
 ### Interacting with an environment
@@ -94,8 +94,6 @@ def sample(env, agent1, agent2)
       act2 = agent2.act(obs)
       obs, rews, done, info = env.step((act1, act2))
       rets.append(rews)
-    agent1.act(obs)
-    agent2.act(obs)
   return rets 
 ```
 
