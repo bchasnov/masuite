@@ -3,8 +3,9 @@ from masuite.environments.base import Environment
 from masuite.environments.cartpole import CartPoleEnv
 
 
-class Cartpole2PEnv(Environment):
+class Cartpole2PEnv(CartPoleEnv):
     def __init__(self, mapping_seed, masuite_num_episodes, is_uncoupled=True):
+        super(Cartpole2PEnv, self).__init__()
         self.n_players = 2
         self.is_uncoupled = is_uncoupled
         self.envs = [CartPoleEnv(mapping_seed) for _ in range(self.n_players)]
