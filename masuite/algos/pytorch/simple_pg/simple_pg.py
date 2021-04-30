@@ -84,15 +84,6 @@ class SimplePG:
                 self.batch_rews.append(ep_ret)
                 self.batch_lens.append(ep_len)
 
-            # ep_ret, ep_len = self.buffer.compute_batch_info()
-
-            # the weight for each logprob(a|s) is R(tau)
-            # if self.batch_rews == []:
-            #     for idx in range(len(self.agents)):
-            #         self.batch_rews.append([ep_rets[idx]]*ep_lens[idx])
-            # else:
-            #     for idx in range(len(self.agents)):
-            #         self.batch_rews[idx] += [ep_rets[idx]] * ep_lens[idx]
             self.batch_weights += [ep_ret] * ep_len
 
             buff_lens = [len(self.buffers[i]._obs) for i in range(self.n_players)]

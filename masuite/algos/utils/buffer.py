@@ -36,9 +36,6 @@ class SingleBuffer:
             rews: timestep rewards
             done: whether or not the environment finished this time timestep
         """
-        if self.full():
-            raise ValueError('Cannot append; buffer is full')
-        
         if self._needs_reset:
             print('resetting')
             self._obs, self._acts, self._rews = [], [], []
@@ -62,6 +59,7 @@ class SingleBuffer:
 
 
     def drain(self):
+        print(self._curr_len)
         if self.empty():
             raise ValueError('Cannot drain; buffer is empty')
         obs = np.array(self._obs)
@@ -73,7 +71,3 @@ class SingleBuffer:
     
     def empty(self)->bool:
         return self._curr_len == 0
-
-
-    def full(self)->bool:
-        return self._curr_len == self.max_batch_len + 1
