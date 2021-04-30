@@ -36,8 +36,10 @@ def run(alg,
                 # env.raw_env.render()
             acts = [agent.select_action(obs) for agent in agents]
             obs, rews, done, env_info = env.step(acts)
-            if done:
-                finished_rendering_this_epoch = True
             batch_loss, batch_rets, batch_lens = alg.update(obs, acts, rews, done)
+            if done:
+                obs, _, _, _ = env.reset()
             if batch_loss is not None:
                 break
+    if should_render:
+        env.close()
