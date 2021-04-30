@@ -38,7 +38,7 @@ def run(alg,
             obs, rews, done, env_info = env.step(acts)
             batch_loss, batch_rets, batch_lens = alg.update(obs, acts, rews, done)
             if done:
-                obs, _, _, _ = env.reset()
+                obs = env.reset()
             if batch_loss is not None:
                 break
     if should_render:
