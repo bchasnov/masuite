@@ -41,10 +41,11 @@ def load_from_id(masuite_id: str)->base.Environment:
 
 def load_and_record(masuite_id: str,
                     save_path: str,
+                    batch_size: int,
                     logging_mode: str='csv',
-                    overwrite: bool=False)->base.Environment:
+                    overwrite: bool=False,)->base.Environment:
     if logging_mode == 'csv':
-        return load_and_record_to_csv(masuite_id, save_path, overwrite)
+        return load_and_record_to_csv(masuite_id, save_path, batch_size, overwrite)
     elif logging_mode == 'terminal':
         return load_and_record_to_terminal(masuite_id)
     else:
@@ -53,11 +54,13 @@ def load_and_record(masuite_id: str,
 
 def load_and_record_to_csv(masuite_id: str,
                            results_dir: str,
+                           batch_size,
                            overwrite: bool=False)->base.Environment:
     raw_env = load_from_id(masuite_id)
     print(f'Logging results to CSV file for each masuite_id in {results_dir}.')
     return csv_logging.wrap_environment(
         env=raw_env,
+        batch_size=batch_size,
         masuite_id=masuite_id,
         results_dir=results_dir,
         overwrite=overwrite

@@ -14,6 +14,7 @@ STANDARD_KEYS = frozenset([
 class Logging(environments.Environment):
     def __init__(self, env: environments.Environment,
         logger: base.Logger,
+        batch_size,
         log_by_step: bool=False,
         log_every: bool=False,
         log_freq: int=10):
@@ -32,6 +33,7 @@ class Logging(environments.Environment):
         self.log_by_step = log_by_step
         self.log_every = log_every
         self.log_freq = log_freq
+        self.batch_size = batch_size
 
         # accumulating throughout experiment
         self.steps = 0
@@ -81,7 +83,7 @@ class Logging(environments.Environment):
             self.episode_len = 0
             self.episode_return = [0.0 for _ in range(self.env.n_players)]
 
-        if self.episode == self.env.masuite_num_episodes:
+        if self.episode == self.batch_size:
             self.flush()
         
     @property

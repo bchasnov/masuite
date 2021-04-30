@@ -90,8 +90,11 @@ class CartPoleEnv(Environment):
 
         self.steps_beyond_done = None
 
-        self.masuite_num_episodes = 5000
-        self.mapping_seed = 0
+        # masuite parameters
+        self.mapping_seed = mapping_seed
+        self.env_dim = [4] # shape of state
+        self.act_dim = [1] # shape of inputted actions 
+        self.shared_state = True
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -150,7 +153,7 @@ class CartPoleEnv(Environment):
             self.steps_beyond_done += 1
             reward = 0.0
 
-        return np.array(self.state), reward, done, {}
+        return np.array(self.state), [reward], done, {}
 
     def reset(self):
         self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))
