@@ -17,7 +17,7 @@ def run(alg,
     """
     agents = alg.agents
     if verbose:
-        env = terminal_logging.wrap_environment(env, log_every=True)
+        env = terminal_logging.wrap_environment(env, batch_size, log_every=True)
     
     should_render = hasattr(env.raw_env, 'render')
     shared_state = env.raw_env.shared_state
@@ -31,7 +31,6 @@ def run(alg,
         ep_rews = []
         # render first episode of each epoch
         finished_rendering_this_epoch = False
-        # while done is False:
         while True:
             # if not finished_rendering_this_epoch and should_render:
                 # env.raw_env.render()

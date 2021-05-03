@@ -66,7 +66,6 @@ class Logging(environments.Environment):
             self.steps += 1
             self.episode_len += 1
             for player in range(self.env.n_players):
-                print(rews)
                 self.episode_return[player] += rews[player]
                 self.total_returns[player] += rews[player]
         

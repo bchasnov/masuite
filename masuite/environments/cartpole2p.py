@@ -27,8 +27,7 @@ class CartPole2PEnv(Environment):
     def step(self, acts, pos_weight=-0.00):
         obs, raw_rews, done, info = [], [], [], []
         for idx in range(self.n_players):
-            act = acts[idx]
-            obs_, rew_, done_, info_ = self.envs[idx].step(act)
+            obs_, rew_, done_, info_ = self.envs[idx].step(acts[idx])
             obs.append(obs_)
             raw_rews.append(rew_[0])
             done.append(done_)
@@ -40,17 +39,18 @@ class CartPole2PEnv(Environment):
             rews = raw_rews
         else:
             xs = [1, -1]
+            print(raw_rews[0])
+            print(self.envs[0].state[0])
             rews = [
-                rews[i] + pos_weight*(self.envs[i].state[0]-xs[i])**2
+                raw_rews[i] + pos_weight*(self.envs[i].state[0]-xs[i])**2
                 for i in range(self.n_players)
             ]
         # rews = [rews[0] + weight*(self.env1.state[0]-x1)**2, 
             #    rew2 + weight*(self.env2.state[0]-x2)**2]
         
-        info = dict(p1=info[0], p2=info[1])
-        done = done[0] and done[1]
-
-        return obs, rews, info, done
+        # info = dict(p1=info[0], p2=info[1])
+        done = done[0] or done[1]
+        return obs, rews, done, info
 
 
     def reset(self):

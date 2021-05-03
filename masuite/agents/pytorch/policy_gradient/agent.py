@@ -24,13 +24,11 @@ class PGAgent:
         if not isinstance(n_acts, list):
             n_acts = [n_acts]
         self.logits_net = mlp(sizes=env_dim+hidden_sizes+n_acts)
-        # print(env_dim+hidden_sizes+n_acts)
         self.lr = lr
 
 
     def _get_policy(self, obs):
         logits = self.logits_net(obs)
-        # print('logits: ', logits)
         return Categorical(logits=logits)
 
 
@@ -48,7 +46,6 @@ class PGAgent:
     def select_action(self, obs):
         if not isinstance(obs, torch.Tensor):
             obs = torch.as_tensor(obs).float()
-            print(obs)
         return self._get_policy(obs).sample().item()
         
 

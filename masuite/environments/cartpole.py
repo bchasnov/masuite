@@ -58,6 +58,7 @@ class CartPoleEnv(Environment):
     }
 
     def __init__(self, mapping_seed=0):
+        print(mapping_seed)
         self.n_players=1
         self.gravity = 9.8
         self.masscart = 1.0

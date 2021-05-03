@@ -38,11 +38,7 @@ class SimplePG:
         # print('policy: ', agent._get_policy(obs).sample())
         # import pdb
         # pdb.set_trace()
-        print(obs.shape)
-        print(act.shape)
-        print(rews.shape)
         logp = agent._get_policy(obs).log_prob(act)
-        print(logp.shape)
         # print('logp: ', logp)
         return -(logp * rews).mean()
     
@@ -56,7 +52,6 @@ class SimplePG:
         obs = torch.as_tensor(obs, dtype=torch.float32)
         acts = torch.as_tensor(acts, dtype=torch.float32)
         weights = torch.as_tensor(self.batch_weights, dtype=torch.float32)
-        print(f'weights:{weights.shape}')
         # print('obs: ', obs.shape)
         # print('acts: ', acts.shape)
         # print(acts)
