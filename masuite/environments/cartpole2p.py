@@ -39,8 +39,6 @@ class CartPole2PEnv(Environment):
             rews = raw_rews
         else:
             xs = [1, -1]
-            print(raw_rews[0])
-            print(self.envs[0].state[0])
             rews = [
                 raw_rews[i] + pos_weight*(self.envs[i].state[0]-xs[i])**2
                 for i in range(self.n_players)
