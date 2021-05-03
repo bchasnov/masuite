@@ -34,7 +34,7 @@ class GridPlayer():
             (0,1)) #up
         
         self.state = (3, 3)
-        self.dim = (5,5)
+        self.dim = (5,4)
         
 
     def step(self, act):
@@ -44,8 +44,8 @@ class GridPlayer():
         next_state[0] += move[0]
         next_state[1] += move[1]
  
-        next_state[0] = max(min(next_state[0], self.dim[0]-1, 0)
-        next_state[1] = max(min(next_state[1], self.dim[1]-1, 0)
+        next_state[0] = max(min(next_state[0], self.dim[0]-1, 0))
+        next_state[1] = max(min(next_state[1], self.dim[1]-1, 0))
 
         rew = 0
         done = False

@@ -18,12 +18,11 @@ class SingleBuffer:
         self._obs = []
         self._acts = []
         self._rews = []
-        self._curr_len = 0
         self._needs_reset = True
 
 
     def append_reset(self, obs):
-        self._obs[self._curr_len] = obs
+        self._obs.append(obs)
 
 
     def append_timestep(self, obs, acts, rews):
@@ -37,7 +36,6 @@ class SingleBuffer:
             done: whether or not the environment finished this time timestep
         """
         if self._needs_reset:
-            print('resetting')
             self._obs, self._acts, self._rews = [], [], []
             self._needs_reset = False
         
@@ -48,10 +46,10 @@ class SingleBuffer:
         self._obs.append(obs)
         self._acts.append(acts)
         self._rews.append(rews)
-        self._curr_len += 1
 
 
     def compute_batch_info(self):
+        #TODO: Discount factor
         ep_ret = sum(self._rews)
         ep_len = len(self._rews)
         self._rews = []
@@ -59,15 +57,8 @@ class SingleBuffer:
 
 
     def drain(self):
-        print(self._curr_len)
-        if self.empty():
-            raise ValueError('Cannot drain; buffer is empty')
         obs = np.array(self._obs)
         acts = np.array(self._acts)
-        self._curr_len = 0
         self._needs_reset = True
         return obs, acts 
     
-    
-    def empty(self)->bool:
-        return self._curr_len == 0

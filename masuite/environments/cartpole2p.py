@@ -18,8 +18,11 @@ class CartPole2PEnv(Environment):
                         dtype=np.float32)
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.Box(-high, high, dtype=np.float32)
-        self.masuite_num_episodes = 5000
 
+        # masuite parameters
+        self.env_dim = [4]
+        self.act_dim = [1]
+        self.shared_state = False
 
     def step(self, acts, pos_weight=-0.00):
         obs, raw_rews, done, info = [], [], [], []
@@ -27,7 +30,7 @@ class CartPole2PEnv(Environment):
             act = acts[idx]
             obs_, rew_, done_, info_ = self.envs[idx].step(act)
             obs.append(obs_)
-            raw_rews.append(rew_)
+            raw_rews.append(rew_[0])
             done.append(done_)
             info.append(info_)
         obs = np.array(obs)

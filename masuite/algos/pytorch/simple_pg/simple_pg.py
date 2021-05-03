@@ -26,9 +26,13 @@ class SimplePG:
         #     n_players=n_players,
         #     max_batch_len=batch_size
         # )
-        self.batch_rews = []
+        self.batch_rets = []
         self.batch_lens = []
         self.batch_weights = []
+        for _ in range(self.n_players):
+            self.batch_rets.append([])
+            self.batch_lens.append([])
+            self.batch_weights.append([])
     
     def _compute_loss(self, obs, act, rews, agent):
         # print('policy: ', agent._get_policy(obs).sample())
@@ -52,6 +56,7 @@ class SimplePG:
         obs = torch.as_tensor(obs, dtype=torch.float32)
         acts = torch.as_tensor(acts, dtype=torch.float32)
         weights = torch.as_tensor(self.batch_weights, dtype=torch.float32)
+        print(f'weights:{weights.shape}')
         # print('obs: ', obs.shape)
         # print('acts: ', acts.shape)
         # print(acts)
@@ -78,13 +83,12 @@ class SimplePG:
                 self.buffers[idx].append_timestep(obs[idx], acts[idx], rews[idx])
 
         if done:
-            ep_rets, ep_lens = [], []
             for idx in range(self.n_players):
                 ep_ret, ep_len = self.buffers[idx].compute_batch_info()
-                self.batch_rews.append(ep_ret)
-                self.batch_lens.append(ep_len)
+                self.batch_rets[idx].append(ep_ret)
+                self.batch_lens[idx].append(ep_len)
+                self.batch_weights[idx] += [ep_ret] * ep_len
 
-            self.batch_weights += [ep_ret] * ep_len
 
             buff_lens = [len(self.buffers[i]._obs) for i in range(self.n_players)]
             if max(buff_lens) > self.batch_size:
@@ -93,9 +97,18 @@ class SimplePG:
                     batch_obs_, batch_acts_ = self.buffers[idx].drain()
                     batch_obs.append(batch_obs_)
                     batch_acts.append(batch_acts_)
-                grads, info = self.step(batch_obs, batch_acts)
+                grads, step_info = self.step(batch_obs, batch_acts)
                 for idx in range(len(self.agents)):
                     self.agents[idx].update(grads[idx])
-                self.batch_rews, self.batch_lens, self.batch_weights = [], [], []
-                return info['loss'], ep_rets, ep_lens
-        return None, None, None
+                info = {
+                    'loss': step_info['loss'],
+                    'batch_rets': self.batch_rets,
+                    'batch_lens': self.batch_lens
+                }
+                self.batch_rets, self.batch_lens, self.batch_weights = [], [], []
+                for _ in range(self.n_players):
+                    self.batch_rets.append([])
+                    self.batch_lens.append([])
+                    self.batch_weights.append([])
+                return info
+        return None

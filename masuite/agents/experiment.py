@@ -20,6 +20,7 @@ def run(alg,
         env = terminal_logging.wrap_environment(env, log_every=True)
     
     should_render = hasattr(env.raw_env, 'render')
+    shared_state = env.raw_env.shared_state
     
     for i in range(num_epochs):
         obs = env.reset()
@@ -34,10 +35,15 @@ def run(alg,
         while True:
             # if not finished_rendering_this_epoch and should_render:
                 # env.raw_env.render()
-            acts = [agent.select_action(obs) for agent in agents]
+            if shared_state:
+                acts = [agent.select_action(obs) for agent in agents]
+            else:
+                acts = []
+                for idx in range(env.raw_env.n_players):
+                    acts.append(agents[idx].select_action(obs[idx]))
             obs, rews, done, env_info = env.step(acts)
-            batch_loss, batch_rets, batch_lens = alg.update(obs, acts, rews, done)
-            if batch_loss is not None:
+            batch_info = alg.update(obs, acts, rews, done)
+            if batch_info is not None:
                 break
             if done:
                 obs = env.reset()

@@ -48,6 +48,7 @@ class PGAgent:
     def select_action(self, obs):
         if not isinstance(obs, torch.Tensor):
             obs = torch.as_tensor(obs).float()
+            print(obs)
         return self._get_policy(obs).sample().item()
         
 
