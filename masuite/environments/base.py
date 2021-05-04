@@ -1,15 +1,42 @@
 import gym
+from abc import ABCMeta, abstractmethod
 
-class Environment(gym.Env):
-    def __init__(self, mapping_seed=None, masuite_num_episodes=None):
-        self.mapping_seed = mapping_seed
-        self.masuite_num_episodes = masuite_num_episodes
-        assert self.mapping_seed is not None
-        assert self.n_players is not None
-        assert self.masuite_num_episodes is not None
 
-    def step(self, actions):
-        raise NotImplementedError
+class Environment(metaclass=ABCMeta):
+    def __init__(self):
+        pass
+
+    @property
+    @abstractmethod
+    def mapping_seed(self, val):
+        pass
+
+    @property
+    @abstractmethod
+    def n_players(self):
+        pass
+
+    @property
+    @abstractmethod
+    def env_dim(self):
+        pass
+
+    @property
+    @abstractmethod
+    def act_dim(self):
+        pass
+
+    @property
+    @abstractmethod
+    def shared_state(self):
+        pass
     
+    @property
+    @abstractmethod
+    def step(self, actions):
+        pass
+    
+    @property
+    @abstractmethod
     def reset(self):
         raise NotImplementedError

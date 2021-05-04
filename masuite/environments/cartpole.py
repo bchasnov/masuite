@@ -57,9 +57,14 @@ class CartPoleEnv(Environment):
         'video.frames_per_second': 50
     }
 
-    def __init__(self, mapping_seed=0):
-        print(mapping_seed)
-        self.n_players=1
+    n_players = 1
+    mapping_seed = None # gets set in __init__
+    env_dim = [4] # shape of state
+    act_dim = [1] # shape of inputted actions 
+    shared_state = True
+
+    def __init__(self, mapping_seed):
+        self.mapping_seed = mapping_seed
         self.gravity = 9.8
         self.masscart = 1.0
         self.masspole = 0.1
@@ -93,9 +98,6 @@ class CartPoleEnv(Environment):
 
         # masuite parameters
         self.mapping_seed = mapping_seed
-        self.env_dim = [4] # shape of state
-        self.act_dim = [1] # shape of inputted actions 
-        self.shared_state = True
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)

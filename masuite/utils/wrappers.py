@@ -12,6 +12,14 @@ STANDARD_KEYS = frozenset([
 
 
 class Logging(environments.Environment):
+    # metadata raw envs must set
+    mapping_seed = None
+    n_players = None
+    env_dim = None
+    act_dim = None
+    shared_state = None
+
+
     def __init__(self, env: environments.Environment,
         logger: base.Logger,
         batch_size,
@@ -29,6 +37,7 @@ class Logging(environments.Environment):
         log_freq: Frequency to output to the log file (in steps)
         """
         self.env = env
+        self.n_players = env.n_players
         self.logger = logger
         self.log_by_step = log_by_step
         self.log_every = log_every
