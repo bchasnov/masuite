@@ -2,9 +2,13 @@ from typing import Any, Mapping, Tuple
 
 from masuite import sweep
 from masuite.environments import base
+
 from masuite.experiments.quadratic_2p_simgrad import quadratic_2p_simgrad
 from masuite.experiments.cartpole_simplepg import cartpole_simplepg
 from masuite.experiments.cartpole2p_simplepg import cartpole2p_simplepg
+
+from masuite.environments import cartpole
+from masuite.environments import cartpole2p
 
 from masuite.logging import csv_logging
 from masuite.logging import terminal_logging
@@ -19,6 +23,10 @@ EXPERIMENT_NAME_TO_ENVIRONMENT = dict(
     cartpole2p_simplepg=cartpole2p_simplepg.load
 )
 
+ENVIRONMENT_NAME_TO_ENVIRONMENT = dict(
+    cartpole=cartpole.CartPoleEnv,
+    cartpole2p=cartpole2p.CartPole2PEnv
+)
 
 def unpack_masuite_id(masuite_id: str)->Tuple[str, int]:
     """Returns the experiment name and setting index given an masuite_id"""
@@ -31,13 +39,21 @@ def load(exp_name: str, kwargs: Mapping[str, Any])->base.Environment:
     return EXPERIMENT_NAME_TO_ENVIRONMENT[exp_name](**kwargs)
 
 
-
 def load_from_id(masuite_id: str)->base.Environment:
     kwargs = sweep.SETTINGS[masuite_id]
     exp_name, _ = unpack_masuite_id(masuite_id)
     env = load(exp_name, kwargs)
     print(f'Loaded masuite_id: {masuite_id}.')
     return env
+
+
+def load_env(env_id: str)->base.Environment:
+    env_name, mapping_seed = env_id.split('/')
+    mapping_seed = int(mapping_seed)
+    env_fn = ENVIRONMENT_NAME_TO_ENVIRONMENT[env_name]
+    env = env_fn(mapping_seed=mapping_seed)
+    return env
+
 
 def load_and_record(masuite_id: str,
                     save_path: str,

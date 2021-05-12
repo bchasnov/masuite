@@ -44,41 +44,36 @@ In addition, each environment has two public functions:
 * `step(self, actions)` - executes a single timestep transition given actions (a list of all agents' chosen actions for that timestep). `step` returns the resulting state/observations, the calculated reward for each agent based on their actions and the resulting state, a boolean indicating whether the environment is "done" meaning it needs to be reset, and a dictionary containing any other info that could be interesting/useful.
 * `reset(self)` - resets the environment to initial state and returns the initial state/observations.
 
-
-The environments are defined by a set of functions `(f1, f2, ..., fn)` where `fi` is the `i`th agent's cost/reward. 
-The costs/rewards of each agent are dependent on the shared state, its own action and the actions of others.
-
-The case where agents are coupled through costs and dynamics are the emphasized.
-Those are cases where the gradient of `fi` with respect the `j` agent's action (`j!=i`) is non-zero in general.
-We can show this concept with an example.
-
-**Example:** Here is a simple quadratic game defined by the pair of costs `(fx, fy)`
-```
-fx(x,y) = (1/2) Ax^2 + Bxy
-fy(x,y) = Cyx + (1/2) Dy^2
-```
-We use `𝛅z` as the gradient operator with respect to `z`.
-Then
-```
-𝛅x(fx)(x,y) = Ax + By
-𝛅y(fy)(x,y) = Cx + Dy
-```
-The fact that `B` and `C` are non-zero is important when considering the gradient of agents in games. These terms do not show up 
-in single agent learning problems.
-
 ### Loading an environment
-Environments are specificed by a `masuite_id` string. 
+Environments are specificed by an `env_id` string. The string consists of the environment name followed by an integer specifying the random `mapping_seed` in the following format:
 ```
 import masuite
 
-env = masuite.load_env('lqgame/zs/0')
+env = masuite.load_env('cartpole/0')
 ```
+
+The above returns a raw environment instance.
+
+## Agents
+Agents are responsible for learning an action policy and choosing actions given a set of _observations_. Each agent instance must be passed the following parameters on creation:
+* `env_dim list(int)` - defines the shape of the observations the agent will be passed when choosing an action.
+* `act_dim list(int)` - defines the shape of the actions the agent will return.
+
+In addition, an optional `lr` parameter can be passed specifying the _learning rate_ for the agent when updating its action policy.
+
+Each agent must also have two public functions:
+* `select_action(self, obs)` - chooses what actions to take based on the current action policy and the passed observations.
+* `update(self, grad)` - makes a single action policy update based on `grad` and the learning rate.
+
+
+## Experiments
+
 
 ### Loading an environemnt with logging
 ```
 import masuite
 
-env = masuite.load_and_record('lqgame/zs/0', save_path='/path/to/results')
+env = masuite.load_and_record('cartpole/0', save_path='/path/to/results')
 ```
 
 ### Interacting with an environment
