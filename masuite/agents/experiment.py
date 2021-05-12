@@ -19,18 +19,21 @@ def run(alg,
     if verbose:
         env = terminal_logging.wrap_environment(env, batch_size, log_every=True)
     
-    should_render = hasattr(env.raw_env, 'render')
-    shared_state = env.raw_env.shared_state
+    if hasattr(env, 'raw_env'):
+        should_render = hasattr(env.raw_env, 'render')
+        shared_state = env.raw_env.shared_state
+    else:
+        should_render = hasattr(env, 'render')
+        shared_state = env.shared_state
     
-    for i in range(num_epochs):
+    for _ in range(num_epochs):
         obs = env.reset()
-        env.track(obs)
+        if hasattr(env, 'track'):
+            env.track(obs)
         if hasattr(alg, 'buffer'):
             alg.buffer.append_reset(obs)
         done = False
-        ep_rews = []
         # render first episode of each epoch
-        finished_rendering_this_epoch = False
         while True:
             # if not finished_rendering_this_epoch and should_render:
                 # env.raw_env.render()

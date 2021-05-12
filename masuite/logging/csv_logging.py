@@ -7,7 +7,7 @@ from masuite.logging import base
 from masuite.utils import wrappers
 
 SAFE_SEP = '-'
-INITIAL_SEP = '_-_'
+INITIAL_SEP = '__'
 MASUITE_PREFIX = 'masuite_id' + INITIAL_SEP
 
 def wrap_environment(env: environments.Environment,

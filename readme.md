@@ -4,9 +4,9 @@ The multi-agent suite is a collection of experiments that investigate the capabi
 
 ## Technical overview
 Experiments are defined in the `experiments` folder. Each folder inside corresponds to one experiment and contains:
-* A file that defines an environment, with a level of configurability.
-* A sequence of keyword arguments for this environment, defined in `CONFIG` variable in the experiment's `config.py` file
-* A file `analysis.py` that defines the plotting and analysis tools.
+* A file that defines an environment, with a level of configurability (python file with the same name as the experiment).
+* A sequence of keyword arguments for this environment, defined in `SETTINGS` variable in the experiment's `sweep.py` file
+* A file `analysis.py` that defines the plotting and analysis tools (WIP).
 Logging is done inside an environment, which allows for data to be output in the correct format regardless of the agent or algorithm structure.
 
 ## Getting Started
@@ -22,20 +22,28 @@ pip install .
 ```
 
 ### Command line
-To confirm the installation was successful, run:
+To confirm the installation was successful run:
 ```
-python tests
+pytest --disable-warnings
 ```
+Do not worry about the warnings that are encountered as they come from the gym dependency.
+
 
 ### Notebooks
-For example usage, see
-the jupyter notebooks in `masuite/notebooks`.
-You can open it 
-
-### Installation
-
+For example notebook usage, see the jupyter notebooks in `masuite/notebooks`.
 
 ## Environments
+The environments define the environment dynamics agents interact with. All environments inherit from `masuite.environments.base.Environment`. Each environment has at least the following parameters:
+* `mapping_seed: int` - defines the seed for any randomness in the enviornment.
+* `n_players: int` - defines the number of players that interact with the environment.
+* `env_dim: list(int)` - defines the shape of the observations the environment makes public to learning agents.
+* `act_dim: list(int)` - defines the shape of the actions to be inputted by a single learning agent.
+* `shared_state: bool` - defines whether or not a single state is shared between each learning agent, or if each agent has its own state.
+
+In addition, each environment has two public functions:
+* `step(self, actions)` - executes a single timestep transition given actions (a list of all agents' chosen actions for that timestep). `step` returns the resulting state/observations, the calculated reward for each agent based on their actions and the resulting state, a boolean indicating whether the environment is "done" meaning it needs to be reset, and a dictionary containing any other info that could be interesting/useful.
+* `reset(self)` - resets the environment to initial state and returns the initial state/observations.
+
 
 The environments are defined by a set of functions `(f1, f2, ..., fn)` where `fi` is the `i`th agent's cost/reward. 
 The costs/rewards of each agent are dependent on the shared state, its own action and the actions of others.

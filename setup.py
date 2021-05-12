@@ -53,8 +53,7 @@ setuptools.setup(
     keywords='',
     packages=setuptools.find_packages(),
     install_requires=[
-#         'absl-py',
-#         'dm_env',
+        'absl-py',
         'frozendict',
         'gym',
         'matplotlib',
@@ -62,13 +61,12 @@ setuptools.setup(
         'pandas',
         'plotnine',
         'scipy',
-#         'scikit-image',
-#         'six',
         'termcolor',
         'torch',
         'ipykernel',
         'jax',
-        'jaxlib'
+        'jaxlib',
+        'pytest'
     ],
 #     extras_require={
 #         'baselines': baselines_require,

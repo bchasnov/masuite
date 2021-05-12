@@ -5,8 +5,14 @@ from masuite.environments.cartpole import CartPoleEnv
 
 
 class CartPole2PEnv(Environment):
-    def __init__(self, mapping_seed, is_uncoupled=True):
-        self.n_players = 2
+    mapping_seed = None
+    n_players = 2
+    env_dim = [4]
+    act_dim = [1]
+    shared_state = False
+
+    def __init__(self, mapping_seed=0, is_uncoupled=True):
+        self.mapping_seed = mapping_seed
         self.viewer = None
         self.is_uncoupled = is_uncoupled
         self.envs = [CartPoleEnv(mapping_seed) for _ in range(self.n_players)]
@@ -19,10 +25,6 @@ class CartPole2PEnv(Environment):
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.Box(-high, high, dtype=np.float32)
 
-        # masuite parameters
-        self.env_dim = [4]
-        self.act_dim = [1]
-        self.shared_state = False
 
     def step(self, acts, pos_weight=-0.00):
         obs, raw_rews, done, info = [], [], [], []
@@ -43,10 +45,8 @@ class CartPole2PEnv(Environment):
                 raw_rews[i] + pos_weight*(self.envs[i].state[0]-xs[i])**2
                 for i in range(self.n_players)
             ]
-        # rews = [rews[0] + weight*(self.env1.state[0]-x1)**2, 
-            #    rew2 + weight*(self.env2.state[0]-x2)**2]
         
-        # info = dict(p1=info[0], p2=info[1])
+        info = dict(p1=info[0], p2=info[1])
         done = done[0] or done[1]
         return obs, rews, done, info
 

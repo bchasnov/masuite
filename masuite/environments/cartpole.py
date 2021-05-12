@@ -61,7 +61,7 @@ class CartPoleEnv(Environment):
     mapping_seed = None # gets set in __init__
     env_dim = [4] # shape of state
     act_dim = [1] # shape of inputted actions 
-    shared_state = True
+    shared_state = True # whether or not all agents in the env share a state
 
     def __init__(self, mapping_seed):
         self.mapping_seed = mapping_seed
