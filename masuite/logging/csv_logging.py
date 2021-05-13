@@ -10,19 +10,6 @@ SAFE_SEP = '-'
 INITIAL_SEP = '__'
 MASUITE_PREFIX = 'masuite_id' + INITIAL_SEP
 
-def wrap_environment(env: environments.Environment,
-    batch_size,
-    masuite_id: str,
-    results_dir: str,
-    overwrite: bool=False,
-    log_by_step: bool=False
-)->environments.Environment:
-    """
-    Returns a wrapped logging environment that logs to CSV
-    """
-    logger = Logger(masuite_id, batch_size, results_dir, overwrite)
-    return wrappers.Logging(env, logger, batch_size, log_by_step=log_by_step)
-
 
 class Logger(base.Logger):
     """
@@ -30,10 +17,10 @@ class Logger(base.Logger):
 
     """
     def __init__(self,
-                 masuite_id: str,
-                 batch_size,
-                 results_dir: str= '/tmp/masuite',
-                 overwrite:bool=False):
+        masuite_id: str,
+        results_dir: str= '/tmp/masuite',
+        overwrite:bool=False
+    ):
         
         if not os.path.exists(results_dir):
             try:

@@ -1,8 +1,10 @@
 import gym
 from masuite.logging import terminal_logging
+from masuite.utils.logging import Logging
 
 def run(alg,
         env: gym.Env,
+        logger: Logging,
         num_epochs: int,
         batch_size: int,
         verbose: bool=False)->None:
@@ -17,14 +19,11 @@ def run(alg,
     """
     agents = alg.agents
     if verbose:
-        env = terminal_logging.wrap_environment(env, batch_size, log_every=True)
+        # TODO: Terminal logging
+        pass
     
-    if hasattr(env, 'raw_env'):
-        should_render = hasattr(env.raw_env, 'render')
-        shared_state = env.raw_env.shared_state
-    else:
-        should_render = hasattr(env, 'render')
-        shared_state = env.shared_state
+    should_render = hasattr(env, 'render')
+    shared_state = env.shared_state
     
     for _ in range(num_epochs):
         obs = env.reset()
@@ -41,11 +40,13 @@ def run(alg,
                 acts = [agent.select_action(obs) for agent in agents]
             else:
                 acts = []
-                for idx in range(env.raw_env.n_players):
+                for idx in range(env.n_players):
                     acts.append(agents[idx].select_action(obs[idx]))
             obs, rews, done, env_info = env.step(acts)
+            logger.track_env_step(rews, done, env_info)
             batch_info = alg.update(obs, acts, rews, done)
             if batch_info is not None:
+                # logger.log_batch_info(batch_info)
                 break
             if done:
                 obs = env.reset()

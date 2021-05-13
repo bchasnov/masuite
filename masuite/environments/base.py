@@ -1,4 +1,3 @@
-import gym
 from abc import ABCMeta, abstractmethod
 
 

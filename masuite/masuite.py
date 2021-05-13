@@ -1,3 +1,4 @@
+from masuite.logging.base import Logger
 from typing import Any, Mapping, Tuple
 
 from masuite import sweep
@@ -10,6 +11,7 @@ from masuite.experiments.cartpole2p_simplepg import cartpole2p_simplepg
 from masuite.environments import cartpole
 from masuite.environments import cartpole2p
 
+from masuite.utils.logging import Logging
 from masuite.logging import csv_logging
 from masuite.logging import terminal_logging
 
@@ -27,6 +29,7 @@ ENVIRONMENT_NAME_TO_ENVIRONMENT = dict(
     cartpole=cartpole.CartPoleEnv,
     cartpole2p=cartpole2p.CartPole2PEnv
 )
+
 
 def unpack_masuite_id(masuite_id: str)->Tuple[str, int]:
     """Returns the experiment name and setting index given an masuite_id"""
@@ -53,6 +56,36 @@ def load_env(env_id: str)->base.Environment:
     env_fn = ENVIRONMENT_NAME_TO_ENVIRONMENT[env_name]
     env = env_fn(mapping_seed=mapping_seed)
     return env
+
+
+def init_logging(
+    masuite_id: str,
+    n_players: int,
+    mode: str,
+    save_path: str,
+    overwrite: bool,
+    log_by_step: bool,
+    log_every: bool,
+    log_freq: int
+):
+    if mode == 'csv':
+        logger = csv_logging.Logger(
+            masuite_id=masuite_id,
+            results_dir=save_path,
+            overwrite=overwrite
+        )
+    elif mode == 'terminal':
+        logger = terminal_logging.Logger()
+
+    logging_instance = Logging(
+        logger=logger,
+        n_players=n_players,
+        log_by_step=log_by_step,
+        log_every=log_every,
+        log_freq=log_freq
+    )
+    
+    return logging_instance
 
 
 def load_and_record(masuite_id: str,

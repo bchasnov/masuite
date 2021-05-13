@@ -1,6 +1,5 @@
 from masuite import environments
 from masuite.logging import base
-import gym
 
 STANDARD_KEYS = frozenset([
     'steps',
@@ -67,7 +66,7 @@ class Logging(environments.Environment):
         self.track(obs, rews, done, info)
         return obs, rews, done, info
     
-    def track(self, obs, rews=None, done=None, info=None):
+    def track(self, rews=None, done=None, info=None):
         if rews is not None and not isinstance(rews, list):
             rews = [rews]
 

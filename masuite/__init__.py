@@ -6,3 +6,4 @@ load_from_id = _masuite.load_from_id
 load_env = _masuite.load_env
 load_and_record = _masuite.load_and_record
 load_and_record_to_csv = _masuite.load_and_record_to_csv
+init_logging = _masuite.init_logging
