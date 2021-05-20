@@ -9,7 +9,7 @@ class SimplePG:
         act_dim,
         shared_state,
         n_players,
-        batch_size=5000
+        batch_size
     ):
         self.agents = agents
         self.shared_state = shared_state
@@ -27,6 +27,16 @@ class SimplePG:
             self.batch_rets.append([])
             self.batch_lens.append([])
             self.batch_weights.append([])
+    
+
+    def _reset_batch_info(self):
+        """Reset the tracked batch info"""
+        self.batch_rets, self.batch_lens, self.batch_weights = [], [], []
+        for _ in range(self.n_players):
+            self.batch_rets.append([])
+            self.batch_lens.append([])
+            self.batch_weights.append([])
+
     
     def _compute_loss(self, obs, act, rews, agent):
         """Compute the log-probability loss for the current batch.
@@ -61,7 +71,6 @@ class SimplePG:
         obs = torch.as_tensor(obs, dtype=torch.float32)
         acts = torch.as_tensor(acts, dtype=torch.float32)
         weights = torch.as_tensor(self.batch_weights, dtype=torch.float32)
-        logps = []
         for idx in range(len(self.agents)):
             agent = self.agents[idx]
             loss = self._compute_loss(obs[idx], acts[idx], weights, agent)
@@ -97,20 +106,24 @@ class SimplePG:
                 batch_obs_, batch_acts_ = self.buffers[idx].drain()
                 batch_obs.append(batch_obs_)
                 batch_acts.append(batch_acts_)
+            # compute loss and grads
             grads, step_info = self._step(batch_obs, batch_acts)
+
+            # update agent action policies using computed grads
             for idx in range(len(self.agents)):
                 self.agents[idx].update(grads[idx])
+
             info = {
-                'loss': step_info['loss'],
-                'batch_rets': self.batch_rets,
-                'batch_lens': self.batch_lens
+                'loss': step_info['loss'],     # batch logp loss
+                'grads': grads,                # batch grads
+                'batch_rets': self.batch_rets, # batch return
+                'batch_lens': self.batch_lens  # batch len
             }
-            self.batch_rets, self.batch_lens, self.batch_weights = [], [], []
-            for _ in range(self.n_players):
-                self.batch_rets.append([])
-                self.batch_lens.append([])
-                self.batch_weights.append([])
+
+            # reset for new batch/epoch
+            self._reset_batch_info()
             return info
+
         return None
 
 
@@ -146,3 +159,16 @@ class SimplePG:
             return self._end_episode()
         
         return None
+    
+
+    def get_agent_params(self, copy: bool=True):
+        params = []
+        for agent in self.agents:
+            agent_params = []
+            for p in agent._get_params():
+                if copy:
+                    agent_params.append(p.data.detach().clone())
+                else:
+                    agent_params.append(p.data)
+            params.append(agent_params)
+        return params

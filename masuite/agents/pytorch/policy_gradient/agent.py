@@ -49,10 +49,10 @@ class PGAgent:
         return self._get_policy(obs).sample().item()
         
 
-    def update(self, grad):
+    def update(self, grads):
         self._zero_grad()
-        for p, g in zip(self.logits_net.parameters(), grad):
-            p.data.add_(-self.lr * g)
+        for param, grad in zip(self._get_params(), grads):
+            param.data.add_(-self.lr * grad)
 
 def default_agent(env_dim, act_dim):
     return PGAgent(env_dim, act_dim)

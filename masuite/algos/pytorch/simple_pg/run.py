@@ -28,7 +28,7 @@ parser.add_argument('--verbose', default=False, type=bool,
 # algorithm-specific params
 parser.add_argument('--num_epochs', default=50, type=int,
     help='number of training epochs')
-parser.add_argument('--batch_size', default=5000, type=int,
+parser.add_argument('--batch-size', default=5000, type=int,
     help='maximum training batch size per epoch')
 parser.add_argument('--seed', default=0, type=int,
     help='seed for random number generation')
@@ -65,7 +65,8 @@ def run(masuite_id: str):
         obs_dim=env_dim,
         act_dim=act_dim,
         shared_state=shared_state,
-        n_players=env.n_players
+        n_players=env.n_players,
+        batch_size=args.batch_size
     )
 
     experiment.run(
@@ -73,7 +74,6 @@ def run(masuite_id: str):
         env=env,
         logger=logger,
         num_epochs=args.num_epochs,
-        batch_size=args.batch_size,
         verbose=args.verbose
     )
 

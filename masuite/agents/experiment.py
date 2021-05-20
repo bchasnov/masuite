@@ -6,7 +6,6 @@ def run(alg,
         env: gym.Env,
         logger: Logging,
         num_epochs: int,
-        batch_size: int,
         verbose: bool=False)->None:
     """
     Runs an agent on an environment
@@ -27,26 +26,31 @@ def run(alg,
     
     for _ in range(num_epochs):
         obs = env.reset()
-        if hasattr(env, 'track'):
-            env.track(obs)
         if hasattr(alg, 'buffer'):
             alg.buffer.append_reset(obs)
-        done = False
-        # render first episode of each epoch
+        # only render first episode of each epoch
+        finished_rendering_this_epoch = False
         while True:
             # if not finished_rendering_this_epoch and should_render:
-                # env.raw_env.render()
+                # env.render()
+            
+            # get actions from agent(s)
             if shared_state:
                 acts = [agent.select_action(obs) for agent in agents]
             else:
-                acts = []
-                for idx in range(env.n_players):
-                    acts.append(agents[idx].select_action(obs[idx]))
+                acts = [agents[i].select_action(obs[i])
+                    for i in range(env.n_players)]
+            
+            # send action(s) to env and get new timestep info
             obs, rews, done, env_info = env.step(acts)
-            logger.track_env_step(rews, done, env_info)
+            logger.log_timestep(rews, done, env_info)
             batch_info = alg.update(obs, acts, rews, done)
             if batch_info is not None:
-                # logger.log_batch_info(batch_info)
+                # logger.track_batch_info(batch_info)
+                if logger.checkpoint_due():
+                    curr_params = alg.get_agent_params(copy=True)
+                    logger.log_checkpoint(curr_params)
+                
                 break
             if done:
                 obs = env.reset()
