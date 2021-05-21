@@ -21,7 +21,6 @@ class Logger(base.Logger):
         results_dir: str= '/tmp/masuite',
         overwrite:bool=False
     ):
-        
         if not os.path.exists(results_dir):
             try:
                 os.makedirs(results_dir)

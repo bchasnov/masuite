@@ -1,4 +1,5 @@
 from masuite.logging import base
+import numpy as np
 
 class Logging():
     def __init__(self,
@@ -31,6 +32,7 @@ class Logging():
         self.env_info = dict()
     
     def log_timestep(self, rews: list, done: bool, info: dict):
+        print(done)
         self.steps += 1
         self.episode_len += 1
         for player in range(self.n_players):
@@ -45,8 +47,10 @@ class Logging():
                     self.info[key].append(val)
 
         if self.log_by_step:
-            if done or self.log_every or self.steps % self.log_freq == 0:
+            if self.log_every or self.steps % self.log_freq == 0:
                 self._log_env_data()
+        elif done:
+            self._log_env_data()
 
         if done:
             self.episode += 1
@@ -70,13 +74,23 @@ class Logging():
 
 
     def _log_env_data(self):
-        data = dict(
-            steps=self.steps,
-            episode=self.episode,
-            total_returns=self.total_returns.copy(),
-            episode_len=self.episode_len,
-            episode_returns=self.episode_returns.copy()
-        )
+        print('LOGGING')
+        data = {
+            'steps': self.steps,
+            'episode': self.episode,
+            'episode_len': self.episode_len
+        }
+        print(self.total_returns[:5])
+        for idx in range(self.n_players):
+            data[f'agent{idx}_total_ret'] = self.total_returns[idx]
+            data[f'agent{idx}_episode_ret'] = self.episode_returns[idx]
+        # data = dict(
+        #     steps=self.steps,
+        #     episode=self.episode,
+        #     total_returns=self.total_returns.copy(),
+        #     episode_len=self.episode_len,
+        #     episode_returns=self.episode_returns.copy()
+        # )
         if self.env_info != {}:
             for key, val in self.env_info.items():
                 data[key] = val
