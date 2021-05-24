@@ -1,5 +1,6 @@
 import torch
 import torch.autograd as autograd
+import numpy as np
 from masuite.algos.utils.buffer import SingleBuffer
 
 class SimplePG:
@@ -38,7 +39,7 @@ class SimplePG:
             self.batch_weights.append([])
 
     
-    def _compute_loss(self, obs, act, rews, agent):
+    def _compute_loss(self, obs, act, weights, agent):
         """Compute the log-probability loss for the current batch.
         
         Keyword arguments:
@@ -53,9 +54,9 @@ class SimplePG:
         returns -- float agent's log-prob loss for current batch
         """
         logp = agent._get_policy(obs).log_prob(act)
-        return -(logp * rews).mean()
+        return -(logp * weights).mean()
     
-    
+
     def _step(self, obs, acts):
         """Compute the batch loss and take a single gradient descent
         optimization step for each agent.
@@ -78,7 +79,38 @@ class SimplePG:
             grad = autograd.grad(loss, agent._get_params(), create_graph=True)
             grads.append(grad)
         return grads, info
+    
 
+    def _end_epoch(self):
+        batch_obs, batch_acts = [], []
+        for idx in range(self.n_players):
+            batch_obs_, batch_acts_ = self.buffers[idx].drain()
+            batch_obs.append(batch_obs_)
+            batch_acts.append(batch_acts_)
+        # compute loss and grads
+        grads, step_info = self._step(batch_obs, batch_acts)
+
+        # update agent action policies using computed grads, and compute grad norms
+        grad_norms = []
+        for idx in range(len(self.agents)):
+            self.agents[idx].update(grads[idx])
+            norms = [float(torch.norm(grad)) for grad in grads[idx]]
+            grad_norms.append(norms)
+        
+        # compute batch info for logging
+        mean_rets = [np.mean(self.batch_rets[i]) for i in range(len(self.agents))]
+        mean_lens = [np.mean(self.batch_lens[i]) for i in range(len(self.agents))]
+        loss = [float(step_info['loss'][i]) for i in range(len(step_info['loss']))]
+        info = {
+            'grad_norms': grad_norms,                # batch grads
+            'avg_rets': mean_rets,       # batch return
+            'avg_lens': mean_lens,       # batch len
+            'loss': loss
+        }
+
+        # reset for new batch/epoch
+        self._reset_batch_info()
+        return info
 
     def _end_episode(self):
         """
@@ -101,29 +133,8 @@ class SimplePG:
         # check the current buffer sizes to check if the batch is over
         buff_len = max([len(self.buffers[i]._obs) for i in range(self.n_players)])
         if buff_len > self.batch_size:
-            batch_obs, batch_acts = [], []
-            for idx in range(self.n_players):
-                batch_obs_, batch_acts_ = self.buffers[idx].drain()
-                batch_obs.append(batch_obs_)
-                batch_acts.append(batch_acts_)
-            # compute loss and grads
-            grads, step_info = self._step(batch_obs, batch_acts)
-
-            # update agent action policies using computed grads
-            for idx in range(len(self.agents)):
-                self.agents[idx].update(grads[idx])
-
-            info = {
-                'loss': step_info['loss'],     # batch logp loss
-                'grads': grads,                # batch grads
-                'batch_rets': self.batch_rets, # batch return
-                'batch_lens': self.batch_lens  # batch len
-            }
-
-            # reset for new batch/epoch
-            self._reset_batch_info()
-            return info
-
+            return self._end_epoch()
+            
         return None
 
 

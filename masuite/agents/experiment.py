@@ -1,10 +1,10 @@
 import gym
+import torch
 from masuite.logging import terminal_logging
-from masuite.utils.logging import Logging
 
 def run(alg,
         env: gym.Env,
-        logger: Logging,
+        logger,
         num_epochs: int,
         verbose: bool=False)->None:
     """
@@ -24,7 +24,8 @@ def run(alg,
     should_render = hasattr(env, 'render')
     shared_state = env.shared_state
     
-    for _ in range(num_epochs):
+    for epoch in range(num_epochs):
+        print(f'Beginning epoch {epoch}')
         obs = env.reset()
         if hasattr(alg, 'buffer'):
             alg.buffer.append_reset(obs)
@@ -43,14 +44,12 @@ def run(alg,
             
             # send action(s) to env and get new timestep info
             obs, rews, done, env_info = env.step(acts)
-            logger.log_timestep(rews, done, env_info)
             batch_info = alg.update(obs, acts, rews, done)
             if batch_info is not None:
-                # logger.track_batch_info(batch_info)
+                logger.track_epoch(batch_info)
                 if logger.checkpoint_due():
                     curr_params = alg.get_agent_params(copy=True)
                     logger.log_checkpoint(curr_params)
-                
                 break
             if done:
                 obs = env.reset()

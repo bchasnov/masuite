@@ -3,7 +3,6 @@ import masuite
 from masuite import sweep
 from masuite.agents import experiment
 from masuite.agents.pytorch.policy_gradient.agent import PGAgent
-from masuite.environments.cartpole import CartPoleEnv
 from masuite.algos.pytorch.simple_pg.simple_pg import SimplePG
 
 parser = argparse.ArgumentParser()
@@ -16,23 +15,23 @@ parser.add_argument('--logging-mode', default='csv', type=str,
     choices=['csv', 'terminal'], help='how to log masuite results')
 parser.add_argument('--overwrite', default = False, type=bool,
     help='overwrite csv logging file if found')
-parser.add_argument('--log-by-step', default=False, type=bool,
-    help='whether to log by steps rather than on episode completion')
-parser.add_argument('--log-every', default=False, type=bool,
-    help='whether or not to log every single environment timestep')
 parser.add_argument('--log-freq', default=10, type=int,
     help='frequency at which to log env info')
+parser.add_argument('--log-checkpoints', default=False, type=bool,
+    help='whether or not to checkpoint agent parameters')
+parser.add_argument('--checkpoint-freq', default=5, type=int,
+    help='frequency (in epochs) at which to log agent checkpoints')
 parser.add_argument('--verbose', default=False, type=bool,
     help='whether or not to use verbose logging to terminal')
 
 # algorithm-specific params
-parser.add_argument('--num_epochs', default=50, type=int,
+parser.add_argument('--num-epochs', default=50, type=int,
     help='number of training epochs')
 parser.add_argument('--batch-size', default=5000, type=int,
     help='maximum training batch size per epoch')
 parser.add_argument('--seed', default=0, type=int,
     help='seed for random number generation')
-parser.add_argument('--lr', default=1e-2, type=int,
+parser.add_argument('--lr', default=1e-2, type=float,
     help='learning rate for agents')
 
 args = parser.parse_args()
@@ -52,9 +51,9 @@ def run(masuite_id: str):
         mode=args.logging_mode,
         save_path=args.save_path,
         overwrite=args.overwrite,
-        log_by_step=args.log_by_step,
-        log_every=args.log_every,
-        log_freq=args.log_freq
+        log_freq=args.log_freq,
+        log_checkpoints=args.log_checkpoints,
+        checkpoint_freq=args.checkpoint_freq
     )
 
     agents = [PGAgent(env_dim=env_dim, n_acts=n_acts, lr=args.lr)

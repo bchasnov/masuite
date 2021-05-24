@@ -52,7 +52,8 @@ class PGAgent:
     def update(self, grads):
         self._zero_grad()
         for param, grad in zip(self._get_params(), grads):
-            param.data.add_(-self.lr * grad)
+            #TODO: param.data.add_(- self.lr * grad)
+            param.data.add_(self.lr * grad)
 
 def default_agent(env_dim, act_dim):
     return PGAgent(env_dim, act_dim)

@@ -1,4 +1,3 @@
-from masuite.logging.base import Logger
 from typing import Any, Mapping, Tuple
 
 from masuite import sweep
@@ -11,7 +10,7 @@ from masuite.experiments.cartpole2p_simplepg import cartpole2p_simplepg
 from masuite.environments import cartpole
 from masuite.environments import cartpole2p
 
-from masuite.utils.logging import Logging
+from masuite.utils.logging import EpochLogging
 from masuite.logging import csv_logging
 from masuite.logging import terminal_logging
 
@@ -64,9 +63,9 @@ def init_logging(
     mode: str,
     save_path: str,
     overwrite: bool,
-    log_by_step: bool,
-    log_every: bool,
-    log_freq: int
+    log_freq: int,
+    log_checkpoints: bool,
+    checkpoint_freq: int
 ):
     if mode == 'csv':
         logger = csv_logging.Logger(
@@ -77,12 +76,12 @@ def init_logging(
     elif mode == 'terminal':
         logger = terminal_logging.Logger()
 
-    logging_instance = Logging(
+    logging_instance = EpochLogging(
         logger=logger,
         n_players=n_players,
-        log_by_step=log_by_step,
-        log_every=log_every,
-        log_freq=log_freq
+        log_freq=log_freq,
+        log_checkpoints=log_checkpoints,
+        checkpoint_freq=checkpoint_freq
     )
     
     return logging_instance

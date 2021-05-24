@@ -59,5 +59,4 @@ class Logger(base.Logger):
     def write_checkpoint(self, params: dict):
         self.checkpoint_data.append(params)
         df = pd.DataFrame(self.checkpoint_data)
-        print(df.head())
         df.to_csv(self.checkpoint_save_path, index=False)
