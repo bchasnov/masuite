@@ -43,7 +43,7 @@ def run(alg,
                     for i in range(env.n_players)]
             
             # send action(s) to env and get new timestep info
-            obs, rews, done, env_info = env.step(acts)
+            obs, rews, done, _ = env.step(acts)
             batch_info = alg.update(obs, acts, rews, done)
             if batch_info is not None:
                 logger.track_epoch(batch_info)

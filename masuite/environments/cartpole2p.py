@@ -49,7 +49,7 @@ class CartPole2PEnv(Environment):
             ]
         
         info = dict(p1=info[0], p2=info[1])
-        done = done[0] or done[1]
+        done = done[0] and done[1]
         return obs, rews, done, info
 
 
