@@ -63,7 +63,6 @@ class CartPoleEnv(Environment):
     shared_state = True # whether or not all agents in the env share a state
 
     def __init__(self, mapping_seed):
-        print(f'MAPPING SEED {mapping_seed}')
         self.mapping_seed = mapping_seed
         self.gravity = 9.8
         self.masscart = 1.0

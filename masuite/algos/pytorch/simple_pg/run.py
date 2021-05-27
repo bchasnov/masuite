@@ -23,6 +23,8 @@ parser.add_argument('--checkpoint-freq', default=5, type=int,
     help='frequency (in epochs) at which to log agent checkpoints')
 parser.add_argument('--verbose', default=False, type=bool,
     help='whether or not to use verbose logging to terminal')
+parser.add_argument('--log-params', default=False, type=bool,
+    help='whether or not to include experiment params in log filename')
 
 # algorithm-specific params
 parser.add_argument('--num-epochs', default=50, type=int,
@@ -44,6 +46,15 @@ def run(masuite_id: str):
     n_acts = env.action_space.n # number of possible actions
     act_dim = env.act_dim # number of actions chosen at each step (per agent)
     shared_state = env.shared_state # whether or not all players see the same state
+    
+    if args.log_params:
+        params = dict(
+            epochs=args.num_epochs,
+            batch_size=args.batch_size,
+            lr=args.lr,
+        )
+    else:
+        params = None
 
     logger = masuite.init_logging(
         masuite_id=masuite_id,
@@ -53,7 +64,8 @@ def run(masuite_id: str):
         overwrite=args.overwrite,
         log_freq=args.log_freq,
         log_checkpoints=args.log_checkpoints,
-        checkpoint_freq=args.checkpoint_freq
+        checkpoint_freq=args.checkpoint_freq,
+        params=params
     )
 
     agents = [PGAgent(env_dim=env_dim, n_acts=n_acts, lr=args.lr)

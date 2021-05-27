@@ -24,8 +24,7 @@ def run(alg,
     should_render = hasattr(env, 'render')
     shared_state = env.shared_state
     
-    for epoch in range(num_epochs):
-        print(f'Beginning epoch {epoch}')
+    for _ in range(num_epochs):
         obs = env.reset()
         if hasattr(alg, 'buffer'):
             alg.buffer.append_reset(obs)
@@ -53,5 +52,6 @@ def run(alg,
                 break
             if done:
                 obs = env.reset()
+    print('Done!')
     if should_render:
         env.close()

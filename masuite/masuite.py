@@ -65,13 +65,16 @@ def init_logging(
     overwrite: bool,
     log_freq: int,
     log_checkpoints: bool,
-    checkpoint_freq: int
+    checkpoint_freq: int,
+    params: dict=None
 ):
     if mode == 'csv':
         logger = csv_logging.Logger(
             masuite_id=masuite_id,
             results_dir=save_path,
-            overwrite=overwrite
+            overwrite=overwrite,
+            log_checkpoints=log_checkpoints,
+            params=params
         )
     elif mode == 'terminal':
         logger = terminal_logging.Logger()
