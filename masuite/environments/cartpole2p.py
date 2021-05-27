@@ -15,7 +15,9 @@ class CartPole2PEnv(Environment):
         self.mapping_seed = mapping_seed
         self.viewer = None
         self.is_uncoupled = is_uncoupled
-        self.envs = [CartPoleEnv(mapping_seed) for _ in range(self.n_players)]
+        np.random.seed(mapping_seed)
+        seeds = [np.random.randint(100) for _ in range(self.n_players)]
+        self.envs = [CartPoleEnv(seeds[i]) for i in range(self.n_players)]
 
         high = np.array([self.envs[0].x_threshold * 2,
                          np.finfo(np.float32).max,

@@ -54,7 +54,7 @@ class SimplePG:
         returns -- float agent's log-prob loss for current batch
         """
         logp = agent._get_policy(obs).log_prob(act)
-        return -(logp * weights).mean()
+        return (logp * weights).mean()
     
 
     def _step(self, obs, acts):

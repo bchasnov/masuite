@@ -5,7 +5,6 @@ permalink: https://perma.cc/C9ZM-652R
 """
 
 import math
-import gym
 from masuite.environments.base import Environment
 from gym import spaces, logger
 from gym.utils import seeding
@@ -64,6 +63,7 @@ class CartPoleEnv(Environment):
     shared_state = True # whether or not all agents in the env share a state
 
     def __init__(self, mapping_seed):
+        print(f'MAPPING SEED {mapping_seed}')
         self.mapping_seed = mapping_seed
         self.gravity = 9.8
         self.masscart = 1.0
@@ -96,8 +96,6 @@ class CartPoleEnv(Environment):
 
         self.steps_beyond_done = None
 
-        # masuite parameters
-        self.mapping_seed = mapping_seed
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
