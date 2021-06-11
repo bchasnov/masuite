@@ -32,27 +32,7 @@ Do not worry about the warnings that are encountered as they come from the gym d
 ### Notebooks
 For example notebook usage, see the jupyter notebooks in `masuite/notebooks`.
 
-## Environments
-The environments define the environment dynamics agents interact with. All environments inherit from `masuite.environments.base.Environment`. Each environment has at least the following parameters:
-* `mapping_seed: int` - defines the seed for any randomness in the enviornment.
-* `n_players: int` - defines the number of players that interact with the environment.
-* `env_dim: list(int)` - defines the shape of the observations the environment makes public to learning agents.
-* `act_dim: list(int)` - defines the shape of the actions to be inputted by a single learning agent.
-* `shared_state: bool` - defines whether or not a single state is shared between each learning agent, or if each agent has its own state.
 
-In addition, each environment has two public functions:
-* `step(self, actions)` - executes a single timestep transition given actions (a list of all agents' chosen actions for that timestep). `step` returns the resulting state/observations, the calculated reward for each agent based on their actions and the resulting state, a boolean indicating whether the environment is "done" meaning it needs to be reset, and a dictionary containing any other info that could be interesting/useful.
-* `reset(self)` - resets the environment to initial state and returns the initial state/observations.
-
-### Loading an environment
-Environments are specificed by an `env_id` string. The string consists of the environment name followed by an integer specifying the random `mapping_seed` in the following format:
-```
-import masuite
-
-env = masuite.load_env('cartpole/0')
-```
-
-The above returns a raw environment instance.
 
 ## Agents
 Agents are responsible for learning an action policy and choosing actions given a set of _observations_. Each agent instance must be passed the following parameters on creation:

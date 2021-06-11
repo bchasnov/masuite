@@ -1,7 +1,7 @@
 import argparse
 import masuite
 from masuite import sweep
-from masuite.agents import experiment
+from masuite.algos import experiment
 from masuite.agents.pytorch.policy_gradient.agent import PGAgent
 from masuite.algos.pytorch.simple_pg.simple_pg import SimplePG
 

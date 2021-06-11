@@ -100,11 +100,12 @@ class CartPoleEnv(Environment):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-    def step(self, action):
+    def step(self, action, external_force=0):
         if isinstance(action, list): action = action[0]
         err_msg = "%r (%s) invalid" % (action, type(action))
         assert self.action_space.contains(action), err_msg
 
+        # position, cart velocity, pole angle, pole angular velocity
         x, x_dot, theta, theta_dot = self.state
         force = self.force_mag if action == 1 else -self.force_mag
         costheta = math.cos(theta)
@@ -118,11 +119,11 @@ class CartPoleEnv(Environment):
 
         if self.kinematics_integrator == 'euler':
             x = x + self.tau * x_dot
-            x_dot = x_dot + self.tau * xacc
+            x_dot = x_dot + self.tau * (xacc + external_force)
             theta = theta + self.tau * theta_dot
             theta_dot = theta_dot + self.tau * thetaacc
         else:  # semi-implicit euler
-            x_dot = x_dot + self.tau * xacc
+            x_dot = x_dot + self.tau * (xacc + external_force)
             x = x + self.tau * x_dot
             theta_dot = theta_dot + self.tau * thetaacc
             theta = theta + self.tau * theta_dot

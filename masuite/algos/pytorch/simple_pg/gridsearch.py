@@ -3,7 +3,7 @@ from masuite.algos.pytorch.simple_pg import run
 lrs = [float(f'1e-{i}') for i in range(1, 10)]
 batch_sizes = [1000*i for i in range(1, 10)]
 # epochs = [10*i for i in range(1, 10)]
-epochs = list(range(80, 260, 10))
+epochs = [300]
 
 
 def run_gridsearch(masuite_id):

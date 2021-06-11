@@ -30,8 +30,17 @@ class CartPole2PEnv(Environment):
 
     def step(self, acts, pos_weight=-0.00):
         obs, raw_rews, done, info = [], [], [], []
+        spring_const = 0.001
+        spring_dist = .5
+        x1, x2 = self.envs[0].x, self.envs[1].x
+
+        forces = [spring_const*(x2 - x1 - spring_dist), 
+                  spring_const*(x1 - x2 + spring_dist)]
         for idx in range(self.n_players):
-            obs_, rew_, done_, info_ = self.envs[idx].step(acts[idx])
+            if not self.is_uncoupled:
+                obs_, rew_, done_, info_ = self.envs[idx].step(acts[idx], forces[idx])
+            else:
+                obs_, rew_, done_, info_ = self.envs[idx].step(acts[idx])
             obs.append(obs_)
             raw_rews.append(rew_[0])
             done.append(done_)
