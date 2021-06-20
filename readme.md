@@ -16,10 +16,23 @@ The main way to use the package is through the command line or juptyer notebooks
 We recommend installing a virtual environment.
 
 ```
+cd /path/to/masuite/dir/
 python3 -m venv masuite
 source masuite/bin/activate
+```
+
+If you are simply going to run masuite experiments, or use already implemented tools, install using:
+
+```
 pip install .
 ```
+
+Alternatively, if you are planning on editing/developing masuite source code, it is recommended to install in development mode using:
+
+```
+python3 setup.py --develop
+```
+
 
 ### Command line
 To confirm the installation was successful run:
@@ -27,7 +40,7 @@ To confirm the installation was successful run:
 pytest --disable-warnings
 ```
 Do not worry about the warnings that are encountered as they come from the gym dependency.
-
+(Note: this is a WIP feature that only tests that the package is installed and some basic tests can be run. More verbose testing still needs to be written.)
 
 ### Notebooks
 For example notebook usage, see the jupyter notebooks in `masuite/notebooks`.
