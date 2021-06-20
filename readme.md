@@ -40,12 +40,8 @@ To confirm the installation was successful run:
 pytest --disable-warnings
 ```
 Do not worry about the warnings that are encountered as they come from the gym dependency.
-(Note: this is a WIP feature that only tests that the package is installed and some basic tests can be run. More verbose testing still needs to be written.)
 
-### Notebooks
-For example notebook usage, see the jupyter notebooks in `masuite/notebooks`.
-
-
+(Note: this is a WIP feature that only tests that the package is installed and some basic tests can be run. More verbose testing still needs to be written).
 
 ## Agents
 Agents are responsible for learning an action policy and choosing actions given a set of _observations_. Each agent instance must be passed the following parameters on creation:
@@ -61,17 +57,36 @@ Each agent must also have two public functions:
 
 ## Experiments
 
+Masuite has three main modules that when combined create an experiment. The three modules are:
 
-### Loading an environemnt with logging
+1. Environments: The environment agents interact with.
+2. Agents - Responsible for choosing actions to pass to the environment based on some action policy.
+3. Algos - Responsible for choosing updates for agents' action policies and passing these updates to the agent(s).
+
+Additionally, experiements are generally initialized with logging to track progress and checkpoints.
+
+Experiements are usually run from the command line. When this is the case, the used algorithm's `run.py` file is called with various (optional) command args. The main argument you should be aware of is the `masuite-id`. This specifies the name of the experiment to run as well as which configuration to run. The general form is `experiment_name/config_num`. The configurations (and their corresponding `config_num`) can be found in `experiments/experiment_name/sweep.py`.
+
+To run the single-player simple pg cartpole experiment run:
+
 ```
+python3 masuite/algos/pytorch/simple_pg/run.py --masuite-id=cartpole_simplepg/0
+```
+Additional optional command line args can be found in `run.py`.
+
+### Loading an environemnt
+
+```python
 import masuite
 
-env = masuite.load_and_record('cartpole/0', save_path='/path/to/results')
+env = masuite.load_from_id('env_id')
 ```
 
 ### Interacting with an environment
+
 Example run loop for 2 agents (no state)
-```
+
+```python
 def sample(env, agent1, agent2):
   x = agent1.act()  
   y = agent2.act()
@@ -80,11 +95,12 @@ def sample(env, agent1, agent2):
 ```
 
 Example run loop for 2 agents in an environment (with state)
-```
+
+```python
 def sample(env, agent1, agent2)
   rets = []
   for _ in range(env.num_episodes):
-    obs = env.reset()
+    obs = env.reset() # resets environment to initial state
     while not done:
       act1 = agent1.act(obs)
       act2 = agent2.act(obs)
@@ -94,8 +110,9 @@ def sample(env, agent1, agent2)
 ```
 
 ## Algorithms
+
 ### Loading an algorithm
-```
+```python
 import masuite
 
 alg = masuite.load_alg('simgrad')

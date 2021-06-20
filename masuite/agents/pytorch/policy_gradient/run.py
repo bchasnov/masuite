@@ -3,6 +3,8 @@ import masuite
 from masuite.algos import experiment
 from masuite.algos.pytorch import policy_gradient
 
+# TODO: Update this file (maybe delete)
+
 def run(CONFIG):
     env = masuite.load_and_record(
         env_name=env_name,

@@ -35,13 +35,13 @@ class Environment(metaclass=ABCMeta):
         """Defines whether or not players share a single state"""
         pass
     
-    @property
+    #@property
     @abstractmethod
     def step(self, actions):
         """Steps the environment to a new timestep given players' actions"""
         pass
     
-    @property
+    #@property
     @abstractmethod
     def reset(self):
         """Resets the environment"""

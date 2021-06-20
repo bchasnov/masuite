@@ -24,7 +24,7 @@ The above returns a raw environment instance.
 
 ## Interacting with the environment
 Each agent acts in the environment simultaneously and recieves an individual reward.
-A two-agent environment takes in two actions and returns one observation and two rewards. If `step()` returns `done= True` the environment should call its `reset()` function to work properly.
+A two-agent environment takes in two actions and returns one or two observations (based on the value of the `shared_state` parameter) and two rewards. If `step()` returns `done = True` the environment should call its `reset()` function to work properly.
 
 ```python
 for episode in range(20):
@@ -46,7 +46,7 @@ print(rews)
 ### Cartpole (1 player)
 Classic inverted-pendulum problem. A pole is attached to a cart that can move either left or right. The goal is to keep the pole upright by moving the cart left or right. The agent is rewarded if the goal is still upright after actions are executed in the environment.
 
-### Cartpole2p (2 player)
+### Cartpole2p (2 players)
 An extension of the 1 player cartpole environment. This environment contains two inverted-pendulum carts with the same goal as above. The carts can be completely independent of one another (in which case each player's reward is calculated individually in the manner described above), or "coupled" meaning the reward calculation takes the other player's cart state into effect (this is specified by the `is_uncoupled` class parameter).
 
 ## Other environments 
