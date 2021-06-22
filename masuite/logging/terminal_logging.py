@@ -1,52 +1,45 @@
-import logging
-import numbers
+import os
 from typing import Mapping, Any
-
-from masuite import environments
+from masuite import sweep
 from masuite.logging import base
-from masuite.utils import wrappers
 
-def wrap_environment(env: environments.Environment,
-                     batch_size,
-                     pretty_print: bool=True,
-                     log_every: bool=False,
-                     log_by_step: bool=False)->environments.Environment:
-    logging.getLogger()
-    logger = Logger(pretty_print)
-    return wrappers.Logging(
-        env,
-        logger,
-        batch_size,
-        log_by_step=log_by_step,
-        log_every=log_every
-    )
+class TerminalLogger(base.Logger):
+    def __init__(self,
+        masuite_id: str,
+        results_dir: str,
+        overwrite:bool = False,
+        log_checkpoints:bool = False,
+        params:dict = None
+    ):
+        self.masuite_id = masuite_id
+        if log_checkpoints:
+            if not os.path.exists(results_dir):
+                try:
+                    os.makedirs(results_dir)
+                except OSError:
+                    pass
+        
+            safe_masuite_id = masuite_id.replace(sweep.SEP, base.SAFE_SEP)
+            if params is not None:
+                params_str = base.create_params_str(params)
+            else:
+                params_str = None
+            
+            self.checkpoint_save_path = base.create_checkpoint_file(
+                safe_masuite_id,
+                results_dir,
+                params_str
+            )
 
+            if os.path.exists(self.checkpoint_save_path) and not overwrite:
+                raise ValueError(
+                    f'File {self.checkpoint_save_path} already exists. Specify a different '
+                    'directory, or set overwrite=True to overwrite existing data.'
+                )
 
-class Logger(base.Logger):
-    def __init__(self, pretty_print: bool=True):
-        self.pretty_print = pretty_print
-
+            self.checkpoint_data = []
+            
+    
     def write(self, data: Mapping[str, Any]):
-        """Writes data to terminal"""
-        if self.pretty_print:
-            data = pretty_dict(data)
+        print(f'[{self.masuite_id}] {data}')
 
-        print(data)
-
-
-def pretty_dict(data: Mapping[str, Any])->str:
-    msg = []
-    for key in sorted(data):
-        value = value_format(data[key])
-        msg_pair = f'{key} = {value}'
-        msg.append(msg_pair)
-
-    return ' | '.join(msg)
-
-
-def value_format(value: Any)->str:
-    if isinstance(value, numbers.Integral):
-        return str(value)
-    if isinstance(value, numbers.Number):
-        return f'{value:0.4f}'
-    return str(value)

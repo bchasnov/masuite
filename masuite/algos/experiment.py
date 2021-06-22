@@ -1,18 +1,19 @@
-import gym
-import torch
+from masuite.environments import Environment
 from masuite.logging import terminal_logging
 
-def run(alg,
-        env: gym.Env,
-        logger,
-        num_epochs: int,
-        verbose: bool=False)->None:
+def run(
+    alg,
+    env: Environment,
+    logger,
+    num_epochs: int,
+    verbose: bool=False
+)->None:
     """
     Runs an agent on an environment
 
     Args:
-        agent: The agent to train and evaluate
-        environment: The environment to train on
+        alg: algorithm instance defining update process between epochs
+        env: masuite.Env instance 
         num_episodes: Number of episodes to train for
         verbose: Whether or not to also log to terminal
     """
@@ -33,6 +34,7 @@ def run(alg,
         while True:
             # if not finished_rendering_this_epoch and should_render:
                 # env.render()
+                # finished_rendering_this_epoch = True
             
             # get actions from agent(s)
             if shared_state:
@@ -52,6 +54,6 @@ def run(alg,
                 break
             if done:
                 obs = env.reset()
-    print('Done!')
-    if should_render:
+
+    if should_render and hasattr(env, 'close'):
         env.close()

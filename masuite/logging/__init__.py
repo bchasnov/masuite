@@ -1,0 +1,1 @@
+from masuite.logging.base import Logger

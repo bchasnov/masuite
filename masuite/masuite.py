@@ -1,6 +1,9 @@
 from typing import Any, Mapping, Tuple
 
+from numpy import save
+
 from masuite import sweep
+import masuite
 from masuite.environments import base
 
 from masuite.experiments.quadratic_2p_simgrad import quadratic_2p_simgrad
@@ -11,8 +14,8 @@ from masuite.environments import cartpole
 from masuite.environments import cartpole2p
 
 from masuite.utils.logging import EpochLogging
-from masuite.logging import csv_logging
-from masuite.logging import terminal_logging
+from masuite.logging.csv_logging import CSVLogger
+from masuite.logging.terminal_logging import TerminalLogger
 
 
 # Mapping from experiment name to environment constructor or load function.
@@ -69,15 +72,17 @@ def init_logging(
     params: dict=None
 ):
     if mode == 'csv':
-        logger = csv_logging.Logger(
-            masuite_id=masuite_id,
-            results_dir=save_path,
-            overwrite=overwrite,
-            log_checkpoints=log_checkpoints,
-            params=params
-        )
+        log_class = CSVLogger
     elif mode == 'terminal':
-        logger = terminal_logging.Logger()
+        log_class = TerminalLogger
+        
+    logger = log_class(
+        masuite_id=masuite_id,
+        results_dir=save_path,
+        overwrite=overwrite,
+        log_checkpoints=log_checkpoints,
+        params=params
+    )
 
     logging_instance = EpochLogging(
         logger=logger,
@@ -88,37 +93,3 @@ def init_logging(
     )
     
     return logging_instance
-
-
-def load_and_record(masuite_id: str,
-                    save_path: str,
-                    batch_size: int,
-                    logging_mode: str='csv',
-                    overwrite: bool=False,)->base.Environment:
-    if logging_mode == 'csv':
-        return load_and_record_to_csv(masuite_id, save_path, batch_size, overwrite)
-    elif logging_mode == 'terminal':
-        return load_and_record_to_terminal(masuite_id)
-    else:
-        raise NotImplementedError
-
-
-def load_and_record_to_csv(masuite_id: str,
-                           results_dir: str,
-                           batch_size,
-                           overwrite: bool=False)->base.Environment:
-    raw_env = load_from_id(masuite_id)
-    print(f'Logging results to CSV file for each masuite_id in {results_dir}.')
-    return csv_logging.wrap_environment(
-        env=raw_env,
-        batch_size=batch_size,
-        masuite_id=masuite_id,
-        results_dir=results_dir,
-        overwrite=overwrite
-    )
-
-
-def load_and_record_to_terminal(masuite_id: str)->base.Environment:
-    raw_env = load_from_id(masuite_id)
-    print('Logging results to terminal.')
-    return terminal_logging.wrap_environment(raw_env)

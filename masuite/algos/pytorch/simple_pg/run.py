@@ -96,11 +96,6 @@ def main():
     if masuite_id in sweep.SWEEP:
         print(f'Running single experiment: masuite_id={masuite_id}')
         run(masuite_id=masuite_id)
-    elif hasattr(sweep, masuite_id):
-        masuite_sweep = getattr(sweep, masuite_id)
-        print(f'Running sweep over masuite_id in sweep.{masuite_id}')
-        args.verbose = False
-        pool.map_mpi(run, masuite_sweep)
     else:
         raise ValueError(f'Invalid flag: masuite_id={masuite_id}')
 
