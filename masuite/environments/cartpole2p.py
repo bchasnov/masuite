@@ -17,7 +17,7 @@ class CartPole2PEnv(Environment):
         self.is_uncoupled = is_uncoupled
         np.random.seed(mapping_seed)
         seeds = [np.random.randint(100) for _ in range(self.n_players)]
-        self.envs = [CartPoleEnv(seeds[i]) for i in range(self.n_players)]
+        self.envs = [CartPoleEnv(seed) for seed in seeds]
 
         high = np.array([self.envs[0].x_threshold * 2,
                          np.finfo(np.float32).max,
@@ -63,7 +63,11 @@ class CartPole2PEnv(Environment):
 
 
     def reset(self):
-        obs = [self.envs[i].reset() for i in range(self.n_players)]
+        obs = [env.reset() for env in self.envs]
+        obs[0][0] -= 0.5
+        self.envs[0].state[0] -= 0.5
+        obs[1][0] += 0.5
+        self.envs[1].state[0] += 0.5
         return obs
     
 
@@ -146,7 +150,7 @@ class CartPole2PEnv(Environment):
             
 
 if __name__ == '__main__':
-    env = Cartpole2PEnv(0, 5000)
+    env = CartPole2PEnv(0, 5000)
     print(env.reset())
     print(env.step(acts=[0, 1]))
     while True:
