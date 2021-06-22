@@ -11,7 +11,7 @@ class CartPole2PEnv(Environment):
     act_dim = [1]
     shared_state = False
 
-    def __init__(self, mapping_seed=0, is_uncoupled=True):
+    def __init__(self, mapping_seed=0, is_uncoupled=False):
         self.mapping_seed = mapping_seed
         self.viewer = None
         self.is_uncoupled = is_uncoupled
@@ -28,11 +28,11 @@ class CartPole2PEnv(Environment):
         self.observation_space = spaces.Box(-high, high, dtype=np.float32)
 
 
-    def step(self, acts, pos_weight=-0.00):
+    def step(self, acts, pos_weight=-0.01):
         obs, raw_rews, done, info = [], [], [], []
         spring_const = 0.001
         spring_dist = .5
-        x1, x2 = self.envs[0].x, self.envs[1].x
+        x1, x2 = self.envs[0].state[0], self.envs[1].state[0]
 
         forces = [spring_const*(x2 - x1 - spring_dist), 
                   spring_const*(x1 - x2 + spring_dist)]
