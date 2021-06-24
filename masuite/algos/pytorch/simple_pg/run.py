@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser()
 # masuite logging and env params
 parser.add_argument('--masuite-id', default='cartpole_simplepg/0', type=str,
     help='global flag used to control which environment is loaded')
-parser.add_argument('--save_path', default='tmp/masuite', type=str,
+parser.add_argument('--save-path', default='tmp/masuite', type=str,
     help='where to save masuite results')
 parser.add_argument('--logging-mode', default='csv', type=str,
     choices=['csv', 'terminal'], help='how to log masuite results')
@@ -79,6 +79,7 @@ def run(masuite_id: str):
         n_players=env.n_players,
         batch_size=args.batch_size
     )
+    print(f'Running experiement: masuite={masuite_id}, lr={args.lr}, epochs={args.num_epochs}, batch_size={args.batch_size}')
 
     experiment.run(
         alg=alg,

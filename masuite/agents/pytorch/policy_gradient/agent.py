@@ -1,5 +1,7 @@
+from numpy import log
 import torch
 import torch.nn as nn
+from torch.optim import Adam
 from torch.distributions.categorical import Categorical
 
 
@@ -17,7 +19,8 @@ class PGAgent:
         env_dim: int,
         n_acts: int,
         hidden_sizes: list=[32],
-        lr: float=1e-2
+        lr: float=1e-2,
+        optim=Adam
     ):
         if not isinstance(env_dim, list):
             env_dim = [env_dim]
@@ -25,6 +28,9 @@ class PGAgent:
             n_acts = [n_acts]
         self.logits_net = mlp(sizes=env_dim+hidden_sizes+n_acts)
         self.lr = lr
+        # Forcing Adam for now, will change to allow for other optims
+        # or if None, we can use our unoptimized gd function
+        self.optim = Adam(params=self.logits_net.parameters(), lr=lr)
 
 
     def _get_policy(self, obs):
@@ -51,8 +57,14 @@ class PGAgent:
 
     def update(self, grads):
         self._zero_grad()
-        for param, grad in zip(self._get_params(), grads):
-            param.data.add_(-self.lr * grad)
+        for param, grad in zip(self.optim.param_groups[0]['params'], grads):
+            param.grad = -grad # if grad is positive, performance steadily decreases
+        for param in self.optim.param_groups[0]['params']:
+            print(torch.norm(param.grad))
+        # for param, grad in zip(self._get_params(), grads):
+            # param.data.add_(-self.lr * grad)
+        self.optim.step()
+
 
 def default_agent(env_dim, act_dim):
     return PGAgent(env_dim, act_dim)

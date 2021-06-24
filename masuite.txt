@@ -1,0 +1,253 @@
+Running single experiment: masuite_id=cartpole_simplepg/0
+Loaded masuite_id: cartpole_simplepg/0.
+Running experiement: masuite=cartpole_simplepg/0, lr=0.01, epochs=50, batch_size=5000
+tensor(2.8386, grad_fn=<CopyBackwards>)
+tensor(0.6311, grad_fn=<CopyBackwards>)
+tensor(8.8096, grad_fn=<CopyBackwards>)
+tensor(0.6430, grad_fn=<CopyBackwards>)
+epoch:   0 	 loss: 19.720 	 return: 22.498
+tensor(3.3941, grad_fn=<CopyBackwards>)
+tensor(0.5048, grad_fn=<CopyBackwards>)
+tensor(10.3284, grad_fn=<CopyBackwards>)
+tensor(0.2300, grad_fn=<CopyBackwards>)
+epoch:   1 	 loss: 21.831 	 return: 24.227
+tensor(4.4430, grad_fn=<CopyBackwards>)
+tensor(0.8602, grad_fn=<CopyBackwards>)
+tensor(13.0867, grad_fn=<CopyBackwards>)
+tensor(0.4804, grad_fn=<CopyBackwards>)
+epoch:   2 	 loss: 26.777 	 return: 27.201
+tensor(4.6392, grad_fn=<CopyBackwards>)
+tensor(1.0477, grad_fn=<CopyBackwards>)
+tensor(13.1147, grad_fn=<CopyBackwards>)
+tensor(0.8491, grad_fn=<CopyBackwards>)
+epoch:   3 	 loss: 28.208 	 return: 29.134
+tensor(5.2127, grad_fn=<CopyBackwards>)
+tensor(0.9415, grad_fn=<CopyBackwards>)
+tensor(14.1960, grad_fn=<CopyBackwards>)
+tensor(0.0209, grad_fn=<CopyBackwards>)
+epoch:   4 	 loss: 29.929 	 return: 30.193
+tensor(5.8194, grad_fn=<CopyBackwards>)
+tensor(1.2164, grad_fn=<CopyBackwards>)
+tensor(15.1472, grad_fn=<CopyBackwards>)
+tensor(0.5719, grad_fn=<CopyBackwards>)
+epoch:   5 	 loss: 31.613 	 return: 30.193
+tensor(7.3081, grad_fn=<CopyBackwards>)
+tensor(1.9147, grad_fn=<CopyBackwards>)
+tensor(18.2165, grad_fn=<CopyBackwards>)
+tensor(1.5209, grad_fn=<CopyBackwards>)
+epoch:   6 	 loss: 39.158 	 return: 35.752
+tensor(7.4956, grad_fn=<CopyBackwards>)
+tensor(1.5772, grad_fn=<CopyBackwards>)
+tensor(17.6990, grad_fn=<CopyBackwards>)
+tensor(0.4399, grad_fn=<CopyBackwards>)
+epoch:   7 	 loss: 38.178 	 return: 35.077
+tensor(8.9112, grad_fn=<CopyBackwards>)
+tensor(2.1160, grad_fn=<CopyBackwards>)
+tensor(20.2234, grad_fn=<CopyBackwards>)
+tensor(1.1388, grad_fn=<CopyBackwards>)
+epoch:   8 	 loss: 42.814 	 return: 38.267
+tensor(10.2984, grad_fn=<CopyBackwards>)
+tensor(2.2715, grad_fn=<CopyBackwards>)
+tensor(22.1942, grad_fn=<CopyBackwards>)
+tensor(0.7703, grad_fn=<CopyBackwards>)
+epoch:   9 	 loss: 48.417 	 return: 40.079
+tensor(11.5663, grad_fn=<CopyBackwards>)
+tensor(2.9428, grad_fn=<CopyBackwards>)
+tensor(24.1119, grad_fn=<CopyBackwards>)
+tensor(1.5592, grad_fn=<CopyBackwards>)
+epoch:  10 	 loss: 53.607 	 return: 41.405
+tensor(11.2402, grad_fn=<CopyBackwards>)
+tensor(2.3378, grad_fn=<CopyBackwards>)
+tensor(22.4410, grad_fn=<CopyBackwards>)
+tensor(0.3474, grad_fn=<CopyBackwards>)
+epoch:  11 	 loss: 49.096 	 return: 39.865
+tensor(11.5411, grad_fn=<CopyBackwards>)
+tensor(2.3329, grad_fn=<CopyBackwards>)
+tensor(22.2572, grad_fn=<CopyBackwards>)
+tensor(0.0158, grad_fn=<CopyBackwards>)
+epoch:  12 	 loss: 49.635 	 return: 38.023
+tensor(14.1038, grad_fn=<CopyBackwards>)
+tensor(2.8794, grad_fn=<CopyBackwards>)
+tensor(26.1422, grad_fn=<CopyBackwards>)
+tensor(0.2136, grad_fn=<CopyBackwards>)
+epoch:  13 	 loss: 59.191 	 return: 43.121
+tensor(13.9768, grad_fn=<CopyBackwards>)
+tensor(2.9155, grad_fn=<CopyBackwards>)
+tensor(25.2447, grad_fn=<CopyBackwards>)
+tensor(0.3754, grad_fn=<CopyBackwards>)
+epoch:  14 	 loss: 58.025 	 return: 41.975
+tensor(16.6921, grad_fn=<CopyBackwards>)
+tensor(3.2557, grad_fn=<CopyBackwards>)
+tensor(29.2588, grad_fn=<CopyBackwards>)
+tensor(0.1556, grad_fn=<CopyBackwards>)
+epoch:  15 	 loss: 66.517 	 return: 44.795
+tensor(17.1363, grad_fn=<CopyBackwards>)
+tensor(3.4570, grad_fn=<CopyBackwards>)
+tensor(29.4183, grad_fn=<CopyBackwards>)
+tensor(0.3556, grad_fn=<CopyBackwards>)
+epoch:  16 	 loss: 68.102 	 return: 44.982
+tensor(17.2833, grad_fn=<CopyBackwards>)
+tensor(3.3490, grad_fn=<CopyBackwards>)
+tensor(28.9546, grad_fn=<CopyBackwards>)
+tensor(0.1496, grad_fn=<CopyBackwards>)
+epoch:  17 	 loss: 68.315 	 return: 42.235
+tensor(20.7343, grad_fn=<CopyBackwards>)
+tensor(3.9776, grad_fn=<CopyBackwards>)
+tensor(34.0173, grad_fn=<CopyBackwards>)
+tensor(0.2004, grad_fn=<CopyBackwards>)
+epoch:  18 	 loss: 81.247 	 return: 47.415
+tensor(22.6112, grad_fn=<CopyBackwards>)
+tensor(4.0954, grad_fn=<CopyBackwards>)
+tensor(36.1163, grad_fn=<CopyBackwards>)
+tensor(0.2890, grad_fn=<CopyBackwards>)
+epoch:  19 	 loss: 87.165 	 return: 48.154
+tensor(22.9908, grad_fn=<CopyBackwards>)
+tensor(4.8501, grad_fn=<CopyBackwards>)
+tensor(36.5062, grad_fn=<CopyBackwards>)
+tensor(1.1359, grad_fn=<CopyBackwards>)
+epoch:  20 	 loss: 90.404 	 return: 48.699
+tensor(23.1278, grad_fn=<CopyBackwards>)
+tensor(3.9745, grad_fn=<CopyBackwards>)
+tensor(35.6181, grad_fn=<CopyBackwards>)
+tensor(0.2748, grad_fn=<CopyBackwards>)
+epoch:  21 	 loss: 88.652 	 return: 46.860
+tensor(26.2496, grad_fn=<CopyBackwards>)
+tensor(4.4788, grad_fn=<CopyBackwards>)
+tensor(39.8377, grad_fn=<CopyBackwards>)
+tensor(0.1495, grad_fn=<CopyBackwards>)
+epoch:  22 	 loss: 100.931 	 return: 49.343
+tensor(27.1804, grad_fn=<CopyBackwards>)
+tensor(4.5203, grad_fn=<CopyBackwards>)
+tensor(40.7398, grad_fn=<CopyBackwards>)
+tensor(0.2252, grad_fn=<CopyBackwards>)
+epoch:  23 	 loss: 105.355 	 return: 46.806
+tensor(30.4180, grad_fn=<CopyBackwards>)
+tensor(4.8628, grad_fn=<CopyBackwards>)
+tensor(45.0279, grad_fn=<CopyBackwards>)
+tensor(0.2859, grad_fn=<CopyBackwards>)
+epoch:  24 	 loss: 118.528 	 return: 52.821
+tensor(28.7728, grad_fn=<CopyBackwards>)
+tensor(5.0404, grad_fn=<CopyBackwards>)
+tensor(42.3052, grad_fn=<CopyBackwards>)
+tensor(0.6394, grad_fn=<CopyBackwards>)
+epoch:  25 	 loss: 113.908 	 return: 48.115
+tensor(30.8848, grad_fn=<CopyBackwards>)
+tensor(5.0900, grad_fn=<CopyBackwards>)
+tensor(44.8395, grad_fn=<CopyBackwards>)
+tensor(0.3927, grad_fn=<CopyBackwards>)
+epoch:  26 	 loss: 123.362 	 return: 47.638
+tensor(38.6987, grad_fn=<CopyBackwards>)
+tensor(5.8233, grad_fn=<CopyBackwards>)
+tensor(55.3251, grad_fn=<CopyBackwards>)
+tensor(0.0607, grad_fn=<CopyBackwards>)
+epoch:  27 	 loss: 155.140 	 return: 53.158
+tensor(32.0765, grad_fn=<CopyBackwards>)
+tensor(4.4699, grad_fn=<CopyBackwards>)
+tensor(45.1619, grad_fn=<CopyBackwards>)
+tensor(0.5458, grad_fn=<CopyBackwards>)
+epoch:  28 	 loss: 129.240 	 return: 48.288
+tensor(36.7795, grad_fn=<CopyBackwards>)
+tensor(4.9431, grad_fn=<CopyBackwards>)
+tensor(51.3862, grad_fn=<CopyBackwards>)
+tensor(0.3770, grad_fn=<CopyBackwards>)
+epoch:  29 	 loss: 150.345 	 return: 50.717
+tensor(35.8625, grad_fn=<CopyBackwards>)
+tensor(4.7122, grad_fn=<CopyBackwards>)
+tensor(49.7877, grad_fn=<CopyBackwards>)
+tensor(0.5172, grad_fn=<CopyBackwards>)
+epoch:  30 	 loss: 148.954 	 return: 48.689
+tensor(37.2381, grad_fn=<CopyBackwards>)
+tensor(4.6667, grad_fn=<CopyBackwards>)
+tensor(51.2470, grad_fn=<CopyBackwards>)
+tensor(0.1585, grad_fn=<CopyBackwards>)
+epoch:  31 	 loss: 157.241 	 return: 49.275
+tensor(35.7662, grad_fn=<CopyBackwards>)
+tensor(4.4836, grad_fn=<CopyBackwards>)
+tensor(48.6185, grad_fn=<CopyBackwards>)
+tensor(0.0216, grad_fn=<CopyBackwards>)
+epoch:  32 	 loss: 152.685 	 return: 46.832
+tensor(37.3875, grad_fn=<CopyBackwards>)
+tensor(4.8979, grad_fn=<CopyBackwards>)
+tensor(50.8114, grad_fn=<CopyBackwards>)
+tensor(0.3144, grad_fn=<CopyBackwards>)
+epoch:  33 	 loss: 163.260 	 return: 48.573
+tensor(39.1456, grad_fn=<CopyBackwards>)
+tensor(4.3095, grad_fn=<CopyBackwards>)
+tensor(52.5099, grad_fn=<CopyBackwards>)
+tensor(0.4772, grad_fn=<CopyBackwards>)
+epoch:  34 	 loss: 172.820 	 return: 47.415
+tensor(45.5547, grad_fn=<CopyBackwards>)
+tensor(5.0409, grad_fn=<CopyBackwards>)
+tensor(60.2563, grad_fn=<CopyBackwards>)
+tensor(1.0456, grad_fn=<CopyBackwards>)
+epoch:  35 	 loss: 202.181 	 return: 48.663
+tensor(42.6278, grad_fn=<CopyBackwards>)
+tensor(4.3982, grad_fn=<CopyBackwards>)
+tensor(56.2959, grad_fn=<CopyBackwards>)
+tensor(0.9519, grad_fn=<CopyBackwards>)
+epoch:  36 	 loss: 193.729 	 return: 47.604
+tensor(45.5054, grad_fn=<CopyBackwards>)
+tensor(4.3642, grad_fn=<CopyBackwards>)
+tensor(59.6389, grad_fn=<CopyBackwards>)
+tensor(0.5339, grad_fn=<CopyBackwards>)
+epoch:  37 	 loss: 209.808 	 return: 48.183
+tensor(41.9395, grad_fn=<CopyBackwards>)
+tensor(4.1404, grad_fn=<CopyBackwards>)
+tensor(54.9742, grad_fn=<CopyBackwards>)
+tensor(0.2477, grad_fn=<CopyBackwards>)
+epoch:  38 	 loss: 198.586 	 return: 46.463
+tensor(46.4860, grad_fn=<CopyBackwards>)
+tensor(3.6752, grad_fn=<CopyBackwards>)
+tensor(60.5078, grad_fn=<CopyBackwards>)
+tensor(0.4525, grad_fn=<CopyBackwards>)
+epoch:  39 	 loss: 223.584 	 return: 48.442
+tensor(50.3731, grad_fn=<CopyBackwards>)
+tensor(3.6349, grad_fn=<CopyBackwards>)
+tensor(65.2934, grad_fn=<CopyBackwards>)
+tensor(0.6263, grad_fn=<CopyBackwards>)
+epoch:  40 	 loss: 247.301 	 return: 49.594
+tensor(46.8818, grad_fn=<CopyBackwards>)
+tensor(3.1440, grad_fn=<CopyBackwards>)
+tensor(60.4026, grad_fn=<CopyBackwards>)
+tensor(0.3834, grad_fn=<CopyBackwards>)
+epoch:  41 	 loss: 233.965 	 return: 45.936
+tensor(49.0090, grad_fn=<CopyBackwards>)
+tensor(3.0798, grad_fn=<CopyBackwards>)
+tensor(62.8305, grad_fn=<CopyBackwards>)
+tensor(0.2615, grad_fn=<CopyBackwards>)
+epoch:  42 	 loss: 249.560 	 return: 46.119
+tensor(52.5692, grad_fn=<CopyBackwards>)
+tensor(3.8467, grad_fn=<CopyBackwards>)
+tensor(67.5489, grad_fn=<CopyBackwards>)
+tensor(0.1589, grad_fn=<CopyBackwards>)
+epoch:  43 	 loss: 274.326 	 return: 49.118
+tensor(47.4827, grad_fn=<CopyBackwards>)
+tensor(3.0833, grad_fn=<CopyBackwards>)
+tensor(60.8943, grad_fn=<CopyBackwards>)
+tensor(0.2508, grad_fn=<CopyBackwards>)
+epoch:  44 	 loss: 253.262 	 return: 44.425
+tensor(53.1482, grad_fn=<CopyBackwards>)
+tensor(2.9822, grad_fn=<CopyBackwards>)
+tensor(67.2787, grad_fn=<CopyBackwards>)
+tensor(1.0798, grad_fn=<CopyBackwards>)
+epoch:  45 	 loss: 285.910 	 return: 46.796
+tensor(54.3675, grad_fn=<CopyBackwards>)
+tensor(2.7124, grad_fn=<CopyBackwards>)
+tensor(69.0216, grad_fn=<CopyBackwards>)
+tensor(0.4541, grad_fn=<CopyBackwards>)
+epoch:  46 	 loss: 300.161 	 return: 47.358
+tensor(68.5551, grad_fn=<CopyBackwards>)
+tensor(4.6423, grad_fn=<CopyBackwards>)
+tensor(86.3023, grad_fn=<CopyBackwards>)
+tensor(0.5921, grad_fn=<CopyBackwards>)
+epoch:  47 	 loss: 383.221 	 return: 53.596
+tensor(55.0766, grad_fn=<CopyBackwards>)
+tensor(2.4554, grad_fn=<CopyBackwards>)
+tensor(69.5249, grad_fn=<CopyBackwards>)
+tensor(0.3500, grad_fn=<CopyBackwards>)
+epoch:  48 	 loss: 316.305 	 return: 46.018
+tensor(54.9999, grad_fn=<CopyBackwards>)
+tensor(2.3091, grad_fn=<CopyBackwards>)
+tensor(69.0866, grad_fn=<CopyBackwards>)
+tensor(0.4291, grad_fn=<CopyBackwards>)
+epoch:  49 	 loss: 321.141 	 return: 45.917

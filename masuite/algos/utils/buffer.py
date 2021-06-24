@@ -4,8 +4,6 @@ import numpy as np
 class SingleBuffer:
     def __init__(
         self,
-        obs_dim: list,
-        act_dim: int,
         max_batch_len: int
     ):
         # self._obs = np.zeros(shape=(max_batch_len+1, *obs_dim))
@@ -22,7 +20,7 @@ class SingleBuffer:
 
 
     def append_reset(self, obs):
-        self._obs.append(obs)
+        self._obs.append(obs.copy())
 
 
     def append_timestep(self, obs, acts, rews):
@@ -43,22 +41,21 @@ class SingleBuffer:
         # self._acts[self._curr_len+1] = acts
         # self._rews[self._curr_len+1] = rews
         # self._curr_len += 1
-        self._obs.append(obs)
+        self._obs.append(obs.copy())
         self._acts.append(acts)
         self._rews.append(rews)
 
 
     def compute_batch_info(self):
         #TODO: Discount factor
-        ep_ret = sum(self._rews)
-        ep_len = len(self._rews)
+        ep_ret, ep_len = sum(self._rews), len(self._rews)
         self._rews = []
         return ep_ret, ep_len
 
 
     def drain(self):
-        obs = np.array(self._obs)
-        acts = np.array(self._acts)
+        obs = self._obs
+        acts = self._acts
         self._needs_reset = True
         return obs, acts 
     

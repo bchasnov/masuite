@@ -177,3 +177,23 @@ Experiments combine environemnts, agents and algorithms together.
 * Run policy gradient in linear quadratic games.
 * Run policy gradient in markov games.
 * Run stackelberg policy gradient in linear quadratic games.
+
+## General Experiment Runflow
+### Initialization
+1. Create `Environment` instance
+2. Create `Logger` instance
+3. Create `Agent` instance(s)
+4. Create `Algo` instance
+5. Pass to `experiment.run()`
+
+### Training Loop
+```
+for epoch in range(num_epochs):
+    obs <- env.reset()
+    while True:
+        acts <- agent.select_action()
+        obs, rews, done <- env.step(acts)
+        batch_info <- alg.update(obs, acts, rews, done)
+        if batch is over:
+            break
+```

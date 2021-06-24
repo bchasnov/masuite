@@ -17,8 +17,6 @@ class SimplePG:
         self.n_players = n_players
         self.batch_size = batch_size
         self.buffers = [SingleBuffer(
-            obs_dim=obs_dim,
-            act_dim=act_dim,
             max_batch_len=batch_size
         ) for _ in range(n_players)]
         self.batch_rets = []
@@ -54,7 +52,7 @@ class SimplePG:
         returns -- float agent's log-prob loss for current batch
         """
         logp = agent._get_policy(obs).log_prob(act)
-        return (logp * weights).mean()
+        return -(logp * weights).mean()
     
 
     def _step(self, obs, acts):
@@ -69,19 +67,25 @@ class SimplePG:
             'loss': [],
         }
         grads = []
-        obs = torch.as_tensor(obs, dtype=torch.float32)
-        acts = torch.as_tensor(acts, dtype=torch.float32)
-        weights = torch.as_tensor(self.batch_weights, dtype=torch.float32)
+        obs = [torch.as_tensor(obs_, dtype=torch.float32) for obs_ in obs]
+        acts = [torch.as_tensor(acts_, dtype=torch.int32) for acts_ in acts]
+        weights = [torch.as_tensor(weights_, dtype=torch.float32)
+            for weights_ in self.batch_weights]
         for idx in range(len(self.agents)):
             agent = self.agents[idx]
-            loss = self._compute_loss(obs[idx], acts[idx], weights, agent)
+            loss = self._compute_loss(obs[idx], acts[idx], weights[idx], agent)
             info['loss'].append(loss)
             grad = autograd.grad(loss, agent._get_params(), create_graph=True)
             grads.append(grad)
         return grads, info
     
 
-    def _end_epoch(self):
+    def end_epoch(self):
+        """Complete the current epoch by computing gradients using them to
+        update the agent(s) parameters.
+
+        returns -- dict of batch/epoch info
+        """
         batch_obs, batch_acts = [], []
         for idx in range(self.n_players):
             batch_obs_, batch_acts_ = self.buffers[idx].drain()
@@ -112,14 +116,10 @@ class SimplePG:
         self._reset_batch_info()
         return info
 
-    def _end_episode(self):
+    def end_episode(self):
         """
         Complete the current episode and compute the reward weights for the
         episode.
-
-
-        returns -- None if batch has not ended, dict of batch info if the
-        batch is over
         """
         # get the cumulative episode return and length and compute episode
         # weights accordingly
@@ -128,22 +128,11 @@ class SimplePG:
             self.batch_rets[idx].append(ep_ret)
             self.batch_lens[idx].append(ep_len)
             self.batch_weights[idx] += [ep_ret] * ep_len
+        
 
-
-        # check the current buffer sizes to check if the batch is over
-        buff_len = max([len(self.buffers[i]._obs) for i in range(self.n_players)])
-        if buff_len > self.batch_size:
-            return self._end_epoch()
-            
-        return None
-
-
-
-    def update(self, obs, acts, rews, done):
+    def track_timestep(self, obs, acts, rews):
         """
-        Update the buffers with environment information and end the current
-        episode if neeeded.
-
+        Update the buffers with current timestep info.
 
         Keyword arguments:
         obs -- list containing the environment state/observation(s) for
@@ -154,9 +143,6 @@ class SimplePG:
         timestep
         done -- bool indicating whether the current environment episode
         has ended
-
-        returns -- None if batch is not over, dict of batch info if the
-        batch has ended.
         """
         # append timestep information to the buffer(s)
         if self.shared_state:
@@ -165,14 +151,18 @@ class SimplePG:
         else:
             for idx in range(self.n_players):
                 self.buffers[idx].append_timestep(obs[idx], acts[idx], rews[idx])
-
-        if done:
-            return self._end_episode()
-        
-        return None
     
 
+    def batch_over(self):
+        """Return whether or not a buffer's length is longer than the maximum
+        batch size. Indicating the batch is over.
+        """
+        buff_len = max([len(self.buffers[i]._obs) for i in range(self.n_players)])
+        return buff_len > self.batch_size
+
+
     def get_agent_params(self, copy: bool=True):
+        """Return the current agent neural network parameters"""
         params = []
         for agent in self.agents:
             agent_params = []

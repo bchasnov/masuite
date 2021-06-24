@@ -10,6 +10,7 @@ class CartPole2PEnv(Environment):
     env_dim = [4]
     act_dim = [1]
     shared_state = False
+    # TODO: agent sees both states
 
     def __init__(self, mapping_seed=0, is_uncoupled=False):
         self.mapping_seed = mapping_seed

@@ -25,7 +25,7 @@ def run(
     should_render = hasattr(env, 'render')
     shared_state = env.shared_state
     
-    for _ in range(num_epochs):
+    for epoch in range(num_epochs):
         obs = env.reset()
         if hasattr(alg, 'buffer'):
             alg.buffer.append_reset(obs)
@@ -34,7 +34,6 @@ def run(
         while True:
             # if not finished_rendering_this_epoch and should_render:
                 # env.render()
-                # finished_rendering_this_epoch = True
             
             # get actions from agent(s)
             if shared_state:
@@ -45,15 +44,20 @@ def run(
             
             # send action(s) to env and get new timestep info
             obs, rews, done, _ = env.step(acts)
-            batch_info = alg.update(obs, acts, rews, done)
-            if batch_info is not None:
-                logger.track_epoch(batch_info)
-                if logger.checkpoint_due():
-                    curr_params = alg.get_agent_params(copy=True)
-                    logger.log_checkpoint(curr_params)
-                break
+            alg.track_timestep(obs, acts, rews)
             if done:
+                alg.end_episode()
+                if alg.batch_over():
+                    batch_info = alg.end_epoch()
+                    logger.track_epoch(batch_info)
+                    print('epoch: %3d \t loss: %.3f \t return: %.3f'%
+                    (epoch, batch_info["loss"][0], batch_info["avg_rets"][0]))
+                    if logger.checkpoint_due():
+                        curr_params = alg.get_agent_params(copy=True)
+                        logger.log_checkpoint(curr_params)
+                    break
                 obs = env.reset()
+                # finished_rendering_this_epoch = True
 
     if should_render and hasattr(env, 'close'):
         env.close()

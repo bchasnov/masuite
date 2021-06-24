@@ -4,42 +4,6 @@ import imp
 
 import setuptools
 
-# # Additional requirements for TensorFlow baselines, excluding OpenAI & Dopamine.
-# # See baselines/README.md for more information.
-# baselines_require = [
-#     'dm-sonnet',
-#     'dm-tree',
-#     'tensorflow',
-#     'tensorflow_probability',
-#     'trfl',
-#     'tqdm',
-# ]
-
-# # Additional requirements for JAX baselines.
-# # See baselines/README.md for more information.
-# baselines_jax_require = [
-#     'dataclasses',
-#     'dm-haiku',
-#     'dm-tree',
-#     'jax',
-#     'jaxlib',
-#     'optax',
-#     'rlax',
-#     'tqdm',
-# ]
-
-# baselines_third_party_require = [
-#     'tensorflow == 1.15',
-#     'dopamine-rl',
-#     'baselines',
-# ]
-
-# testing_require = [
-#     'mock',
-#     'pytest-xdist',
-#     'pytype',
-# ]
-
 setuptools.setup(
     name='masuite',
     description=(''),
@@ -68,11 +32,4 @@ setuptools.setup(
         'jaxlib',
         'pytest'
     ],
-#     extras_require={
-#         'baselines': baselines_require,
-#         'baselines_jax': baselines_jax_require,
-#         'baselines_third_party': baselines_third_party_require,
-#         'testing': testing_require,
-#     },
-#     classifiers=[ ],
 )
