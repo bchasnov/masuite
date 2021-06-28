@@ -19,13 +19,7 @@ class SimplePG:
         self.buffers = [SingleBuffer(
             max_batch_len=batch_size
         ) for _ in range(n_players)]
-        self.batch_rets = []
-        self.batch_lens = []
-        self.batch_weights = []
-        for _ in range(self.n_players):
-            self.batch_rets.append([])
-            self.batch_lens.append([])
-            self.batch_weights.append([])
+        self._reset_batch_info()
     
 
     def _reset_batch_info(self):
@@ -52,6 +46,10 @@ class SimplePG:
         returns -- float agent's log-prob loss for current batch
         """
         logp = agent._get_policy(obs).log_prob(act)
+    #     print(f'logp: {logp}')
+    #     print(logp.shape)
+    #     print(f'negative loss: {-(logp*weights).mean()}')
+    #     print(f'positive loss: {(logp * weights).mean()}')
         return -(logp * weights).mean()
     
 
@@ -75,7 +73,7 @@ class SimplePG:
             agent = self.agents[idx]
             loss = self._compute_loss(obs[idx], acts[idx], weights[idx], agent)
             info['loss'].append(loss)
-            grad = autograd.grad(loss, agent._get_params(), create_graph=True)
+            grad = autograd.grad(loss, agent._get_params(), create_graph=False)
             grads.append(grad)
         return grads, info
     
@@ -106,7 +104,7 @@ class SimplePG:
         mean_lens = [np.mean(self.batch_lens[i]) for i in range(len(self.agents))]
         loss = [float(step_info['loss'][i]) for i in range(len(step_info['loss']))]
         info = {
-            'grad_norms': grad_norms,                # batch grads
+            # 'grad_norms': grad_norms,                # batch grads
             'avg_rets': mean_rets,       # batch return
             'avg_lens': mean_lens,       # batch len
             'loss': loss

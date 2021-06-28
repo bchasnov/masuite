@@ -1,4 +1,3 @@
-from numpy import log
 import torch
 import torch.nn as nn
 from torch.optim import Adam
@@ -30,7 +29,7 @@ class PGAgent:
         self.lr = lr
         # Forcing Adam for now, will change to allow for other optims
         # or if None, we can use our unoptimized gd function
-        self.optim = Adam(params=self.logits_net.parameters(), lr=lr)
+        self.optim = Adam(self.logits_net.parameters(), lr=lr)
 
 
     def _get_policy(self, obs):
@@ -39,7 +38,8 @@ class PGAgent:
 
 
     def _zero_grad(self):
-        for p in self.logits_net.parameters():
+        for p in self.optim.param_groups[0]['params']:
+        # for p in self.logits_net.parameters():
             if p.grad is not None:
                 p.grad.detach()
                 p.grad.zero_()
@@ -56,13 +56,9 @@ class PGAgent:
         
 
     def update(self, grads):
-        self._zero_grad()
         for param, grad in zip(self.optim.param_groups[0]['params'], grads):
-            param.grad = -grad # if grad is positive, performance steadily decreases
-        for param in self.optim.param_groups[0]['params']:
+            param.grad = grad # if grad is positive, performance steadily decreases
             print(torch.norm(param.grad))
-        # for param, grad in zip(self._get_params(), grads):
-            # param.data.add_(-self.lr * grad)
         self.optim.step()
 
 

@@ -47,6 +47,7 @@ def run(
             alg.track_timestep(obs, acts, rews)
             if done:
                 alg.end_episode()
+                obs, done = env.reset(), False
                 if alg.batch_over():
                     batch_info = alg.end_epoch()
                     logger.track_epoch(batch_info)
@@ -56,7 +57,6 @@ def run(
                         curr_params = alg.get_agent_params(copy=True)
                         logger.log_checkpoint(curr_params)
                     break
-                obs = env.reset()
                 # finished_rendering_this_epoch = True
 
     if should_render and hasattr(env, 'close'):

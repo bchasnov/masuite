@@ -34,7 +34,7 @@ class SingleBuffer:
             done: whether or not the environment finished this time timestep
         """
         if self._needs_reset:
-            self._obs, self._acts, self._rews = [], [], []
+            self._obs, self._acts = [], []
             self._needs_reset = False
         
         # self._obs[self._curr_len+1] = obs
