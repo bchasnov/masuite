@@ -1,3 +1,5 @@
+"""OpenAI's simple_pg example with modifications to match our implementation.
+Our modifications did not affect the performance of this implementation."""
 import torch
 import torch.nn as nn
 from torch.distributions.categorical import Categorical

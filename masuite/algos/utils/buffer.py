@@ -6,12 +6,6 @@ class SingleBuffer:
         self,
         max_batch_len: int
     ):
-        # self._obs = np.zeros(shape=(max_batch_len+1, *obs_dim))
-        # if act_dim == 1:
-        #     self._acts = np.zeros(shape=(max_batch_len))
-        # else:
-        #     self._acts = np.zeros(shape=(max_batch_len, act_dim))
-        # self._rews = np.zeros(shape=(max_batch_len))
         self.max_batch_len= max_batch_len
         self._obs = []
         self._acts = []
@@ -37,10 +31,6 @@ class SingleBuffer:
             self._obs, self._acts = [], []
             self._needs_reset = False
         
-        # self._obs[self._curr_len+1] = obs
-        # self._acts[self._curr_len+1] = acts
-        # self._rews[self._curr_len+1] = rews
-        # self._curr_len += 1
         self._obs.append(obs.copy())
         self._acts.append(acts)
         self._rews.append(rews)

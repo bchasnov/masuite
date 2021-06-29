@@ -6,7 +6,6 @@ def run(
     env: Environment,
     logger,
     num_epochs: int,
-    verbose: bool=False
 )->None:
     """
     Runs an agent on an environment
@@ -18,9 +17,6 @@ def run(
         verbose: Whether or not to also log to terminal
     """
     agents = alg.agents
-    if verbose:
-        # TODO: Terminal logging
-        pass
     
     should_render = hasattr(env, 'render')
     shared_state = env.shared_state

@@ -4,6 +4,7 @@ from masuite import sweep
 from masuite.algos import experiment
 from masuite.agents.pytorch.policy_gradient.agent import PGAgent
 from masuite.algos.pytorch.simple_pg.simple_pg import SimplePG
+import gym
 
 parser = argparse.ArgumentParser()
 # masuite logging and env params
@@ -21,8 +22,6 @@ parser.add_argument('--log-checkpoints', default=False, type=bool,
     help='whether or not to checkpoint agent parameters')
 parser.add_argument('--checkpoint-freq', default=5, type=int,
     help='frequency (in epochs) at which to log agent checkpoints')
-parser.add_argument('--verbose', default=False, type=bool,
-    help='whether or not to use verbose logging to terminal')
 parser.add_argument('--log-params', default=False, type=bool,
     help='whether or not to include experiment params in log filename')
 
@@ -44,7 +43,7 @@ def run(masuite_id: str):
     n_players = env.n_players # number of players
     env_dim = env.env_dim # shape of env state/observations
     n_acts = env.action_space.n # number of possible actions
-    act_dim = env.act_dim # shape of actions for a single agent
+    # act_dim = env.act_dim # shape of actions for a single agent
     shared_state = env.shared_state # whether or not all players see the same state
     
     if args.log_params:
@@ -69,14 +68,12 @@ def run(masuite_id: str):
     )
 
     agents = [PGAgent(env_dim=env_dim, n_acts=n_acts, lr=args.lr)
-        for _ in range(env.n_players)]
+        for _ in range(n_players)]
     
     alg = SimplePG(
         agents=agents,
-        obs_dim=env_dim,
-        act_dim=act_dim,
         shared_state=shared_state,
-        n_players=env.n_players,
+        n_players=n_players,
         batch_size=args.batch_size
     )
     print(f'Running experiement: masuite={masuite_id}, lr={args.lr}, epochs={args.num_epochs}, batch_size={args.batch_size}')
@@ -86,7 +83,6 @@ def run(masuite_id: str):
         env=env,
         logger=logger,
         num_epochs=args.num_epochs,
-        verbose=args.verbose
     )
 
     return masuite_id

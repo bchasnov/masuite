@@ -6,8 +6,6 @@ from masuite.algos.utils.buffer import SingleBuffer
 class SimplePG:
     def __init__(self,
         agents,
-        obs_dim,
-        act_dim,
         shared_state,
         n_players,
         batch_size
