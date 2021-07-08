@@ -5,6 +5,15 @@ from torch.distributions.categorical import Categorical
 
 
 def mlp(sizes, activation=nn.Tanh, output_activation=nn.Identity, seed=None):
+    """Initialize a feed-forward neural network
+    
+    Keyword arguments:
+    sizes -- sizes for the layers of the neural network
+    activation -- input activation function for the neural network
+    output activation -- output activation function for the neural network
+    seed -- to seed the intial state of the neural network
+    
+    returns -- torch.nn.Sequential initialized neural network"""
     torch.manual_seed(0)
     if seed is not None:
         torch.manual_seed(seed)
@@ -22,8 +31,8 @@ class PGAgent:
         n_acts: int,
         hidden_sizes: list=[32],
         lr: float=1e-2,
-        optim=Adam,
-        seed=None
+        seed: int=None,
+        optim=Adam
     ):
         if not isinstance(env_dim, list):
             env_dim = [env_dim]
@@ -31,25 +40,23 @@ class PGAgent:
             n_acts = [n_acts]
         self.logits_net = mlp(sizes=env_dim+hidden_sizes+n_acts, seed=seed)
         self.lr = lr
-        # Forcing Adam for now, will change to allow for other optims
-        # or if None, we can use our unoptimized gd function
-        self.optim = Adam(self.logits_net.parameters(), lr=lr)
+        self.optim = optim(self.logits_net.parameters(), lr=lr)
 
 
     def _get_policy(self, obs):
         logits = self.logits_net(obs)
         return Categorical(logits=logits)
-
-
-    def _zero_grad(self):
-        for p in self.optim.param_groups[0]['params']:
-            if p.grad is not None:
-                p.grad.detach()
-                p.grad.zero_()
     
 
     def _get_params(self):
         return self.logits_net.parameters()
+    
+
+    def _zero_grad(self):
+        for p in self.logits_net.parameters():
+            if p.grad is not None:
+                p.grad.detach()
+                p.grad.zero_()
     
 
     def select_action(self, obs):
@@ -72,7 +79,7 @@ class PGAgent:
         step
         """
         self._zero_grad()
-        for param, grad in zip(self.optim.param_groups[0]['params'], grads):
+        for param, grad in zip(self.logits_net.parameters(), grads):
             param.grad = grad
         self.optim.step()
 
