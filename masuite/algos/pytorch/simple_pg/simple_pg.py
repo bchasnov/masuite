@@ -44,10 +44,6 @@ class SimplePG:
         returns -- float agent's log-prob loss for current batch
         """
         logp = agent._get_policy(obs).log_prob(act)
-    #     print(f'logp: {logp}')
-    #     print(logp.shape)
-    #     print(f'negative loss: {-(logp*weights).mean()}')
-    #     print(f'positive loss: {(logp * weights).mean()}')
         return -(logp * weights).mean()
     
 
@@ -63,13 +59,12 @@ class SimplePG:
             'loss': [],
         }
         grads = []
-        obs = [torch.as_tensor(obs_, dtype=torch.float32) for obs_ in obs]
-        acts = [torch.as_tensor(acts_, dtype=torch.int32) for acts_ in acts]
-        weights = [torch.as_tensor(weights_, dtype=torch.float32)
-            for weights_ in self.batch_weights]
         for idx in range(len(self.agents)):
             agent = self.agents[idx]
-            loss = self._compute_loss(obs[idx], acts[idx], weights[idx], agent)
+            obs_ = torch.as_tensor(obs[idx], dtype=torch.float32)
+            acts_ = torch.as_tensor(acts[idx], dtype=torch.int32)
+            weights_ = torch.as_tensor(self.batch_weights[idx], dtype=torch.float32)
+            loss = self._compute_loss(obs_, acts_, weights_, agent)
             info['loss'].append(loss)
             grad = autograd.grad(loss, agent._get_params(), create_graph=False)
             grads.append(grad)
@@ -102,7 +97,7 @@ class SimplePG:
         mean_lens = [np.mean(self.batch_lens[i]) for i in range(len(self.agents))]
         loss = [float(step_info['loss'][i]) for i in range(len(step_info['loss']))]
         info = {
-            # 'grad_norms': grad_norms,                # batch grads
+            'grad_norms': grad_norms,                # batch grads
             'avg_rets': mean_rets,       # batch return
             'avg_lens': mean_lens,       # batch len
             'loss': loss
@@ -126,7 +121,7 @@ class SimplePG:
             self.batch_weights[idx] += [ep_ret] * ep_len
         
 
-    def track_timestep(self, obs, acts, rews):
+    def track_timestep(self, acts, rews):
         """
         Update the buffers with current timestep info.
 
@@ -143,10 +138,11 @@ class SimplePG:
         # append timestep information to the buffer(s)
         if self.shared_state:
             for idx in range(self.n_players):
-                self.buffers[idx].append_timestep(obs, acts[idx], rews[idx])
+                # self.buffers[idx].append_timestep(acts, rews)
+                self.buffers[idx].append_timestep(acts[idx], rews[idx])
         else:
             for idx in range(self.n_players):
-                self.buffers[idx].append_timestep(obs[idx], acts[idx], rews[idx])
+                self.buffers[idx].append_timestep(acts[idx], rews[idx])
     
 
     def batch_over(self):

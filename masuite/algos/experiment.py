@@ -19,17 +19,24 @@ def run(
     agents = alg.agents
     
     should_render = hasattr(env, 'render')
-    shared_state = env.shared_state
+    # shared_state = env.shared_state
+    shared_state = True
     
+    obs = env.reset()
     for epoch in range(num_epochs):
-        obs = env.reset()
-        if hasattr(alg, 'buffer'):
-            alg.buffer.append_reset(obs)
         # only render first episode of each epoch
         finished_rendering_this_epoch = False
+        count = 0
         while True:
             # if not finished_rendering_this_epoch and should_render:
                 # env.render()
+            
+            if hasattr(alg, 'buffers'):
+                for idx, buffer in enumerate(alg.buffers):
+                    if shared_state:
+                        buffer.append_obs(obs)
+                    else:
+                        buffer.append_obs(obs[idx])
             
             # get actions from agent(s)
             if shared_state:
@@ -37,11 +44,15 @@ def run(
             else:
                 acts = [agents[i].select_action(obs[i])
                     for i in range(env.n_players)]
+            # print(acts[0])
             
             # send action(s) to env and get new timestep info
             obs, rews, done, _ = env.step(acts)
-            alg.track_timestep(obs, acts, rews)
+            alg.track_timestep(acts, rews)
+            count += 1
             if done:
+                # print(count)
+                # finished_rendering_this_epoch = True
                 alg.end_episode()
                 obs, done = env.reset(), False
                 if alg.batch_over():
@@ -53,7 +64,12 @@ def run(
                         curr_params = alg.get_agent_params(copy=True)
                         logger.log_checkpoint(curr_params)
                     break
-                # finished_rendering_this_epoch = True
 
     if should_render and hasattr(env, 'close'):
         env.close()
+
+"""
+episode -> the number of steps env.reset() and env returning done = True.
+batch -> accumulates multiple episodes (~5000 steps)
+epoch -> a single training step
+"""

@@ -5,13 +5,13 @@ permalink: https://perma.cc/C9ZM-652R
 """
 
 import math
-from masuite.environments.base import Environment
+import gym
 from gym import spaces, logger
 from gym.utils import seeding
 import numpy as np
 
 
-class CartPoleEnv(Environment):
+class CartPoleEnv(gym.Env):
     """
     Description:
         A pole is attached by an un-actuated joint to a cart, which moves along
@@ -56,14 +56,7 @@ class CartPoleEnv(Environment):
         'video.frames_per_second': 50
     }
 
-    n_players = 1
-    mapping_seed = None # gets set in __init__
-    env_dim = [4] # shape of state
-    act_dim = [1] # shape of inputted actions 
-    shared_state = True # whether or not all agents in the env share a state
-
-    def __init__(self, mapping_seed):
-        self.mapping_seed = mapping_seed
+    def __init__(self):
         self.gravity = 9.8
         self.masscart = 1.0
         self.masspole = 0.1
@@ -88,24 +81,21 @@ class CartPoleEnv(Environment):
 
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.Box(-high, high, dtype=np.float32)
-        self.seed(mapping_seed)
+
+        self.seed()
         self.viewer = None
         self.state = None
 
         self.steps_beyond_done = None
-        self.episode_len = 0
-
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-    def step(self, action, external_force=0):
-        if isinstance(action, list): action = action[0]
+    def step(self, action):
         err_msg = "%r (%s) invalid" % (action, type(action))
         assert self.action_space.contains(action), err_msg
 
-        # position, cart velocity, pole angle, pole angular velocity
         x, x_dot, theta, theta_dot = self.state
         force = self.force_mag if action == 1 else -self.force_mag
         costheta = math.cos(theta)
@@ -119,12 +109,10 @@ class CartPoleEnv(Environment):
 
         if self.kinematics_integrator == 'euler':
             x = x + self.tau * x_dot
-            # x_dot = x_dot + self.tau * (xacc + external_force)
             x_dot = x_dot + self.tau * xacc
             theta = theta + self.tau * theta_dot
             theta_dot = theta_dot + self.tau * thetaacc
         else:  # semi-implicit euler
-            # x_dot = x_dot + self.tau * (xacc + external_force)
             x_dot = x_dot + self.tau * xacc
             x = x + self.tau * x_dot
             theta_dot = theta_dot + self.tau * thetaacc
@@ -141,9 +129,6 @@ class CartPoleEnv(Environment):
 
         if not done:
             reward = 1.0
-            if self.episode_len == 200:
-                print('Reached max episode len')
-                done = True
         elif self.steps_beyond_done is None:
             # Pole just fell!
             self.steps_beyond_done = 0
@@ -158,15 +143,12 @@ class CartPoleEnv(Environment):
                 )
             self.steps_beyond_done += 1
             reward = 0.0
-        
-        self.episode_len += 1
 
-        return np.array(self.state), [reward], done, {}
+        return np.array(self.state), reward, done, {}
 
     def reset(self):
         self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))
         self.steps_beyond_done = None
-        self.episode_len = 0
         return np.array(self.state)
 
     def render(self, mode='human'):
@@ -227,4 +209,3 @@ class CartPoleEnv(Environment):
         if self.viewer:
             self.viewer.close()
             self.viewer = None
-    

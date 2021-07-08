@@ -43,7 +43,7 @@ def run(masuite_id: str):
     n_players = env.n_players # number of players
     env_dim = env.env_dim # shape of env state/observations
     n_acts = env.action_space.n # number of possible actions
-    # act_dim = env.act_dim # shape of actions for a single agent
+    act_dim = env.act_dim # shape of actions for a single agent
     shared_state = env.shared_state # whether or not all players see the same state
     
     if args.log_params:

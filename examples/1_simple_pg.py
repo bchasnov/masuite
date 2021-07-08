@@ -5,10 +5,12 @@ import torch.nn as nn
 from torch.distributions.categorical import Categorical
 from torch.optim import Adam
 import numpy as np
-import gym
+# from gym.envs.classic_control.cartpole import CartPoleEnv
+from masuite.environments.cartpole import CartPoleEnv
 from gym.spaces import Discrete, Box
 
 def mlp(sizes, activation=nn.Tanh, output_activation=nn.Identity):
+    torch.manual_seed(0)
     # Build a feedforward neural network.
     layers = []
     for j in range(len(sizes)-1):
@@ -20,7 +22,9 @@ def train(env_name='CartPole-v0', hidden_sizes=[32], lr=1e-2,
           epochs=50, batch_size=5000, render=False):
 
     # make environment, check spaces, get obs / act dims
-    env = gym.make(env_name)
+    # env = gym.make(env_name)
+    env = CartPoleEnv(mapping_seed=0)
+    env.seed(0)
     # env.seed(1)
     assert isinstance(env.observation_space, Box), \
         "This example only works for envs with continuous state spaces."
@@ -68,6 +72,7 @@ def train(env_name='CartPole-v0', hidden_sizes=[32], lr=1e-2,
         finished_rendering_this_epoch = False
 
         # collect experience by acting in the environment with current policy
+        count = 0
         while True:
 
             # rendering
@@ -79,13 +84,18 @@ def train(env_name='CartPole-v0', hidden_sizes=[32], lr=1e-2,
 
             # act in the environment
             act = get_action(torch.as_tensor(obs, dtype=torch.float32))
+            # print(act)
             obs, rew, done, _ = env.step(act)
+            rew=rew[0]
+            # print(f'act={act}, obs={obs}, rews={rew}')
 
             # save action, reward
             batch_acts.append(act)
             ep_rews.append(rew)
+            count += 1
 
             if done:
+                # print(count)
                 # if episode is over, record info about episode
                 ep_ret, ep_len = sum(ep_rews), len(ep_rews)
                 batch_rets.append(ep_ret)
@@ -111,15 +121,25 @@ def train(env_name='CartPole-v0', hidden_sizes=[32], lr=1e-2,
                 p.grad.detach()
                 p.grad.zero_()
 
-        batch_loss = compute_loss(obs=torch.as_tensor(batch_obs, dtype=torch.float32),
-                                  act=torch.as_tensor(batch_acts, dtype=torch.int32),
-                                  weights=torch.as_tensor(batch_weights, dtype=torch.float32)
-                                  )
-        # batch_loss.backward()
+        print(np.array(batch_obs).shape)
+        print(np.array(batch_obs))
+        obs_ = torch.as_tensor(batch_obs, dtype=torch.float32),
+        act_ = torch.as_tensor(batch_acts, dtype=torch.int32),
+        weights_ = torch.as_tensor(batch_weights, dtype=torch.float32)
+        print(obs_, act_, weights_)
+        # print(obs, '\n\n')
+        # print(act, '\n\n')
+        # print(weights, '\n\n')
+        batch_loss = compute_loss(obs=obs_, act=act_, weights=weights_)
+
+        # batch_loss = compute_loss(obs=torch.as_tensor(batch_obs, dtype=torch.float32),
+                                #   act=torch.as_tensor(batch_acts, dtype=torch.int32),
+                                #   weights=torch.as_tensor(batch_weights, dtype=torch.float32)
+                                #   )
         grads = torch.autograd.grad(batch_loss, logits_net.parameters(), create_graph=False)
         for param, grad in zip(optimizer.param_groups[0]['params'], grads):
             param.grad = grad
-            print(torch.norm(param.grad))
+            # print(torch.norm(param.grad))
         optimizer.step()
         return batch_loss, batch_rets, batch_lens
 

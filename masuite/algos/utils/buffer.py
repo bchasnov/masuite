@@ -10,14 +10,19 @@ class SingleBuffer:
         self._obs = []
         self._acts = []
         self._rews = []
-        self._needs_reset = True
 
 
     def append_reset(self, obs):
+        print(self._obs)
+        self._obs.append(obs.copy())
+        print(self._obs)
+    
+
+    def append_obs(self, obs):
         self._obs.append(obs.copy())
 
 
-    def append_timestep(self, obs, acts, rews):
+    def append_timestep(self, acts, rews):
         """
         Append a single timestep to the trajectory buffer
 
@@ -27,11 +32,7 @@ class SingleBuffer:
             rews: timestep rewards
             done: whether or not the environment finished this time timestep
         """
-        if self._needs_reset:
-            self._obs, self._acts = [], []
-            self._needs_reset = False
         
-        self._obs.append(obs.copy())
         self._acts.append(acts)
         self._rews.append(rews)
 
@@ -46,6 +47,6 @@ class SingleBuffer:
     def drain(self):
         obs = self._obs
         acts = self._acts
-        self._needs_reset = True
+        self._obs, self._acts = [], []
         return obs, acts 
     
