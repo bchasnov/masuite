@@ -97,10 +97,10 @@ class CartPoleEnv(Environment):
 
     def seed(self, seed=None):
         if seed is not None:
-            seeding.np_random(seed)
+            self.np_random, seed = seeding.np_random(seed)
         else:
-            seeding.np_random(self.mapping_seed)
-
+            self.np_random, seed = seeding.np_random(self.mapping_seed)
+        return [seed]
 
     def step(self, action, external_force=0):
         if isinstance(action, list): action = action[0]

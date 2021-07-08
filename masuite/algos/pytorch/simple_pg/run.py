@@ -32,8 +32,6 @@ parser.add_argument('--num-epochs', default=50, type=int,
     help='number of training epochs')
 parser.add_argument('--batch-size', default=5000, type=int,
     help='maximum training batch size per epoch')
-parser.add_argument('--seed', default=0, type=int,
-    help='seed for random number generation')
 parser.add_argument('--lr', default=1e-2, type=float,
     help='learning rate for agents')
 
@@ -42,7 +40,7 @@ args = parser.parse_args()
 def run(masuite_id: str):
     env = masuite.load_from_id(masuite_id)
     if args.seed:
-        env.seed(mapping_seed)
+        env.seed()
 
     n_players = env.n_players # number of players
     env_dim = env.env_dim # shape of env state/observations
