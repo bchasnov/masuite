@@ -19,8 +19,7 @@ def run(
     agents = alg.agents
     
     should_render = hasattr(env, 'render')
-    # shared_state = env.shared_state
-    shared_state = True
+    shared_state = env.shared_state
     
     obs = env.reset()
     for epoch in range(num_epochs):
@@ -28,8 +27,8 @@ def run(
         finished_rendering_this_epoch = False
         count = 0
         while True:
-            # if not finished_rendering_this_epoch and should_render:
-                # env.render()
+            if not finished_rendering_this_epoch and should_render:
+                env.render()
             
             if hasattr(alg, 'buffers'):
                 for idx, buffer in enumerate(alg.buffers):
@@ -51,8 +50,7 @@ def run(
             alg.track_timestep(acts, rews)
             count += 1
             if done:
-                # print(count)
-                # finished_rendering_this_epoch = True
+                finished_rendering_this_epoch = True
                 alg.end_episode()
                 obs, done = env.reset(), False
                 if alg.batch_over():

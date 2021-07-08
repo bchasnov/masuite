@@ -7,10 +7,9 @@ from masuite.environments.cartpole import CartPoleEnv
 class CartPole2PEnv(Environment):
     mapping_seed = None
     n_players = 2
-    env_dim = [4]
+    env_dim = [8]
     act_dim = [1]
-    shared_state = False
-    # TODO: agent sees both states
+    shared_state = True
 
     def __init__(self, mapping_seed=0, is_uncoupled=False):
         self.mapping_seed = mapping_seed
@@ -27,7 +26,18 @@ class CartPole2PEnv(Environment):
                         dtype=np.float32)
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.Box(-high, high, dtype=np.float32)
+    
 
+    def seed(self, seed=None):
+        if seed is not None:
+            np.random.seed(seed)
+
+        for env in self.envs:
+            if seed is not None:
+                env.seed(np.random.randint(100))
+            else:
+                env.seed()
+        
 
     def step(self, acts, pos_weight=-0.01):
         obs, raw_rews, done, info = [], [], [], []
@@ -42,7 +52,7 @@ class CartPole2PEnv(Environment):
                 obs_, rew_, done_, info_ = self.envs[idx].step(acts[idx], forces[idx])
             else:
                 obs_, rew_, done_, info_ = self.envs[idx].step(acts[idx])
-            obs.append(obs_)
+            obs.extend(obs_)
             raw_rews.append(rew_[0])
             done.append(done_)
             info.append(info_)
@@ -64,10 +74,12 @@ class CartPole2PEnv(Environment):
 
 
     def reset(self):
-        obs = [env.reset() for env in self.envs]
-        obs[0][0] -= 0.5
+        obs = []
+        for env in self.envs:
+            obs.extend(env.reset())
+        obs[0] -= 0.5
         self.envs[0].state[0] -= 0.5
-        obs[1][0] += 0.5
+        obs[4] += 0.5
         self.envs[1].state[0] += 0.5
         return obs
     

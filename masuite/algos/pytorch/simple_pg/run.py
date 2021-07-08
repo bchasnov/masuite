@@ -24,6 +24,8 @@ parser.add_argument('--checkpoint-freq', default=5, type=int,
     help='frequency (in epochs) at which to log agent checkpoints')
 parser.add_argument('--log-params', default=False, type=bool,
     help='whether or not to include experiment params in log filename')
+parser.add_argument('--seed', default=True, type=bool,
+    help='whether or not to seed the environment')
 
 # algorithm-specific params
 parser.add_argument('--num-epochs', default=50, type=int,
@@ -39,6 +41,8 @@ args = parser.parse_args()
 
 def run(masuite_id: str):
     env = masuite.load_from_id(masuite_id)
+    if args.seed:
+        env.seed(mapping_seed)
 
     n_players = env.n_players # number of players
     env_dim = env.env_dim # shape of env state/observations

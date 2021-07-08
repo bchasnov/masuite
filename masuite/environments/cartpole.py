@@ -88,7 +88,6 @@ class CartPoleEnv(Environment):
 
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.Box(-high, high, dtype=np.float32)
-        self.seed(mapping_seed)
         self.viewer = None
         self.state = None
 
@@ -97,8 +96,11 @@ class CartPoleEnv(Environment):
 
 
     def seed(self, seed=None):
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
+        if seed is not None:
+            seeding.np_random(seed)
+        else:
+            seeding.np_random(self.mapping_seed)
+
 
     def step(self, action, external_force=0):
         if isinstance(action, list): action = action[0]
@@ -142,7 +144,6 @@ class CartPoleEnv(Environment):
         if not done:
             reward = 1.0
             if self.episode_len == 200:
-                print('Reached max episode len')
                 done = True
         elif self.steps_beyond_done is None:
             # Pole just fell!
