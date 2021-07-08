@@ -30,7 +30,7 @@ pip install .
 Alternatively, if you are planning on editing/developing masuite source code, it is recommended to install in development mode using:
 
 ```
-python3 setup.py --develop
+python3 setup.py develop
 ```
 
 
