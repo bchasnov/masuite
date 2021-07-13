@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from torch.optim import Adam
+from masuite.agents.pytorch.optims import SGDOptim
 from torch.distributions.categorical import Categorical
 
 
@@ -32,7 +33,7 @@ class PGAgent:
         hidden_sizes: list=[32],
         lr: float=1e-2,
         seed: int=None,
-        optim=Adam
+        optim=SGDOptim
     ):
         if not isinstance(env_dim, list):
             env_dim = [env_dim]
