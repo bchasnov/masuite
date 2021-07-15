@@ -1,5 +1,4 @@
 from typing import NamedTuple
-import numpy as np
 
 class SingleBuffer:
     def __init__(
@@ -12,14 +11,8 @@ class SingleBuffer:
         self._rews = []
 
 
-    def append_reset(self, obs):
-        print(self._obs)
-        self._obs.append(obs.copy())
-        print(self._obs)
-    
-
     def append_obs(self, obs):
-        self._obs.append(obs.copy())
+        self._obs.append(obs)
 
 
     def append_timestep(self, acts, rews):
