@@ -8,12 +8,14 @@ class SimplePG:
         agents,
         shared_state,
         n_players,
-        batch_size
+        batch_size,
+        n_episodes
     ):
         self.agents = agents
         self.shared_state = shared_state
         self.n_players = n_players
         self.batch_size = batch_size
+        self.n_episodes = n_episodes
         self.buffers = [SingleBuffer(
             max_batch_len=batch_size
         ) for _ in range(n_players)]
@@ -126,14 +128,10 @@ class SimplePG:
         Update the buffers with current timestep info.
 
         Keyword arguments:
-        obs -- list containing the environment state/observation(s) for
-        the current timestep
         acts -- list containing the agent(s) actions for the current
         timestep
         rews -- list containing the computed rewards for the current
         timestep
-        done -- bool indicating whether the current environment episode
-        has ended
         """
         # append timestep information to the buffer(s)
         if self.shared_state:
@@ -145,12 +143,28 @@ class SimplePG:
                 self.buffers[idx].append_timestep(acts[idx], rews[idx])
     
 
+    def track_obs(self, obs):
+        """
+        Append observations to the buffer.
+
+        Keyword arguments:
+        obs -- list containing the environment state/observation(s) for
+        the current timestep
+        """
+        if self.shared_state:
+            for idx, buffer in enumerate(self.buffers):
+                buffer.append_obs(obs[idx])
+        else:
+            for buffer in self.buffers:
+                buffer.append_obs(obs)
+    
+
     def batch_over(self):
         """Return whether or not a buffer's length is longer than the maximum
         batch size. Indicating the batch is over.
         """
         buff_len = max([len(self.buffers[i]._obs) for i in range(self.n_players)])
-        return buff_len > self.batch_size
+        return buff_len == self.n_episodes
 
 
     def get_agent_params(self, copy: bool=True):
