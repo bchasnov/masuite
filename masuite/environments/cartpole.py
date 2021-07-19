@@ -58,8 +58,8 @@ class CartPoleEnv(Environment):
 
     n_players = 1
     mapping_seed = None # gets set in __init__
-    env_dim = [4] # shape of state
-    act_dim = [1] # shape of inputted actions 
+    env_dim = [4]       # shape of state
+    n_acts = 2          # number of possible actions
     shared_state = True # whether or not all agents in the env share a state
 
     def __init__(self, mapping_seed):

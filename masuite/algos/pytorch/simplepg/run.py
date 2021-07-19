@@ -3,8 +3,7 @@ import masuite
 from masuite import sweep
 from masuite.algos import experiment
 from masuite.agents.pytorch.policy_gradient.agent import PGAgent
-from masuite.algos.pytorch.simple_pg.simple_pg import SimplePG
-import gym
+from masuite.algos.pytorch import SimplePG
 
 parser = argparse.ArgumentParser()
 # masuite logging and env params

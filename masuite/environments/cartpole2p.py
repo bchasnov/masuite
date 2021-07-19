@@ -8,7 +8,7 @@ class CartPole2PEnv(Environment):
     mapping_seed = None
     n_players = 2
     env_dim = [8]
-    act_dim = [1]
+    n_acts = 2
     shared_state = True
 
     def __init__(self, mapping_seed=0, is_uncoupled=False):

@@ -6,16 +6,14 @@ from masuite.algos.utils.buffer import SingleBuffer
 class SimplePG:
     def __init__(self,
         agents,
-        shared_state,
-        n_players,
-        batch_size,
-        n_episodes
+        shared_state: bool,
+        n_players: int,
+        batch_size: int
     ):
         self.agents = agents
         self.shared_state = shared_state
         self.n_players = n_players
         self.batch_size = batch_size
-        self.n_episodes = n_episodes
         self.buffers = [SingleBuffer(
             max_batch_len=batch_size
         ) for _ in range(n_players)]
@@ -57,11 +55,9 @@ class SimplePG:
         obs -- list of batch observations
         acts -- list of batch actions taken
         """
-        info = {
-            'loss': [],
-        }
+        info = dict(loss=[])
         grads = []
-        for idx in range(len(self.agents)):
+        for idx in range(self.n_players):
             agent = self.agents[idx]
             obs_ = torch.as_tensor(obs[idx], dtype=torch.float32)
             acts_ = torch.as_tensor(acts[idx], dtype=torch.int32)
@@ -164,7 +160,7 @@ class SimplePG:
         batch size. Indicating the batch is over.
         """
         buff_len = max([len(self.buffers[i]._obs) for i in range(self.n_players)])
-        return buff_len == self.n_episodes
+        return buff_len >= self.batch_size
 
 
     def get_agent_params(self, copy: bool=True):

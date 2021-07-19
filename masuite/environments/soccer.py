@@ -12,11 +12,16 @@
 # states are position of A, position of B and whether A or B has the ball
 # actions for both A and B are (N,S,E,W,stick) which is represented as 0~4
 import numpy as np
+from masuite.environments.base import Environment
 GOAL_REWARD = 100
 
-class SoccerEnviroment:
-
-    def __init__(self):
+class SoccerEnv(Environment):
+    mapping_seed = None
+    n_players = 2
+    env_dim = [3]
+    n_acts = 5
+    shared_state = True
+    def __init__(self, mapping_seed=None):
         self.actions = [-4, 4, 1, -1, 0]
         self.action_space = len(self.actions)
         self.state_space = (8, 8, 2)
@@ -62,6 +67,11 @@ class SoccerEnviroment:
         # if B run into A with a ball, give the ball to A
         elif not self.AHasBall:
             self.AHasBall = True
+    
+
+    def seed(self, seed=None):
+        np.random.seed()
+
 
     # initilized game with random ball poccession
     def reset(self):
@@ -71,18 +81,20 @@ class SoccerEnviroment:
 
     # take a step in the game given actions of A and B
     # return next state, reward and whether the game is dones
-    def step(self, actionOfA, actionOfB):
+    def step(self, acts):
+        # Note: action input is index of action to take
+        assert len(acts) == 2
         if np.random.random() > 0.5:
             # A moves first
-            self.__moveA(actionOfA)
-            self.__moveB(actionOfB)
+            self.__moveA(acts[0])
+            self.__moveB(acts[1])
         else:
             # B moves first
-            self.__moveB(actionOfB)
-            self.__moveA(actionOfA)
+            self.__moveB(acts[1])
+            self.__moveA(acts[0])
 
         reward = self.__calculateReward()
-        return self.__showCurrentState(), reward, not reward == 0
+        return self.__showCurrentState(), [reward, -reward], not reward == 0, {}
 
     def render(self):
         out = "---------------------\n"

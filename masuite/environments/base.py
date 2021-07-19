@@ -21,7 +21,7 @@ class Environment(metaclass=ABCMeta):
         pass
 
     @abstractproperty
-    def act_dim(self):
+    def n_acts(self):
         """Defines the dimensions of a single player's inputted actions"""
         pass
 

@@ -7,6 +7,7 @@ from masuite.environments import base
 from masuite.experiments.quadratic_2p_simgrad import quadratic_2p_simgrad
 from masuite.experiments.cartpole_simplepg import cartpole_simplepg
 from masuite.experiments.cartpole2p_simplepg import cartpole2p_simplepg
+from masuite.experiments.soccer_simplepg import soccer_simplepg
 
 # logging
 from masuite.utils.logging import EpochLogging
@@ -20,7 +21,8 @@ from masuite.logging.terminal_logging import TerminalLogger
 EXPERIMENT_NAME_TO_ENVIRONMENT = dict(
     quadratic_2p_simgrad=quadratic_2p_simgrad.load,
     cartpole_simplepg=cartpole_simplepg.load,
-    cartpole2p_simplepg=cartpole2p_simplepg.load
+    cartpole2p_simplepg=cartpole2p_simplepg.load,
+    soccer_simplepg=soccer_simplepg.load
 )
 
 
@@ -38,6 +40,7 @@ def load(exp_name: str, kwargs: Mapping[str, Any])->base.Environment:
     exp_name -- str the name of the experiment
     
     returns -- initialized masuite.Environment"""
+    print(kwargs)
     return EXPERIMENT_NAME_TO_ENVIRONMENT[exp_name](**kwargs)
 
 

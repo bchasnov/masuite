@@ -1,3 +1,3 @@
-from masuite.environments import cartpole
+from masuite.environments import CartPoleEnv
 
-load = cartpole.CartPoleEnv
+load = CartPoleEnv
