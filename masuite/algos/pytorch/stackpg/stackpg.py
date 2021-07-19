@@ -23,11 +23,19 @@ class StackPG(SimplePG):
 
     @staticmethod
     def _resize(params, grads):
+        """Resize a flat gradient vector into a list of gradients matching the
+        sizes of params
+        
+        Keyword arguments:
+        params -- parameters to match the gradient dimensions to
+        grads -- single vector of all gradients
+        
+        returns -- list of gradients with same sizes as params"""
         new_grads = []
         index = 0
         for p in params:
             new_grads.append(grads[index:index+p.numel()].reshape(p.shape))
-        if index != grad.numel():
+        if index != grads.numel():
             raise ValueError("Gradient size mismatch")
         return new_grads
     
