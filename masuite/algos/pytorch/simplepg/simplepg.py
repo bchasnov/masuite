@@ -149,10 +149,10 @@ class SimplePG:
         """
         if self.shared_state:
             for idx, buffer in enumerate(self.buffers):
-                buffer.append_obs(obs[idx])
+                buffer.append_obs(obs)
         else:
             for buffer in self.buffers:
-                buffer.append_obs(obs)
+                buffer.append_obs(obs[idx])
     
 
     def batch_over(self):
