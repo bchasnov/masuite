@@ -9,6 +9,7 @@ class StackPG(SimplePG):
         super().__init__(agents, n_players, batch_size)
         self._reset_batch_info()
     
+    
     @staticmethod
     def _vectorize(grads):
         """Given an iterable of gradients, flatten them into a single
@@ -84,6 +85,8 @@ class StackPG(SimplePG):
     
     def _step(self, obs, acts):
         info = dict()
+        print(self.batch_weights[0][:5])
+        print(self.batch_weights[1][:5])
         f1 = self._compute_loss(obs, acts[0], self.batch_weights[0])
         f2 = -self._compute_loss(obs, acts[1], self.batch_weights[1])
         info["loss"] = (f1, f2)
