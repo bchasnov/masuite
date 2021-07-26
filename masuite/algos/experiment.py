@@ -19,6 +19,7 @@ def run(
     agents = alg.agents
     
     should_render = hasattr(env, 'render')
+    should_render = False
     shared_state = env.shared_state
     
     obs = env.reset()
