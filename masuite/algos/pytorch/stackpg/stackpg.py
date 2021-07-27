@@ -36,20 +36,21 @@ class StackPG(SimplePG):
         index = 0
         for p in params:
             new_grads.append(grads[index:index+p.numel()].reshape(p.shape))
+            index += p.numel()
         if index != grads.numel():
             raise ValueError("Gradient size mismatch")
         return new_grads
     
 
     def compute_loss_p(self, obs, act2):
-        logp2 = self.agents[0]._get_policy(obs).log_prob(act2)
+        logp2 = self.agents[1]._get_policy(obs).log_prob(act2)
         return (logp2).mean()
 
 
     def compute_loss12(self, obs, act1, act2, weights):
-        logp1 = self.agents[0]._get_policy(obs).log_prop(act1)
+        logp1 = self.agents[0]._get_policy(obs).log_prob(act1)
         logp2 = self.agents[1]._get_policy(obs).log_prob(act2)
-        return (logp1 * logp2 * weights)
+        return (logp1 * logp2 * weights).mean()
 
     
     def conjugate_gradient_stac_pg(self, vec, params, b, vec2, x=None,
@@ -64,7 +65,7 @@ class StackPG(SimplePG):
         Ax += reg * x
 
         r = b.clone().detach()-Ax
-        p = r.clone.detach()
+        p = r.clone().detach()
         rsold = torch.dot(r.view(-1), r.view(-1))
 
         for itr in range(nsteps):
@@ -110,21 +111,21 @@ class StackPG(SimplePG):
         x, _ = self.conjugate_gradient_stac_pg(
             vec=D2f2_vec,
             params=p2,
-            vec2=D2f1_vec.detach(),
-            x=D2p_vec.detach(),
+            b=D2f1_vec.detach(),
+            vec2=D2p_vec.detach(),
         )
 
         f2_surro = self.compute_loss12(
-            obs=torch.as_tensor(obs, dtype=torch.float32),
-            act1=torch.as_tensor(acts[1], dtype=torch.int32,
-            act2=torch.as_tensor(acts[1], dtype=torch.int32),
-            weights=torch.as_tensor(self.batch_lens[0], dtype=torch.float32))
+            obs=obs[0],
+            act1=acts[0],
+            act2=acts[1],
+            weights=torch.as_tensor(self.batch_weights[0], dtype=torch.float32)
         )
 
         D2f2_surro = autograd.grad(f2_surro, p2, create_graph=True)
         D2f2_surro_vec = self._vectorize(D2f2_surro)
 
-        _Avec = autograd.grad(D2f2_surro_vec, p2, create_graph=True)
+        _Avec = autograd.grad(D2f2_surro_vec, p1, x, retain_graph=True, allow_unused=True)
         # TODO: device
         grad_imp = torch.cat(
             [g.contiguous().view(-1) if g is not None else torch.Tensor([0]) for g in _Avec]
