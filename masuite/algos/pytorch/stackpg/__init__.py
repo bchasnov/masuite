@@ -1,1 +1,1 @@
-from stackpg import StackPG
+from .stackpg import StackPG

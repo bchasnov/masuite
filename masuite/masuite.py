@@ -8,6 +8,7 @@ from masuite.experiments.quadratic_2p_simgrad import quadratic_2p_simgrad
 from masuite.experiments.cartpole_simplepg import cartpole_simplepg
 from masuite.experiments.cartpole2p_simplepg import cartpole2p_simplepg
 from masuite.experiments.soccer_simplepg import soccer_simplepg
+from masuite.experiments.soccer_stackpg import soccer_stackpg
 
 # logging
 from masuite.utils.logging import EpochLogging
@@ -22,7 +23,8 @@ EXPERIMENT_NAME_TO_ENVIRONMENT = dict(
     quadratic_2p_simgrad=quadratic_2p_simgrad.load,
     cartpole_simplepg=cartpole_simplepg.load,
     cartpole2p_simplepg=cartpole2p_simplepg.load,
-    soccer_simplepg=soccer_simplepg.load
+    soccer_simplepg=soccer_simplepg.load,
+    soccer_stackpg=soccer_stackpg.load
 )
 
 

@@ -1,1 +1,1 @@
-from simplepg import SimplePG
+from .simplepg import SimplePG
