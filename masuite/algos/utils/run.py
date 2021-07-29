@@ -25,6 +25,8 @@ parser.add_argument('--log-params', default=False, type=bool,
     help='whether or not to include experiment params in log filename')
 parser.add_argument('--seed', default=True, type=bool,
     help='whether or not to seed the environment')
+parser.add_argument('--render', default=False, type=bool,
+    help='whether or not to call the environment render function')
 
 # algorithm-specific params
 parser.add_argument('--num-epochs', default=50, type=int,
@@ -85,5 +87,6 @@ def run_pg_experiment(masuite_id: str, AgentClass, AlgClass):
         alg=alg,
         env=env,
         logger=logger,
-        num_epochs=args.num_epochs
+        num_epochs=args.num_epochs,
+        render=args.render
     )
