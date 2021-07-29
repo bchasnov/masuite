@@ -19,7 +19,7 @@ def run(
     agents = alg.agents
     
     should_render = hasattr(env, 'render')
-    should_render = False
+    # should_render = False
     shared_state = env.shared_state
     
     obs = env.reset()
@@ -27,8 +27,8 @@ def run(
         # only render first episode of each epoch
         finished_rendering_this_epoch = False
         while True:
-            if not finished_rendering_this_epoch and should_render:
-                env.render()
+            # if not finished_rendering_this_epoch and should_render:
+            # env.render()
             
             alg.track_obs(obs)
             

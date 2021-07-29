@@ -130,13 +130,8 @@ class SimplePG:
         timestep
         """
         # append timestep information to the buffer(s)
-        if self.shared_state:
-            for idx in range(self.n_players):
-                # self.buffers[idx].append_timestep(acts, rews)
-                self.buffers[idx].append_timestep(acts[idx], rews[idx])
-        else:
-            for idx in range(self.n_players):
-                self.buffers[idx].append_timestep(acts[idx], rews[idx])
+        for idx in range(self.n_players):
+            self.buffers[idx].append_timestep(acts[idx], rews[idx])
     
 
     def track_obs(self, obs):
@@ -148,10 +143,10 @@ class SimplePG:
         the current timestep
         """
         if self.shared_state:
-            for idx, buffer in enumerate(self.buffers):
+            for  buffer in self.buffers:
                 buffer.append_obs(obs)
         else:
-            for buffer in self.buffers:
+            for idx, buffer in enumerate(self.buffers):
                 buffer.append_obs(obs[idx])
     
 

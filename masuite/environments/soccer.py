@@ -22,6 +22,7 @@ class SoccerEnv(Environment):
     n_acts = 5
     shared_state = True
     def __init__(self, mapping_seed=None):
+        self.mapping_seed = mapping_seed
         self.actions = [-4, 4, 1, -1, 0]
         self.action_space = len(self.actions)
         self.state_space = (8, 8, 2)
@@ -70,7 +71,7 @@ class SoccerEnv(Environment):
     
 
     def seed(self, seed=None):
-        np.random.seed()
+        np.random.seed(seed)
 
 
     # initilized game with random ball poccession
