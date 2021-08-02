@@ -66,7 +66,7 @@ def load_from_id(masuite_id: str)->base.Environment:
 
 
 def init_logging(
-    masuite_id: str,
+    filename: str,
     n_players: int,
     mode: str,
     save_path: str,
@@ -84,7 +84,7 @@ def init_logging(
         raise ValueError('Invalid terminal logging mode: \'{mode}\'')
         
     logger = log_class(
-        masuite_id=masuite_id,
+        filename=filename,
         results_dir=save_path,
         overwrite=overwrite,
         log_checkpoints=log_checkpoints,

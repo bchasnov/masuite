@@ -51,7 +51,7 @@ def run(
                     batch_info = alg.end_epoch()
                     logger.track_epoch(batch_info)
                     print(f'epoch: {epoch} \t loss: {batch_info["loss"]} \t return: {batch_info["avg_rets"]}')
-                    if logger.checkpoint_due():
+                    if logger.checkpoint_due() or (logger.log_checkpoints and epoch == num_epochs-1):
                         curr_params = alg.get_agent_params(copy=True)
                         logger.log_checkpoint(curr_params)
                     break

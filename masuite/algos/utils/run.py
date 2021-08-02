@@ -58,18 +58,6 @@ def run_pg_experiment(masuite_id: str, AgentClass, AlgClass):
         )
     else:
         params=None
-    
-    logger = masuite.init_logging(
-        masuite_id=masuite_id,
-        n_players=n_players,
-        mode=args.logging_mode,
-        save_path=args.save_path,
-        overwrite=args.overwrite,
-        log_freq=args.log_freq,
-        log_checkpoints=args.log_checkpoints,
-        checkpoint_freq=args.checkpoint_freq,
-        params=params
-    )
 
     agents = [AgentClass(env_dim=env_dim, n_acts=n_acts, lr=args.lr)
         for _ in range(n_players)]
@@ -79,6 +67,18 @@ def run_pg_experiment(masuite_id: str, AgentClass, AlgClass):
         shared_state=shared_state,
         n_players=n_players,
         batch_size=args.batch_size
+    )
+
+    logger = masuite.init_logging(
+        filename=f"{AlgClass.__name__}-{masuite_id}",
+        n_players=n_players,
+        mode=args.logging_mode,
+        save_path=args.save_path,
+        overwrite=args.overwrite,
+        log_freq=args.log_freq,
+        log_checkpoints=args.log_checkpoints,
+        checkpoint_freq=args.checkpoint_freq,
+        params=params
     )
 
     print(f'Running experiement: masuite={masuite_id}, lr={args.lr}, epochs={args.num_epochs}, batch_size={args.batch_size}')

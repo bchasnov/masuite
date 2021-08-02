@@ -30,3 +30,6 @@ class EpochLogging:
     def checkpoint_due(self):
         return self.log_checkpoints and self.epoch % self.checkpoint_freq == 0
 
+    def log_checkpoint(self, params):
+        self.logger.write_checkpoint(params)
+

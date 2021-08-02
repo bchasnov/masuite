@@ -13,7 +13,7 @@ class CSVLogger(base.Logger):
 
     """
     def __init__(self,
-        masuite_id: str,
+        filename: str,
         results_dir: str= '/tmp/masuite',
         overwrite:bool =False,
         log_checkpoints: bool=False,
@@ -25,23 +25,24 @@ class CSVLogger(base.Logger):
             except OSError:
                 pass
         
-        safe_masuite_id = masuite_id.replace(sweep.SEP, base.SAFE_SEP)
+        safe_filename = filename.replace(sweep.SEP, base.SAFE_SEP)
         if params is not None:
             params_str = base.create_params_str(params)
         else:
             params_str = None
         
         if params_str:
-            log_filename = f'{safe_masuite_id}_{params_str}.csv'
+            log_filename = f'{safe_filename}_{params_str}.csv'
         else:
-            log_filename = f'{safe_masuite_id}.csv'
+            log_filename = f'{safe_filename}.csv'
         
         if log_checkpoints:
             self.checkpoint_save_path = base.create_checkpoint_file(
-                safe_masuite_id,
+                safe_filename,
                 results_dir,
                 params_str
             )
+            print(f"Logging agent checkpoints to file: {self.checkpoint_save_path}")
             if os.path.exists(self.checkpoint_save_path) and not overwrite:
                 raise ValueError(
                     f'File {self.checkpoint_save_path} already exists. Specify a different '
@@ -49,6 +50,7 @@ class CSVLogger(base.Logger):
                 )
         
         log_save_path = os.path.join(results_dir, log_filename)
+        print(f"Logging to file: {log_save_path}")
 
         if os.path.exists(log_save_path) and not overwrite:
             raise ValueError(

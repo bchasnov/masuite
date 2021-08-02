@@ -1,3 +1,4 @@
+import os
 from abc import ABCMeta, abstractproperty
 import pandas as pd
 from masuite import sweep
