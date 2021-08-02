@@ -33,7 +33,7 @@ class PGAgent:
         hidden_sizes: list=[32],
         lr: float=1e-2,
         seed: int=None,
-        optim=SGDOptim
+        optim=Adam
     ):
         if not isinstance(env_dim, list):
             env_dim = [env_dim]

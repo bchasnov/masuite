@@ -15,7 +15,7 @@ import numpy as np
 from masuite.environments.base import Environment
 GOAL_REWARD = 100
 
-class SoccerEnv(Environment):
+class SmallSoccerEnv(Environment):
     mapping_seed = None
     n_players = 2
     env_dim = [3]

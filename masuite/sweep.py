@@ -1,10 +1,8 @@
 from typing import Any, Dict, Mapping, Tuple
 
-from masuite.experiments.quadratic_2p_simgrad import sweep as quadratic_2p_simgrad_sweep
-from masuite.experiments.cartpole_simplepg import sweep as cartpole_simplepg_sweep
-from masuite.experiments.cartpole2p_simplepg import sweep as cartpole2p_simplepg_sweep
-from masuite.experiments.soccer_simplepg import sweep as soccer_simplepg_sweep
-from masuite.experiments.soccer_stackpg import sweep as soccer_stackpg_sweep
+from masuite.experiments.cartpole import sweep as cartpole_sweep
+from masuite.experiments.cartpole2p import sweep as cartpole2p_sweep
+from masuite.experiments.smallsoccer import sweep as smallsoccer_sweep
 
 import frozendict
 
@@ -30,7 +28,7 @@ def _parse_experiment_sweep(experiment_package)->Tuple[MASuiteId,...]:
         masuite_id = f'{experiment_name}{SEP}{i}'
         results.append(masuite_id)
         _SETTINGS[masuite_id] = setting
-        _EPISODES[masuite_id] = experiment_package.NUM_EPISODES
+        # _EPISODES[masuite_id] = experiment_package.NUM_EPISODES
     
     # Add masuite_ids to corresponding tag sweeps
     _SWEEP.extend(results)
@@ -38,11 +36,9 @@ def _parse_experiment_sweep(experiment_package)->Tuple[MASuiteId,...]:
 
 
 # masuite_ids broken down by environment
-QUADRATIC_2P_SIMGRAD = _parse_experiment_sweep(quadratic_2p_simgrad_sweep)
-CARTPOLE_SIMPLEPG = _parse_experiment_sweep(cartpole_simplepg_sweep)
-CARTPOLE2P_SIMPLEPG = _parse_experiment_sweep(cartpole2p_simplepg_sweep)
-SOCCER_SIMPLEPG = _parse_experiment_sweep(soccer_simplepg_sweep)
-SOCCER_STACKPG = _parse_experiment_sweep(soccer_stackpg_sweep)
+CARTPOLE = _parse_experiment_sweep(cartpole_sweep)
+CARTPOLE2P = _parse_experiment_sweep(cartpole2p_sweep)
+SOCCER_SMALL = _parse_experiment_sweep(smallsoccer_sweep)
 
 # mapping from masuite id to keyword arguments for the corresponding env
 SETTINGS: Mapping[MASuiteId, EnvKWargs] = frozendict.frozendict(**_SETTINGS)
@@ -50,5 +46,5 @@ SETTINGS: Mapping[MASuiteId, EnvKWargs] = frozendict.frozendict(**_SETTINGS)
 # Tuple containing all masuite_ids. Used for hyperparameter sweeps
 SWEEP: Tuple[MASuiteId, ...] = tuple(_SWEEP)
 
-# mapping from masuite_id to masuite_num_episodes = how many episodes to run
-EPISODES: Mapping[MASuiteId, int] = frozendict.frozendict(**_EPISODES)
+# # mapping from masuite_id to masuite_num_episodes = how many episodes to run
+# EPISODES: Mapping[MASuiteId, int] = frozendict.frozendict(**_EPISODES)

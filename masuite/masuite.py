@@ -4,11 +4,9 @@ from masuite import sweep
 from masuite.environments import base
 
 # experiments
-from masuite.experiments.quadratic_2p_simgrad import quadratic_2p_simgrad
-from masuite.experiments.cartpole_simplepg import cartpole_simplepg
-from masuite.experiments.cartpole2p_simplepg import cartpole2p_simplepg
-from masuite.experiments.soccer_simplepg import soccer_simplepg
-from masuite.experiments.soccer_stackpg import soccer_stackpg
+from masuite.experiments.cartpole import cartpole
+from masuite.experiments.cartpole2p import cartpole2p
+from masuite.experiments.smallsoccer import smallsoccer
 
 # logging
 from masuite.utils.logging import EpochLogging
@@ -20,11 +18,9 @@ from masuite.logging.terminal_logging import TerminalLogger
 # Each constructor or load function accepts keywork arguments as defined in
 # each experiment's sweep.py file
 EXPERIMENT_NAME_TO_ENVIRONMENT = dict(
-    quadratic_2p_simgrad=quadratic_2p_simgrad.load,
-    cartpole_simplepg=cartpole_simplepg.load,
-    cartpole2p_simplepg=cartpole2p_simplepg.load,
-    soccer_simplepg=soccer_simplepg.load,
-    soccer_stackpg=soccer_stackpg.load
+    cartpole=cartpole.load,
+    cartpole2p=cartpole2p.load,
+    smallsoccer=smallsoccer.load,
 )
 
 

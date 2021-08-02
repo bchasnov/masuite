@@ -4,7 +4,7 @@ from masuite.algos.utils import run
 
 
 if __name__ == '__main__':
-    masuite_id = "cartpole_simplepg/0" # default experiment
+    masuite_id = "cartpole/0" # default experiment
     AgentClass = PGAgent
     AlgClass = SimplePG
     run.run_pg_experiment(masuite_id, AgentClass, AlgClass)
