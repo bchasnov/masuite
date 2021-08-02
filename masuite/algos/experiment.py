@@ -1,11 +1,11 @@
 from masuite.environments.base import Environment
-from masuite.logging import terminal_logging
 
 def run(
     alg,
     env: Environment,
     logger,
     num_epochs: int,
+    render: bool
 )->None:
     """
     Runs an agent on an environment
@@ -18,8 +18,7 @@ def run(
     """
     agents = alg.agents
     
-    should_render = hasattr(env, 'render')
-    # should_render = False
+    should_render = hasattr(env, 'render') and render
     shared_state = env.shared_state
     
     obs = env.reset()
@@ -27,8 +26,8 @@ def run(
         # only render first episode of each epoch
         finished_rendering_this_epoch = False
         while True:
-            # if not finished_rendering_this_epoch and should_render:
-            # env.render()
+            if not finished_rendering_this_epoch and should_render:
+                env.render()
             
             alg.track_obs(obs)
             
@@ -38,10 +37,11 @@ def run(
             else:
                 acts = [agents[i].select_action(obs[i])
                     for i in range(env.n_players)]
-            # print(acts[0])
             
             # send action(s) to env and get new timestep info
             obs, rews, done, _ = env.step(acts)
+            # need to track timestep and acts separately to map obs_t
+            # to acts_t and rews_t
             alg.track_timestep(acts, rews)
             if done:
                 finished_rendering_this_epoch = True
