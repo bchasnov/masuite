@@ -36,7 +36,7 @@ parser.add_argument('--batch-size', default=5000, type=int,
 parser.add_argument('--lr', default=1e-2, type=float,
     help='learning rate for agents')
 
-args = parser.parse_args()
+args, _ = parser.parse_known_args()
 
 
 def run_pg_experiment(masuite_id: str, AgentClass, AlgClass):
@@ -80,7 +80,6 @@ def run_pg_experiment(masuite_id: str, AgentClass, AlgClass):
         checkpoint_freq=args.checkpoint_freq,
         params=params
     )
-
     print(f'Running experiement: masuite={masuite_id}, lr={args.lr}, epochs={args.num_epochs}, batch_size={args.batch_size}')
 
     experiment.run(
@@ -90,3 +89,8 @@ def run_pg_experiment(masuite_id: str, AgentClass, AlgClass):
         num_epochs=args.num_epochs,
         render=args.render
     )
+
+    run_info = dict(
+        log_save_path=logger.logger.log_save_path
+    )
+    return run_info

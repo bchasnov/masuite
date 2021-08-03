@@ -16,6 +16,7 @@ from masuite.environments.base import Environment
 GOAL_REWARD = 100
 
 class SmallSoccerEnv(Environment):
+    max_episode_len = 100
     mapping_seed = None
     n_players = 2
     env_dim = [3]
@@ -26,6 +27,7 @@ class SmallSoccerEnv(Environment):
         self.actions = [-4, 4, 1, -1, 0]
         self.action_space = len(self.actions)
         self.state_space = (8, 8, 2)
+        self.episode_len = 0
 
     def __showCurrentState(self):
         return (self.posOfA, self.posOfB, self.AHasBall)
@@ -76,6 +78,7 @@ class SmallSoccerEnv(Environment):
 
     # initilized game with random ball poccession
     def reset(self):
+        self.episode_len = 0
         self.posOfA, self.posOfB = np.random.choice([1,2,5,6], size=2, replace=False)
         self.AHasBall = np.random.choice([True, False])
         return self.__showCurrentState()
@@ -83,6 +86,7 @@ class SmallSoccerEnv(Environment):
     # take a step in the game given actions of A and B
     # return next state, reward and whether the game is dones
     def step(self, acts):
+        self.episode_len += 1
         # Note: action input is index of action to take
         assert len(acts) == 2
         if np.random.random() > 0.5:
@@ -95,7 +99,8 @@ class SmallSoccerEnv(Environment):
             self.__moveA(acts[0])
 
         reward = self.__calculateReward()
-        return self.__showCurrentState(), [reward, -reward], not reward == 0, {}
+        done = not reward == 0 or self.episode_len >= self.max_episode_len
+        return self.__showCurrentState(), [reward, -reward], done, {}
 
     def render(self):
         out = "---------------------\n"

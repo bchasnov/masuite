@@ -38,6 +38,7 @@ class TerminalLogger(base.Logger):
                 )
 
             self.checkpoint_data = []
+            self.log_save_path = None
             
     
     def write(self, data: Mapping[str, Any]):

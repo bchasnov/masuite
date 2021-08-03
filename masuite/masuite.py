@@ -38,7 +38,6 @@ def load(exp_name: str, kwargs: Mapping[str, Any])->base.Environment:
     exp_name -- str the name of the experiment
     
     returns -- initialized masuite.Environment"""
-    print(kwargs)
     return EXPERIMENT_NAME_TO_ENVIRONMENT[exp_name](**kwargs)
 
 
