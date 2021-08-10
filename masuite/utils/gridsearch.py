@@ -96,7 +96,8 @@ class GridSearch:
         AlgClass,
         run_fn,
         param_grid: Union[Mapping, Iterable],
-        score_fn
+        score_fn,
+        log_to_terminal: bool=False
     ) -> None:
         self.masuite_id = masuite_id
         self.AgentClass = AgentClass
@@ -104,12 +105,13 @@ class GridSearch:
         self.run_fn = run_fn
         self.param_grid = ParamGrid(param_grid)
         self.score_fn = score_fn
+        self.log_to_terminal = log_to_terminal
     
     
     def run_search(self):
         log_files = list()
-        for params in self.param_grid:
-            print(f"Running {self.masuite_id} with params {params}")
+        for i, params in enumerate(self.param_grid):
+            print(f"{i}: Running {self.masuite_id} with params {params}")
             run_info = self.run_experiment(params)
             log_files.append(run_info["log_save_path"])
         self.log_files = log_files
@@ -122,6 +124,6 @@ class GridSearch:
         # set the parameter values
         for key, value in params.items():
             run.args.__setattr__(key, value)
-        run_info = self.run_fn(self.masuite_id, self.AgentClass, self.AlgClass)
+        run_info = self.run_fn(self.masuite_id, self.AgentClass, self.AlgClass, self.log_to_terminal)
         return run_info
         

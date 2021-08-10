@@ -5,7 +5,8 @@ def run(
     env: Environment,
     logger,
     num_epochs: int,
-    render: bool
+    render: bool,
+    log_to_terminal: bool=True
 )->None:
     """
     Runs an agent on an environment
@@ -50,7 +51,8 @@ def run(
                 if alg.batch_over():
                     batch_info = alg.end_epoch()
                     logger.track_epoch(batch_info)
-                    print(f'epoch: {epoch} \t loss: {batch_info["loss"]} \t return: {batch_info["avg_rets"]}')
+                    if log_to_terminal:
+                        print(f'epoch: {epoch} \t loss: {batch_info["loss"]} \t return: {batch_info["avg_rets"]}')
                     if logger.checkpoint_due() or (logger.log_checkpoints and epoch == num_epochs-1):
                         curr_params = alg.get_agent_params(copy=True)
                         logger.log_checkpoint(curr_params)

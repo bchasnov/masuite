@@ -19,7 +19,7 @@ setuptools.setup(
     install_requires=[
         'absl-py',
         'frozendict',
-        'gym',
+        #'gym',
         'matplotlib',
         'numpy',
         'pandas',
