@@ -6,4 +6,4 @@ if __name__ == "__main__":
     masuite_id = "smallsoccer/0" # default experiment
     AgentClass = PGAgent
     AlgClass = StackPG
-    run.run_pg_experiment(masuite_id, AgentClass, AlgClass)
+    run.run_discrete_pg_experiment(masuite_id, AgentClass, AlgClass)

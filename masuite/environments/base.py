@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 
 
-class Environment(metaclass=ABCMeta):
+class DiscreteEnvironment(metaclass=ABCMeta):
+    """Base class for an environment with a discrete action space"""
     def __init__(self):
         pass
 

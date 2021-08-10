@@ -12,20 +12,20 @@
 # states are position of A, position of B and whether A or B has the ball
 # actions for both A and B are (N,S,E,W,stick) which is represented as 0~4
 import numpy as np
-from masuite.environments.base import Environment
+from masuite.environments.base import DiscreteEnvironment
 GOAL_REWARD = 100
 
-class SmallSoccerEnv(Environment):
+class SmallSoccerEnv(DiscreteEnvironment):
     max_episode_len = 100
     mapping_seed = None
     n_players = 2
     env_dim = [3]
     n_acts = 5
     shared_state = True
+
     def __init__(self, mapping_seed=None):
         self.mapping_seed = mapping_seed
         self.actions = [-4, 4, 1, -1, 0]
-        self.action_space = len(self.actions)
         self.state_space = (8, 8, 2)
         self.episode_len = 0
 

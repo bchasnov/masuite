@@ -1,10 +1,10 @@
 import numpy as np
 from gym import spaces
-from masuite.environments.base import Environment
+from masuite.environments.base import DiscreteEnvironment
 from masuite.environments.cartpole import CartPoleEnv
 
 
-class CartPole2PEnv(Environment):
+class CartPole2PEnv(DiscreteEnvironment):
     mapping_seed = None
     n_players = 2
     env_dim = [8]
@@ -19,14 +19,6 @@ class CartPole2PEnv(Environment):
         seeds = [np.random.randint(100) for _ in range(self.n_players)]
         self.envs = [CartPoleEnv(seed) for seed in seeds]
 
-        high = np.array([self.envs[0].x_threshold * 2,
-                         np.finfo(np.float32).max,
-                         self.envs[0].theta_threshold_radians * 2,
-                         np.finfo(np.float32).max],
-                        dtype=np.float32)
-        self.action_space = spaces.Discrete(2)
-        self.observation_space = spaces.Box(-high, high, dtype=np.float32)
-    
 
     def seed(self, seed=None):
         if seed is not None:

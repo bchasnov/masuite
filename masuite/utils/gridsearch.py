@@ -5,7 +5,6 @@ from typing import Mapping, Iterable, Union
 
 import numpy as np
 
-import masuite
 from masuite.agents.base import Agent
 from masuite.algos.utils import run
 # from masuite.algos.base import Algorithm

@@ -5,13 +5,11 @@ permalink: https://perma.cc/C9ZM-652R
 """
 
 import math
-from masuite.environments.base import Environment
-from gym import spaces, logger
-from gym.utils import seeding
+from masuite.environments.base import DiscreteEnvironment
 import numpy as np
 
 
-class CartPoleEnv(Environment):
+class CartPoleEnv(DiscreteEnvironment):
     """
     Description:
         A pole is attached by an un-actuated joint to a cart, which moves along
@@ -78,16 +76,7 @@ class CartPoleEnv(Environment):
         self.theta_threshold_radians = 12 * 2 * math.pi / 360
         self.x_threshold = 2.4
 
-        # Angle limit set to 2 * theta_threshold_radians so failing observation
-        # is still within bounds.
-        high = np.array([self.x_threshold * 2,
-                         np.finfo(np.float32).max,
-                         self.theta_threshold_radians * 2,
-                         np.finfo(np.float32).max],
-                        dtype=np.float32)
-
-        self.action_space = spaces.Discrete(2)
-        self.observation_space = spaces.Box(-high, high, dtype=np.float32)
+        self.actions = [0, 1]
         self.viewer = None
         self.state = None
 
@@ -96,16 +85,12 @@ class CartPoleEnv(Environment):
 
 
     def seed(self, seed=None):
-        if seed is not None:
-            self.np_random, seed = seeding.np_random(seed)
-        else:
-            self.np_random, seed = seeding.np_random(self.mapping_seed)
-        return [seed]
+        np.random.seed(seed)
 
     def step(self, action, external_force=0):
         if isinstance(action, list): action = action[0]
         err_msg = "%r (%s) invalid" % (action, type(action))
-        assert self.action_space.contains(action), err_msg
+        assert action in self.actions, f"Invalid action passed to step: {action}"
 
         # position, cart velocity, pole angle, pole angular velocity
         x, x_dot, theta, theta_dot = self.state
@@ -151,7 +136,7 @@ class CartPoleEnv(Environment):
             reward = 1.0
         else:
             if self.steps_beyond_done == 0:
-                logger.warn(
+                print(
                     "You are calling 'step()' even though this "
                     "environment has already returned done = True. You "
                     "should always call 'reset()' once you receive 'done = "
