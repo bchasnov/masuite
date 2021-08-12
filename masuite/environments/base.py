@@ -1,14 +1,7 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 
-
-class DiscreteEnvironment(metaclass=ABCMeta):
-    """Base class for an environment with a discrete action space"""
+class Environment(metaclass=ABCMeta):
     def __init__(self):
-        pass
-
-    @abstractproperty
-    def mapping_seed(self, val):
-        """Defines the seed env randomization"""
         pass
 
     @abstractproperty
@@ -17,8 +10,29 @@ class DiscreteEnvironment(metaclass=ABCMeta):
         pass
 
     @abstractproperty
+    def mapping_seed(self, val):
+        """Defines the seed env randomization"""
+        pass
+
+    @abstractproperty
     def env_dim(self):
         """Defines the dimension(s) of the state/observations"""
+        pass
+
+    @abstractmethod
+    def step(self, actions):
+        """Steps the environment to a new timestep given players' actions"""
+        pass
+
+    @abstractmethod
+    def reset(self):
+        """Resets the environment"""
+        raise NotImplementedError
+
+
+class DiscreteEnvironment(Environment, metaclass=ABCMeta):
+    """Base class for an environment with a discrete action space"""
+    def __init__(self):
         pass
 
     @abstractproperty
@@ -31,12 +45,4 @@ class DiscreteEnvironment(metaclass=ABCMeta):
         """Defines whether or not players share a single state"""
         pass
     
-    @abstractmethod
-    def step(self, actions):
-        """Steps the environment to a new timestep given players' actions"""
-        pass
     
-    @abstractmethod
-    def reset(self):
-        """Resets the environment"""
-        raise NotImplementedError

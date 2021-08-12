@@ -1,5 +1,4 @@
 import numpy as np
-from gym import spaces
 from masuite.environments.base import DiscreteEnvironment
 from masuite.environments.cartpole import CartPoleEnv
 
