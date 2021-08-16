@@ -39,7 +39,7 @@ parser.add_argument('--lr', default=1e-2, type=float,
 args, _ = parser.parse_known_args()
 
 
-def run_discrete_pg_experiment(masuite_id: str, AgentClass, AlgClass):
+def run_discrete_pg_experiment(masuite_id: str, AgentClass, AlgClass, log_to_terminal: bool=True):
     masuite_id = args.masuite_id if args.masuite_id is not None else masuite_id
     env = masuite.load_from_id(masuite_id)
     if args.seed:
@@ -87,7 +87,8 @@ def run_discrete_pg_experiment(masuite_id: str, AgentClass, AlgClass):
         env=env,
         logger=logger,
         num_epochs=args.num_epochs,
-        render=args.render
+        render=args.render,
+        log_to_terminal=log_to_terminal
     )
 
     run_info = dict(

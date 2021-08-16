@@ -108,9 +108,10 @@ class GridSearch:
     
     
     def run_search(self):
+        print(f"Running gridsearch over {len(self.param_grid)} parameter combinations")
         log_files = list()
         for i, params in enumerate(self.param_grid):
-            print(f"{i}: Running {self.masuite_id} with params {params}")
+            print(f"{i+1}: Running {self.masuite_id} with params {params}")
             run_info = self.run_experiment(params)
             log_files.append(run_info["log_save_path"])
         self.log_files = log_files
