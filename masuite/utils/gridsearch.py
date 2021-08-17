@@ -96,7 +96,9 @@ class GridSearch:
         run_fn,
         param_grid: Union[Mapping, Iterable],
         score_fn,
-        log_to_terminal: bool=False
+        log_to_terminal: bool=False,
+        seed: bool=True,
+        overwrite: bool=False
     ) -> None:
         self.masuite_id = masuite_id
         self.AgentClass = AgentClass
@@ -105,6 +107,8 @@ class GridSearch:
         self.param_grid = ParamGrid(param_grid)
         self.score_fn = score_fn
         self.log_to_terminal = log_to_terminal
+        self.seed = seed
+        self.overwrite = overwrite
     
     
     def run_search(self):
@@ -120,7 +124,10 @@ class GridSearch:
 
     def run_experiment(self, params):
         run.args.__setattr__("log_params", True)
-        run.args.__setattr__("overwrite", True)
+        run.args.__setattr__("overwrite", self.overwrite)
+        run.args.__setattr__("seed", False)
+        safe_masuite_id = self.masuite_id.replace("/", "")
+        run.args.__setattr__("save_path", f"tmp/{safe_masuite_id}-gridsearch")
         # set the parameter values
         for key, value in params.items():
             run.args.__setattr__(key, value)

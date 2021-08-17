@@ -1,3 +1,4 @@
+from typing import List
 import torch
 from torch._C import dtype
 import torch.autograd as autograd
@@ -31,7 +32,8 @@ class StackPG(SimplePG):
         params -- parameters to match the gradient dimensions to
         grads -- single vector of all gradients
         
-        returns -- list of gradients with same sizes as params"""
+        returns -- list of gradients with same sizes as params
+        """
         new_grads = []
         index = 0
         for p in params:
@@ -40,7 +42,32 @@ class StackPG(SimplePG):
         if index != grads.numel():
             raise ValueError("Gradient size mismatch")
         return new_grads
+
+
+    @staticmethod
+    def _compute_simple_grads(losses, params) -> List[torch.Tensor]:
+        grads = []
+        for loss, param in zip(losses, params):
+            grads.append(autograd.grad(loss, param, create_graph=True))
+        return grads
     
+
+    def compute_agent_losses(self, obs, acts, weights) -> List[float]:
+        """Compute all agent losses and return them in a list
+        
+        Keyword arguments:
+        obs -- batch observations
+        acts -- batch actions
+        weights -- batch weights
+        
+        returns -- list of all agent losses
+        """
+        losses = []
+        for idx, agent in enumerate(self.agents):
+            losses.append(self._compute_loss(obs[idx], acts[idx], weights[idx], agent))
+        return losses
+    
+
 
     def compute_loss_p(self, obs, act2):
         logp2 = self.agents[1]._get_policy(obs).log_prob(act2)
@@ -83,22 +110,29 @@ class StackPG(SimplePG):
             rsold = rsnew
         return x, itr + 1
 
-    
+
     def _step(self, obs, acts):
         info = dict()
         obs = [torch.as_tensor(obs[i], dtype=torch.float32) for i in range(self.n_players)]
         acts = [torch.as_tensor(acts[i], dtype=torch.int32) for i in range(self.n_players)]
         weights = [torch.as_tensor(self.batch_weights[i], dtype=torch.float32) 
             for i in range(self.n_players)]
-        f1 = self._compute_loss(obs[0], acts[0], weights[0], self.agents[0])
-        f2 = -self._compute_loss(obs[1], acts[1], weights[1], self.agents[1])
-        info["loss"] = (f1, f2)
-        p1, p2 = list(self.agents[0]._get_params()), list(self.agents[1]._get_params())
-        D1f1 = autograd.grad(f1, p1, create_graph=True)
-        D1f1_vec = self._vectorize(D1f1)
-        D2f2 = autograd.grad(f2, p2, create_graph=True)
-        D2f2_vec = self._vectorize(D2f2)
+        
+        losses = self.compute_agent_losses(obs, acts, weights)
+        params = self.get_agent_params(copy=True)
+        simple_grads = self._compute_simple_grads(losses, params)
+        simple_grad_vecs = [self._vectorize(grads) for grads in simple_grads]
+        # f1 = self._compute_loss(obs[0], acts[0], weights[0], self.agents[0])
+        # f2 = -self._compute_loss(obs[1], acts[1], weights[1], self.agents[1])
+        info["loss"] = tuple(losses)
+
+        # p1, p2 = list(self.agents[0]._get_params()), list(self.agents[1]._get_params())
+        # D1f1 = autograd.grad(f1, p1, create_graph=True)
+        # D1f1_vec = self._vectorize(D1f1)
+        # D2f2 = autograd.grad(f2, p2, create_graph=True)
+        # D2f2_vec = self._vectorize(D2f2)
         D2f1_vec = -D2f2_vec.clone()
+        #REVIEW can this be replaced with "autograd.grad(f1, p2, create_graph=True)"?
 
         f_p = self.compute_loss_p(
             obs=torch.as_tensor(obs[1], dtype=torch.float32),

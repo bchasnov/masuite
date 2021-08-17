@@ -49,18 +49,17 @@ class CSVLogger(base.Logger):
                     'directory, or set overwrite=True to overwrite existing data.'
                 )
         
-        log_save_path = os.path.join(results_dir, log_filename)
-        print(f"Logging to file: {log_save_path}")
+        self.log_save_path = os.path.join(results_dir, log_filename)
 
-        if os.path.exists(log_save_path) and not overwrite:
+        if os.path.exists(self.log_save_path) and not overwrite:
             raise ValueError(
-                f'File {log_save_path} already exists. Specify a different '
+                f'File {self.log_save_path} already exists. Specify a different '
                 'directory, or set overwrite=True to overwrite existing data.'
             )
-            
+
+        print(f"Logging to file: {self.log_save_path}")
 
         self.data, self.checkpoint_data = [], []
-        self.log_save_path = log_save_path
 
 
     def write(self, data: Mapping[str, Any]):

@@ -159,14 +159,18 @@ class SimplePG:
 
 
     def get_agent_params(self, copy: bool=True):
-        """Return the current agent neural network parameters"""
+        """Return a list of the current neural network parameters for all
+        agents
+        
+        Keyword arguments:
+        copy -- whether or not to return a copy of the parameters
+        
+        returns -- list of all agent nn parameters"""
         params = []
         for agent in self.agents:
-            agent_params = []
-            for p in agent._get_params():
-                if copy:
-                    agent_params.append(p.data.detach().clone())
-                else:
-                    agent_params.append(p.data)
-            params.append(agent_params)
+            if copy:
+                # FIXME make sure this copies as intended
+                params.append(list(agent._get_params()))
+            else:
+                params.append(agent._get_params())
         return params
