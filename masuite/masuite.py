@@ -7,6 +7,7 @@ from masuite.environments import base
 from masuite.experiments.cartpole import cartpole
 from masuite.experiments.cartpole2p import cartpole2p
 from masuite.experiments.smallsoccer import smallsoccer
+from masuite.experiments.soccer import soccer
 
 # logging
 from masuite.utils.logging import EpochLogging
@@ -21,6 +22,7 @@ EXPERIMENT_NAME_TO_ENVIRONMENT = dict(
     cartpole=cartpole.load,
     cartpole2p=cartpole2p.load,
     smallsoccer=smallsoccer.load,
+    soccer=soccer.load,
 )
 
 
@@ -54,14 +56,6 @@ def load_from_id(masuite_id: str)->base.Environment:
     env = load(exp_name, kwargs)
     print(f'Loaded masuite_id: {masuite_id}.')
     return env
-
-# TODO: probably delete this
-# def load_env(env_id: str)->base.Environment:
-#     env_name, mapping_seed = env_id.split('/')
-#     mapping_seed = int(mapping_seed)
-#     env_fn = ENVIRONMENT_NAME_TO_ENVIRONMENT[env_name]
-#     env = env_fn(mapping_seed=mapping_seed)
-#     return env
 
 
 def init_logging(

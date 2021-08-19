@@ -3,6 +3,7 @@ from typing import Any, Dict, Mapping, Tuple
 from masuite.experiments.cartpole import sweep as cartpole_sweep
 from masuite.experiments.cartpole2p import sweep as cartpole2p_sweep
 from masuite.experiments.smallsoccer import sweep as smallsoccer_sweep
+from masuite.experiments.soccer import sweep as soccer_sweep
 
 import frozendict
 
@@ -15,7 +16,6 @@ SEP = '/'
 
 _SETTINGS = {}
 _SWEEP = []
-_EPISODES = {}
 
 def _parse_experiment_sweep(experiment_package)->Tuple[MASuiteId,...]:
     """Returns the masuite_ids for each experiment package"""
@@ -39,6 +39,7 @@ def _parse_experiment_sweep(experiment_package)->Tuple[MASuiteId,...]:
 CARTPOLE = _parse_experiment_sweep(cartpole_sweep)
 CARTPOLE2P = _parse_experiment_sweep(cartpole2p_sweep)
 SOCCER_SMALL = _parse_experiment_sweep(smallsoccer_sweep)
+SOCCER = _parse_experiment_sweep(soccer_sweep)
 
 # mapping from masuite id to keyword arguments for the corresponding env
 SETTINGS: Mapping[MASuiteId, EnvKWargs] = frozendict.frozendict(**_SETTINGS)

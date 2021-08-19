@@ -95,6 +95,7 @@ class CartPoleEnv(DiscreteEnvironment):
         # position, cart velocity, pole angle, pole angular velocity
         x, x_dot, theta, theta_dot = self.state
         force = self.force_mag if action == 1 else -self.force_mag
+        force += external_force
         costheta = math.cos(theta)
         sintheta = math.sin(theta)
 

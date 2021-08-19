@@ -15,8 +15,8 @@ def mlp(sizes, activation=nn.Tanh, output_activation=nn.Identity, seed=None):
     seed -- to seed the intial state of the neural network
     
     returns -- torch.nn.Sequential initialized neural network"""
-    if seed is not None: torch.manual_seed(seed)
     if seed is not None:
+        print(f"Seeding nn initialization: {seed}")
         torch.manual_seed(seed)
     # Build a feedforward neural network.
     layers = []

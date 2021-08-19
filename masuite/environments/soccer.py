@@ -21,8 +21,8 @@ class SoccerEnv(DiscreteEnvironment):
 
         self.episode_len = 0
     
-    def seed(self, seed=None):
-        np.random.seed(seed)
+    def seed(self):
+        np.random.seed(self.mapping_seed)
 
     def _get_state(self):
         return (self.A_pos, self.B_pos, self.A_has_ball)
@@ -48,14 +48,16 @@ class SoccerEnv(DiscreteEnvironment):
         return new_pos
     
     def _move_A(self, A_act):
-        new_pos = self._move_player(self.A_pos, A_act)
+        act = self.action_space[A_act]
+        new_pos = self._move_player(self.A_pos, act)
         if new_pos != self.B_pos:
             self.A_pos = new_pos
         elif self.A_has_ball:
             self.A_has_ball = False
     
     def _move_B(self, B_act):
-        new_pos = self._move_player(self.B_pos, B_act)
+        act = self.action_space[B_act]
+        new_pos = self._move_player(self.B_pos, act)
         if new_pos != self.A_pos:
             self.B_pos = new_pos
         elif not self.A_has_ball:
@@ -79,6 +81,11 @@ class SoccerEnv(DiscreteEnvironment):
         
         reward = self._compute_reward()
         done = not reward == 0 or self.episode_len >= self.max_episode_len
+        # if done:
+        #     if reward != 0:
+        #         print(f"Reward is {reward}, episode length is {self.episode_len}")
+        #     elif self.episode_len >= self.max_episode_len:
+        #         print("Reached max ep len")
         self.episode_len += 1
 
         return self._get_state(), [reward, -reward], done, {}

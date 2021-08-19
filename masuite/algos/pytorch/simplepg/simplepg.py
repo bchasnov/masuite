@@ -64,7 +64,7 @@ class SimplePG:
             weights_ = torch.as_tensor(self.batch_weights[idx], dtype=torch.float32)
             loss = self._compute_loss(obs_, acts_, weights_, agent)
             info['loss'].append(loss)
-            grad = autograd.grad(loss, agent._get_params(), create_graph=False)
+            grad = autograd.grad(loss, agent._get_params(), create_graph=True)
             grads.append(grad)
         return grads, info
     

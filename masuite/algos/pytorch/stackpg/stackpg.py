@@ -79,6 +79,8 @@ class StackPG(SimplePG):
         logp2 = self.agents[1]._get_policy(obs).log_prob(act2)
         return (logp1 * logp2 * weights).mean()
 
+    # f1 p2 - weights correspond to f1, act p2, agent p2 --> D2f1
+
     
     def conjugate_gradient_stac_pg(self, vec, params, b, vec2, x=None,
         nsteps=10, residual_tol=1e-18, reg=0, device=torch.device("cpu")):
@@ -118,19 +120,19 @@ class StackPG(SimplePG):
         weights = [torch.as_tensor(self.batch_weights[i], dtype=torch.float32) 
             for i in range(self.n_players)]
         
-        losses = self.compute_agent_losses(obs, acts, weights)
-        params = self.get_agent_params(copy=True)
-        simple_grads = self._compute_simple_grads(losses, params)
-        simple_grad_vecs = [self._vectorize(grads) for grads in simple_grads]
-        # f1 = self._compute_loss(obs[0], acts[0], weights[0], self.agents[0])
-        # f2 = -self._compute_loss(obs[1], acts[1], weights[1], self.agents[1])
-        info["loss"] = tuple(losses)
+        # losses = self.compute_agent_losses(obs, acts, weights)
+        # params = self.get_agent_params(copy=True)
+        # simple_grads = self._compute_simple_grads(losses, params)
+        # simple_grad_vecs = [self._vectorize(grads) for grads in simple_grads]
+        f1 = self._compute_loss(obs[0], acts[0], weights[0], self.agents[0])
+        f2 = -self._compute_loss(obs[1], acts[1], weights[1], self.agents[1])
+        info["loss"] = tuple([f1, f2])
 
-        # p1, p2 = list(self.agents[0]._get_params()), list(self.agents[1]._get_params())
-        # D1f1 = autograd.grad(f1, p1, create_graph=True)
-        # D1f1_vec = self._vectorize(D1f1)
-        # D2f2 = autograd.grad(f2, p2, create_graph=True)
-        # D2f2_vec = self._vectorize(D2f2)
+        p1, p2 = list(self.agents[0]._get_params()), list(self.agents[1]._get_params())
+        D1f1 = autograd.grad(f1, p1, create_graph=True)
+        D1f1_vec = self._vectorize(D1f1)
+        D2f2 = autograd.grad(f2, p2, create_graph=True)
+        D2f2_vec = self._vectorize(D2f2)
         D2f1_vec = -D2f2_vec.clone()
         #REVIEW can this be replaced with "autograd.grad(f1, p2, create_graph=True)"?
 
@@ -153,7 +155,7 @@ class StackPG(SimplePG):
             obs=obs[0],
             act1=acts[0],
             act2=acts[1],
-            weights=torch.as_tensor(self.batch_weights[0], dtype=torch.float32)
+            weights=torch.as_tensor(self.batch_weights[1], dtype=torch.float32)
         )
 
         D2f2_surro = autograd.grad(f2_surro, p2, create_graph=True)

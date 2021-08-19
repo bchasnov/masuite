@@ -58,8 +58,10 @@ def run_discrete_pg_experiment(masuite_id: str, AgentClass, AlgClass, log_to_ter
         )
     else:
         params=None
+    
+    seed = masuite_id[-1] if args.seed else None
 
-    agents = [AgentClass(env_dim=env_dim, n_acts=n_acts, lr=args.lr)
+    agents = [AgentClass(env_dim=env_dim, n_acts=n_acts, lr=args.lr, seed=seed)
         for _ in range(n_players)]
 
     alg = AlgClass(

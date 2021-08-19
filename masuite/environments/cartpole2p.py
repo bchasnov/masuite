@@ -32,7 +32,7 @@ class CartPole2PEnv(DiscreteEnvironment):
 
     def step(self, acts, pos_weight=-0.01):
         obs, raw_rews, done, info = [], [], [], []
-        spring_const = 0.001
+        spring_const = 1
         spring_dist = .5
         x1, x2 = self.envs[0].state[0], self.envs[1].state[0]
 
