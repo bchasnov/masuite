@@ -16,10 +16,10 @@ from masuite.environments.base import DiscreteEnvironment
 GOAL_REWARD = 100
 
 class SmallSoccerEnv(DiscreteEnvironment):
-    max_episode_len = 100
+    max_episode_len = 1000
     mapping_seed = None
     n_players = 2
-    env_dim = [3]
+    env_dim = [36]
     n_acts = 5
     shared_state = True
 
@@ -27,23 +27,40 @@ class SmallSoccerEnv(DiscreteEnvironment):
         self.mapping_seed = mapping_seed
         self.actions = [-4, 4, 1, -1, 0]
         self.state_space = (8, 8, 2)
+
+        self.discount_factor = 0.9
         self.episode_len = 0
 
     def __showCurrentState(self):
         return (self.posOfA, self.posOfB, self.AHasBall)
 
+    def __encodeCurrentState(self):
+        state = np.zeros((4, 9))
+        if self.AHasBall:
+            state[0][0] = 1
+            state[1][self.posOfA+1] = 1
+            state[2][self.posOfB+1] = 1
+            state[3][0] = 1
+        else:
+            state[0][self.posOfA+1] = 1
+            state[1][0] = 1
+            state[2][0] = 1
+            state[3][self.posOfB+1] = 1
+        return state.flatten()
+
     # returns the reward for A, the reward for B is the negative by definition of zero sum game
     def __calculateReward(self):
+        curr_discount = self.discount_factor**self.episode_len
         if self.AHasBall:
             if self.posOfA == 0 or self.posOfA == 4:
-                return GOAL_REWARD
+                return curr_discount * GOAL_REWARD
             if self.posOfA == 3 or self.posOfA == 7:
-                return -GOAL_REWARD
+                return curr_discount * -GOAL_REWARD
         else:
             if self.posOfB == 0 or self.posOfB == 4:
-                return GOAL_REWARD
+                return curr_discount * GOAL_REWARD
             if self.posOfB == 3 or self.posOfB == 7:
-                return -GOAL_REWARD
+                return curr_discount * -GOAL_REWARD
         return 0
 
     # calculate the postion of a player after a move
@@ -81,12 +98,11 @@ class SmallSoccerEnv(DiscreteEnvironment):
         self.episode_len = 0
         self.posOfA, self.posOfB = np.random.choice([1,2,5,6], size=2, replace=False)
         self.AHasBall = np.random.choice([True, False])
-        return self.__showCurrentState()
+        return self.__encodeCurrentState()
 
     # take a step in the game given actions of A and B
     # return next state, reward and whether the game is dones
     def step(self, acts):
-        self.episode_len += 1
         # Note: action input is index of action to take
         assert len(acts) == 2
         if np.random.random() > 0.5:
@@ -100,7 +116,8 @@ class SmallSoccerEnv(DiscreteEnvironment):
 
         reward = self.__calculateReward()
         done = not reward == 0 or self.episode_len >= self.max_episode_len
-        return self.__showCurrentState(), [reward, -reward], done, {}
+        self.episode_len += 1
+        return self.__encodeCurrentState(), [reward, -reward], done, {}
 
     def render(self):
         out = "---------------------\n"

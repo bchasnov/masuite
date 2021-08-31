@@ -6,7 +6,7 @@ from masuite.environments.base import DiscreteEnvironment
 class SoccerEnv(DiscreteEnvironment):
     mapping_seed = None
     n_players = 2
-    env_dim = [3]
+    env_dim = [84]
     n_acts = 5
     shared_state = True
     max_episode_len = 1000
@@ -26,6 +26,20 @@ class SoccerEnv(DiscreteEnvironment):
 
     def _get_state(self):
         return (self.A_pos, self.B_pos, self.A_has_ball)
+
+    def _encode_state(self):
+        state = np.zeros((4, 21))
+        if self.A_has_ball:
+            state[0][0] = 1
+            state[1][self.A_pos+1] = 1
+            state[2][self.B_pos+1] = 1
+            state[3][0] = 1
+        else:
+            state[0][self.A_pos+1] = 1
+            state[1][0] = 1
+            state[2][0] = 1
+            state[3][self.B_pos+1] = 1
+        return state.flatten()
     
     def _compute_reward(self):
         curr_discount = self.discount_factor**self.episode_len
@@ -42,22 +56,20 @@ class SoccerEnv(DiscreteEnvironment):
         return 0
     
     def _move_player(self, position, action):
-        new_pos = position + action
+        new_pos = position + self.action_space[action]
         if new_pos < 0 or new_pos > 19:
             return position
         return new_pos
     
     def _move_A(self, A_act):
-        act = self.action_space[A_act]
-        new_pos = self._move_player(self.A_pos, act)
+        new_pos = self._move_player(self.A_pos, A_act)
         if new_pos != self.B_pos:
             self.A_pos = new_pos
         elif self.A_has_ball:
             self.A_has_ball = False
     
     def _move_B(self, B_act):
-        act = self.action_space[B_act]
-        new_pos = self._move_player(self.B_pos, act)
+        new_pos = self._move_player(self.B_pos, B_act)
         if new_pos != self.A_pos:
             self.B_pos = new_pos
         elif not self.A_has_ball:
@@ -68,7 +80,7 @@ class SoccerEnv(DiscreteEnvironment):
         # NOTE: initial position is a square from middle column of grid
         self.A_pos, self.B_pos = np.random.choice([2, 7, 12, 17], size=2, replace=False)
         self.A_has_ball = np.random.choice([True, False])
-        return self._get_state()
+        return self._encode_state()
     
     def step(self, acts):
         assert len(acts) == 2
@@ -88,4 +100,4 @@ class SoccerEnv(DiscreteEnvironment):
         #         print("Reached max ep len")
         self.episode_len += 1
 
-        return self._get_state(), [reward, -reward], done, {}
+        return self._encode_state(), [reward, -reward], done, {}
