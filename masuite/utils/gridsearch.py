@@ -1,13 +1,15 @@
 from functools import partial, reduce
 from itertools import product
 import operator
-from typing import Mapping, Iterable, Union
+from typing import Mapping, Iterable, Union, Callable
 
 import numpy as np
 
 from masuite.agents.base import Agent
 from masuite.algos.utils import run
 # from masuite.algos.base import Algorithm
+
+LOG_DELIM = 25*'='
 
 class ParamGrid:
     """Grid of parameters used to iterate over all parameter combinations in a
@@ -92,12 +94,13 @@ class GridSearch:
     def __init__(self,
         masuite_id: str,
         AgentClass: Agent,
-        AlgClass,
-        run_fn,
+        AlgClass: Callable,
+        run_fn: Callable,
         param_grid: Union[Mapping, Iterable],
-        score_fn,
+        score_fn: Callable=None,
         log_to_terminal: bool=False,
         seed: bool=True,
+        save_path: str='tmp',
         overwrite: bool=False
     ) -> None:
         self.masuite_id = masuite_id
@@ -107,25 +110,28 @@ class GridSearch:
         self.param_grid = ParamGrid(param_grid)
         self.score_fn = score_fn
         self.log_to_terminal = log_to_terminal
-        self.seed = seed
-        self.overwrite = overwrite
+        run.args.__setattr__("log_params", True)
+        run.args.__setattr__("seed", seed)
+        run.args.__setattr__("save_path", save_path)
+        run.args.__setattr__("overwrite", overwrite)
     
     
     def run_search(self):
-        print(f"Running gridsearch over {len(self.param_grid)} parameter combinations")
+        print(f"Running gridsearch on {self.masuite_id} with {len(self.param_grid)} parameter combinations")
         log_files = list()
         for i, params in enumerate(self.param_grid):
-            print(f"{i+1}: Running {self.masuite_id} with params {params}")
+            print(LOG_DELIM)
+            print(f"[{i+1}]: Running with params {params}")
             run_info = self.run_experiment(params)
             log_files.append(run_info["log_save_path"])
+            if self.score_fn is not None:
+                score = self.score_fn(run_info["log_save_path"])
+                print(f"Experiment score: {score}")
         self.log_files = log_files
-        print(f"Gridsearch complete, experiments run: {len(self.param_grid)}")
+        print(f"Gridsearch complete")
     
 
     def run_experiment(self, params):
-        run.args.__setattr__("log_params", True)
-        run.args.__setattr__("overwrite", self.overwrite)
-        run.args.__setattr__("seed", False)
         safe_masuite_id = self.masuite_id.replace("/", "")
         run.args.__setattr__("save_path", f"tmp/{safe_masuite_id}-gridsearch")
         # set the parameter values
@@ -133,4 +139,3 @@ class GridSearch:
             run.args.__setattr__(key, value)
         run_info = self.run_fn(self.masuite_id, self.AgentClass, self.AlgClass, self.log_to_terminal)
         return run_info
-        

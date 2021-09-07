@@ -35,7 +35,7 @@ parser.add_argument('--batch-size', default=5000, type=int,
     help='maximum training batch size per epoch')
 parser.add_argument('--lr', default=1e-2, type=float,
     help='learning rate for agents')
-parser.add_argument('--hidder-sizes', default=[32], type=list,
+parser.add_argument('--hidden-sizes', default=[32], type=list,
     help='agent neural network hidden layer sizes')
 
 args, _ = parser.parse_known_args()

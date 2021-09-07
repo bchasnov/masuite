@@ -17,14 +17,12 @@ def mlp(sizes, activation=nn.Tanh, output_activation=nn.Identity, seed=None):
     
     returns -- torch.nn.Sequential initialized neural network"""
     if seed is not None:
-        print(f"Seeding nn initialization: {seed}")
         torch.manual_seed(seed)
     # Build a feedforward neural network.
     layers = []
     for j in range(len(sizes)-1):
         act = activation if j < len(sizes)-2 else output_activation
         layers += [nn.Linear(sizes[j], sizes[j+1]), act()]
-    print(layers)
     return nn.Sequential(*layers)
 
 
