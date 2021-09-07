@@ -35,6 +35,8 @@ parser.add_argument('--batch-size', default=5000, type=int,
     help='maximum training batch size per epoch')
 parser.add_argument('--lr', default=1e-2, type=float,
     help='learning rate for agents')
+parser.add_argument('--hidder-sizes', default=[32], type=list,
+    help='agent neural network hidden layer sizes')
 
 args, _ = parser.parse_known_args()
 
@@ -61,8 +63,15 @@ def run_discrete_pg_experiment(masuite_id: str, AgentClass, AlgClass, log_to_ter
     
     seed = masuite_id[-1] if args.seed else None
 
-    agents = [AgentClass(env_dim=env_dim, n_acts=n_acts, lr=args.lr, seed=seed)
-        for _ in range(n_players)]
+    agents = [AgentClass(
+        env_dim=env_dim,
+        n_acts=n_acts,
+        lr=args.lr,
+        hidden_sizes=args.hidden_sizes,
+        seed=seed
+        )
+        for _ in range(n_players)
+    ]
 
     alg = AlgClass(
         agents=agents,
