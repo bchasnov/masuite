@@ -16,7 +16,7 @@ The main way to use the package is through the command line or juptyer notebooks
 We recommend installing a virtual environment.
 
 ```
-cd /path/to/masuite/dir/
+cd /path/to/masuite/
 python3 -m venv masuite
 source masuite/bin/activate
 ```
