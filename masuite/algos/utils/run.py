@@ -56,7 +56,8 @@ def run_discrete_pg_experiment(masuite_id: str, AgentClass, AlgClass, log_to_ter
         params = dict(
             epochs=args.num_epochs,
             batch_size=args.batch_size,
-            lr=args.lr
+            lr=args.lr,
+            hidden_sizes=args.hidden_sizes
         )
     else:
         params=None

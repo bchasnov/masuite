@@ -1,3 +1,4 @@
+import torch
 from masuite.environments.base import Environment
 
 def run(
@@ -53,10 +54,16 @@ def run(
                     logger.track_epoch(batch_info)
                     if log_to_terminal:
                         print(f'epoch: {epoch} \t loss: {[round(loss, 2) for loss in batch_info["loss"]]} \t return: {[round(ret, 2) for ret in batch_info["avg_rets"]]}')
-                    if logger.checkpoint_due() or (logger.log_checkpoints and epoch == num_epochs-1):
-                        curr_params = alg.get_agent_params(copy=True)
-                        logger.log_checkpoint(curr_params)
+                    #if logger.checkpoint_due() or (logger.log_checkpoints and epoch == num_epochs-1):
+                    #    curr_params = alg.get_agent_params(copy=True)
+                    #    logger.log_checkpoint(curr_params)
                     break
+
+
+    # log checkpoint at the end of training
+    filename = logger.logger.log_save_path[:-4]+'-checkpoint.pt'
+    torch.save(agents, filename)
+
 
     if should_render and hasattr(env, 'close'):
         env.close()
