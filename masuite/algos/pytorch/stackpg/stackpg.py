@@ -125,7 +125,7 @@ class StackPG(SimplePG):
         # simple_grads = self._compute_simple_grads(losses, params)
         # simple_grad_vecs = [self._vectorize(grads) for grads in simple_grads]
         f1 = self._compute_loss(obs[0], acts[0], weights[0], self.agents[0])
-        f2 = -self._compute_loss(obs[1], acts[1], weights[1], self.agents[1])
+        f2 = self._compute_loss(obs[1], acts[1], weights[1], self.agents[1])
         info["loss"] = tuple([f1, f2])
 
         p1, p2 = list(self.agents[0]._get_params()), list(self.agents[1]._get_params())
