@@ -88,10 +88,10 @@ To run a tournament
 1. Activate Masuite
 2. python3 masuite/analysis/tournament_demo.py masuite/analysis/soccer_checkpoints out.pkl
 
-"Python3" is to open the python file
-"masuite/analysis/tournament_demo.py" is the file that has the tournament information in it.
-"masuite/analysis/soccer_checkpoints" is the folder where the checkpoints of the agents are in
-"out.pkl" is the output pickle file name that can be opened in python and get the info from the tournament.
+* "Python3" is to open the python file
+* "masuite/analysis/tournament_demo.py" is the file that has the tournament information in it.
+* "masuite/analysis/soccer_checkpoints" is the folder where the checkpoints of the agents are in
+* "out.pkl" is the output pickle file name that can be opened in python and get the info from the tournament.
 
 ### Loading an environemnt
 
