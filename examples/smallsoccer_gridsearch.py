@@ -1,4 +1,4 @@
-from masuite.agents.pytorch.policy_gradient.agent import PGAgent
+from masuite.agents.pytorch.policy_gradient import PGAgent
 from masuite.algos.pytorch.simplepg import SimplePG
 from masuite.algos.pytorch.stackpg import StackPG
 from masuite.algos.utils.run import run_discrete_pg_experiment
