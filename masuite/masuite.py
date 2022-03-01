@@ -8,6 +8,7 @@ from masuite.experiments.cartpole import cartpole
 from masuite.experiments.cartpole2p import cartpole2p
 from masuite.experiments.smallsoccer import smallsoccer
 from masuite.experiments.soccer import soccer
+from masuite.experiments.gridhunter import gridhunter
 
 # logging
 from masuite.utils.logging import EpochLogging
@@ -23,6 +24,7 @@ EXPERIMENT_NAME_TO_ENVIRONMENT = dict(
     cartpole2p=cartpole2p.load,
     smallsoccer=smallsoccer.load,
     soccer=soccer.load,
+    gridhunter=gridhunter.load,
 )
 
 
