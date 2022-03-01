@@ -70,9 +70,9 @@ Experiements are usually run from the command line. When this is the case, the u
 To run the single-player simple pg cartpole experiment run:
 
 ```
-python3 masuite/algos/pytorch/simple_pg/run.py --masuite-id=cartpole_simplepg/0
+python3 masuite/algos/pytorch/simplepg/run.py --masuite-id=cartpole_simplepg/0
 ```
-Additional optional command line args can be found in `run.py`.
+Additional optional command line args can be found in `run.py`. If 'python3' doesn't work try 'python'
 
 ### Loading an environemnt
 
