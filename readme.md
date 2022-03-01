@@ -74,6 +74,12 @@ python3 masuite/algos/pytorch/simplepg/run.py --masuite-id=cartpole_simplepg/0
 ```
 Additional optional command line args can be found in `run.py`. If 'python3' doesn't work try 'python'
 
+To run the two-player simple pg smallsoccer experiment run:
+
+```
+python3 masuite/experiments/smallsoccer_gridsearch.py
+```
+
 ### Loading an environemnt
 
 ```python
