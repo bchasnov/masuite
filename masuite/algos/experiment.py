@@ -1,4 +1,6 @@
 import torch
+import random
+import numpy as np
 from masuite.environments.base import Environment
 
 def run(
@@ -34,24 +36,33 @@ def run(
             alg.track_obs(obs)
             
             # get actions from agent(s)
-            if shared_state:
-                acts = [agent.select_action(obs) for agent in agents]
-            else:
-                acts = [agents[i].select_action(obs[i])
-                    for i in range(env.n_players)]
-            
-            # send action(s) to env and get new timestep info
-            obs, rews, done, _ = env.step(acts)
-            # need to track timestep and acts separately to map obs_t
-            # to acts_t and rews_t
-            alg.track_timestep(acts, rews)
+            try:
+                if shared_state:
+                    acts = [agent.select_action(obs) for agent in agents]
+                else:
+                    acts = [agents[i].select_action(obs[i])
+                        for i in range(env.n_players)]
+
+                # send action(s) to env and get new timestep info
+                obs, rews, done, _ = env.step(acts)
+                #print(env._get_state())
+                # need to track timestep and acts separately to map obs_t
+                # to acts_t and rews_t
+                alg.track_timestep(acts, rews)
+                
+            except:
+                done = True
+                print("********************************************** ERROR *******************************************")
             if done:
                 finished_rendering_this_epoch = True
                 alg.end_episode()
                 obs, done = env.reset(), False
                 if alg.batch_over():
-                    batch_info = alg.end_epoch()
-                    logger.track_epoch(batch_info)
+                    try:
+                        batch_info = alg.end_epoch()
+                        logger.track_epoch(batch_info)
+                    except:
+                        print("Bad File")
                     if log_to_terminal:
                         print(f'epoch: {epoch} \t loss: {[round(loss, 2) for loss in batch_info["loss"]]} \t return: {[round(ret, 2) for ret in batch_info["avg_rets"]]}')
                     #if logger.checkpoint_due() or (logger.log_checkpoints and epoch == num_epochs-1):
