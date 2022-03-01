@@ -3,6 +3,7 @@ import torch
 from torch._C import dtype
 import torch.autograd as autograd
 from masuite.algos.pytorch import SimplePG
+import numpy as np
 
 class StackPG(SimplePG):
     def __init__(self, agents, shared_state, n_players: int, batch_size: int):
@@ -115,17 +116,17 @@ class StackPG(SimplePG):
 
     def _step(self, obs, acts):
         info = dict()
-        obs = [torch.as_tensor(obs[i], dtype=torch.float32) for i in range(self.n_players)]
-        acts = [torch.as_tensor(acts[i], dtype=torch.int32) for i in range(self.n_players)]
-        weights = [torch.as_tensor(self.batch_weights[i], dtype=torch.float32) 
-            for i in range(self.n_players)]
-        
+        obs_ = [torch.as_tensor(obs[i], dtype=torch.float32) for i in range(self.n_players)]
+        #print(obs_)
+        acts_ = [torch.as_tensor(acts[i], dtype=torch.int32) for i in range(self.n_players)]
+        weights_ = [torch.as_tensor(self.batch_weights[i], dtype=torch.float32) for i in range(self.n_players)]
+
         # losses = self.compute_agent_losses(obs, acts, weights)
         # params = self.get_agent_params(copy=True)
         # simple_grads = self._compute_simple_grads(losses, params)
         # simple_grad_vecs = [self._vectorize(grads) for grads in simple_grads]
-        f1 = self._compute_loss(obs[0], acts[0], weights[0], self.agents[0])
-        f2 = self._compute_loss(obs[1], acts[1], weights[1], self.agents[1])
+        f1 = self._compute_loss(obs_[0], acts_[0], weights_[0], self.agents[0])
+        f2 = self._compute_loss(obs_[1], acts_[1], weights_[1], self.agents[1])
         info["loss"] = tuple([f1, f2])
 
         p1, p2 = list(self.agents[0]._get_params()), list(self.agents[1]._get_params())
@@ -152,9 +153,9 @@ class StackPG(SimplePG):
         )
 
         f2_surro = self.compute_loss12(
-            obs=obs[0],
-            act1=acts[0],
-            act2=acts[1],
+            obs=obs_[0],
+            act1=acts_[0],
+            act2=acts_[1],
             weights=torch.as_tensor(self.batch_weights[1], dtype=torch.float32)
         )
 
