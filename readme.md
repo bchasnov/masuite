@@ -84,10 +84,10 @@ python3 masuite/experiments/smallsoccer_gridsearch.py
 
 After training agents and extracting their checkpoint information, you can compare the quality of agents in a tournament game.
 
-To run a tournament
-1. Activate Masuite
-2. python3 masuite/analysis/tournament_demo.py masuite/analysis/soccer_checkpoints out.pkl
-
+To run a tournament, first activate Masuite, then type the code below into the terminal.
+```
+python3 masuite/analysis/tournament_demo.py masuite/analysis/soccer_checkpoints out.pkl
+```
 * "Python3" is to open the python file
 * "masuite/analysis/tournament_demo.py" is the file that has the tournament information in it.
 * "masuite/analysis/soccer_checkpoints" is the folder where the checkpoints of the agents are in
