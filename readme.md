@@ -13,7 +13,7 @@ Logging is done inside an environment, which allows for data to be output in the
 The main way to use the package is through the command line or juptyer notebooks.
 
 ### Installation
-We recommend installing a virtual environment.
+We recommend installing a virtual environment. If the below code does not work, try "python" for "python3 -m venv masuite"
 
 ```
 cd /path/to/masuite/
